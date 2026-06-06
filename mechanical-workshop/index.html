@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Workshop - Professional Machinery Information Platform</title>
+    <meta name="description" content="Mechanical Workshop is a professional machinery information platform, providing technical articles and industry news in general machinery, construction machinery, cleaning & ventilation, machine tools, logistics equipment, food machinery and other fields.">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="cookie-popup" id="cookiePopup">
+        <div class="cookie-content">
+            <div class="cookie-header">
+                <h3>Cookie Consent</h3>
+                <button class="cookie-close" onclick="toggleCookiePopup()">×</button>
+            </div>
+            <p>We use cookies to improve your experience, analyze site traffic, and serve personalized ads. By using our website, you agree to our <a href="#" class="cookie-link">Cookie Policy</a> and <a href="#" class="cookie-link">Privacy Policy</a>.</p>
+            
+            <div class="cookie-settings" id="cookieSettings">
+                <div class="cookie-category">
+                    <label class="cookie-category-label">
+                        <input type="checkbox" id="necessaryCookies" checked disabled>
+                        <span>Necessary Cookies</span>
+                    </label>
+                    <p class="cookie-description">Essential for basic website functionality.</p>
+                </div>
+                <div class="cookie-category">
+                    <label class="cookie-category-label">
+                        <input type="checkbox" id="analyticsCookies">
+                        <span>Analytics Cookies</span>
+                    </label>
+                    <p class="cookie-description">Help us understand how visitors interact with the site.</p>
+                </div>
+                <div class="cookie-category">
+                    <label class="cookie-category-label">
+                        <input type="checkbox" id="advertisingCookies">
+                        <span>Advertising Cookies</span>
+                    </label>
+                    <p class="cookie-description">Deliver personalized ads based on your browsing history.</p>
+                </div>
+            </div>
+            
+            <div class="cookie-buttons">
+                <button class="btn btn-outline" onclick="rejectNonNecessaryCookies()">Reject Non-Essential</button>
+                <button class="btn btn-secondary" onclick="showCookieSettings()">Customize</button>
+                <button class="btn btn-primary" onclick="acceptAllCookies()">Accept All</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Mechanical Workshop</a>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" onclick="toggleMenu()">Home</a></li>
+                    <li><a href="categories/general-machinery.html" onclick="toggleMenu()">General Machinery</a></li>
+                    <li><a href="categories/construction-machinery.html" onclick="toggleMenu()">Construction Machinery</a></li>
+                    <li><a href="categories/cleaning-ventilation.html" onclick="toggleMenu()">Cleaning & Ventilation</a></li>
+                    <li><a href="categories/machine-tools.html" onclick="toggleMenu()">Machine Tools</a></li>
+                    <li><a href="categories/logistics-equipment.html" onclick="toggleMenu()">Logistics Equipment</a></li>
+                    <li><a href="categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>
+                    <li><a href="categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>
+                    <li><a href="categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Mechanical Workshop</h1>
+            <p>Focus on machinery equipment, sharing professional technical knowledge and industry information</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <section>
+            <h2 class="section-title">Categories</h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="location.href='categories/general-machinery.html'">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400" alt="Industrial general machinery equipment in factory workshop">
+                    <h3>General Machinery</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/construction-machinery.html'">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400" alt="Heavy construction machinery excavator at construction site">
+                    <h3>Construction Machinery</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/cleaning-ventilation.html'">
+                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400" alt="Industrial ventilation system and air cleaning equipment">
+                    <h3>Cleaning & Ventilation</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/machine-tools.html'">
+                    <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400" alt="CNC machine tools for precision manufacturing">
+                    <h3>Machine Tools</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/logistics-equipment.html'">
+                    <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400" alt="Warehouse logistics conveyor belt system">
+                    <h3>Logistics Equipment</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/food-machinery.html'">
+                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400" alt="Food processing and packaging machinery equipment">
+                    <h3>Food Machinery</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/other-machinery.html'">
+                    <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400" alt="Industrial machinery and equipment parts">
+                    <h3>Other Equipment</h3>
+                </div>
+                <div class="category-card" onclick="location.href='categories/hardware-parts.html'">
+                    <img src="https://images.unsplash.com/photo-1581094281289-5133e57f4104?w=400" alt="Mechanical hardware parts and components">
+                    <h3>Hardware Parts</h3>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Latest Articles</h2>
+            <div class="articles-list">
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600" alt="CNC machine tool maintenance and inspection in factory">
+                    <div class="article-content">
+                        <h3><a href="articles/cnc-maintenance-guide.html">CNC Machine Tool Daily Maintenance Guide</a></h3>
+                        <p>This article details the daily maintenance essentials for CNC machine tools, including spindle maintenance, lubrication system care, cooling system inspection and other key aspects to help extend equipment lifespan.</p>
+                        <div class="article-meta">
+                            <span>Machine Tools</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600" alt="Hydraulic excavator machine for construction work">
+                    <div class="article-content">
+                        <h3><a href="articles/hydraulic-excavator-fault.html">Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators</a></h3>
+                        <p>Analyzes common fault phenomena of hydraulic excavators, including diagnosis methods and solutions for walking weakness, reduced digging efficiency, hydraulic system noise and other issues.</p>
+                        <div class="article-meta">
+                            <span>Construction Machinery</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600" alt="Industrial ventilation duct system in workshop">
+                    <div class="article-content">
+                        <h3><a href="articles/industrial-ventilation-design.html">Design Essentials for Industrial Workshop Ventilation Systems</a></h3>
+                        <p>Discusses the design principles of industrial ventilation systems, including key technologies such as air volume calculation, duct layout, and fan selection to ensure workshop air quality standards.</p>
+                        <div class="article-meta">
+                            <span>Cleaning & Ventilation</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600" alt="Automated warehouse conveyor system with ASRS">
+                    <div class="article-content">
+                        <h3><a href="articles/asrs-conveyor-selection.html">ASRS and Conveyor Selection Guide</a></h3>
+                        <p>Introduces the composition structure of automated storage and retrieval systems, shelf type selection, conveyor system configuration and other contents to help enterprises achieve warehouse automation upgrade.</p>
+                        <div class="article-meta">
+                            <span>Logistics Equipment</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600" alt="Food packaging machinery for hygienic food processing">
+                    <div class="article-content">
+                        <h3><a href="articles/food-packaging-hygiene.html">Hygienic Design Specifications for Food Packaging Machinery</a></h3>
+                        <p>Explains the hygienic design requirements for food packaging machinery, including material selection, structural design, cleaning methods and other aspects to ensure compliance with food production safety standards.</p>
+                        <div class="article-meta">
+                            <span>Food Machinery</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=600" alt="Industrial 3D printing technology for manufacturing">
+                    <div class="article-content">
+                        <h3><a href="articles/3d-printing-industrial.html">Industrial 3D Printing Technology Applications and Development Trends</a></h3>
+                        <p>Analyzes the application scenarios of industrial 3D printing technology in manufacturing, including technical characteristics of metal printing, plastic printing and future development trends.</p>
+                        <div class="article-meta">
+                            <span>Other Equipment</span>
+                            <span>2026-06-05</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="index.html" class="footer-logo">Mechanical Workshop</a>
+                <p>Your trusted source for professional machinery information, technical articles, and industry insights. We provide comprehensive resources for machinery professionals worldwide.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>
+                    <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="categories/general-machinery.html">General Machinery</a></li>
+                    <li><a href="categories/construction-machinery.html">Construction Machinery</a></li>
+                    <li><a href="categories/cleaning-ventilation.html">Cleaning & Ventilation</a></li>
+                    <li><a href="categories/machine-tools.html">Machine Tools</a></li>
+                    <li><a href="categories/logistics-equipment.html">Logistics Equipment</a></li>
+                    <li><a href="categories/food-machinery.html">Food Machinery</a></li>
+                    <li><a href="categories/other-machinery.html">Other Machinery</a></li>
+                    <li><a href="categories/hardware-parts.html">Hardware Parts</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#articles">Latest Articles</a></li>
+                    <li><a href="#categories">Browse Categories</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#advertise">Advertise</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                    <li><a href="dmca.html">DMCA & Copyright</a></li>
+                    <li><a href="community-guidelines.html">Community Guidelines</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest machinery news and technical updates.</p>
+                <form class="newsletter-form" action="#" method="post">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <div class="contact-info">
+                    <span>Email: <a href="mailto:info@mechanicalworkshop.com">info@mechanicalworkshop.com</a></span>
+                    <span>Phone: +1 (555) 123-4567</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Mechanical Workshop. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="cookie-policy.html">Cookie Policy</a>
+                <a href="dmca.html">DMCA</a>
+                <a href="community-guidelines.html">Community Guidelines</a>
+                <a href="#sitemap">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
