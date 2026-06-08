@@ -3,7 +3,6 @@ export async function onRequestGet({ request, env }) {
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
   
-  // 验证 state
   const cookies = request.headers.get('Cookie') || '';
   const savedState = cookies.match(/oauth_state=([^;]+)/)?.[1];
   
@@ -30,7 +29,7 @@ export async function onRequestGet({ request, env }) {
     return new Response('Failed to get token', { status: 500 });
   }
   
-  // 返回给 Decap CMS 的回调页面
+  // git-gateway 格式：返回 token 和 provider
   const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -39,18 +38,15 @@ export async function onRequestGet({ request, env }) {
 <body>
   <script>
     (function() {
-      const token = "${tokenData.access_token}";
-      const provider = "github";
+      const message = JSON.stringify({
+        token: "${tokenData.access_token}",
+        provider: "github"
+      });
       
-      // 发送消息给父窗口
       if (window.opener) {
-        window.opener.postMessage(
-          'authorization:github:success:{"token":"' + token + '","provider":"' + provider + '"}',
-          '*'
-        );
+        window.opener.postMessage("authorization:github:success:" + message, "*");
       }
       
-      // 关闭窗口
       setTimeout(function() {
         window.close();
       }, 1000);
