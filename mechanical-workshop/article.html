@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading... - Mechanical Workshop</title>
+    <meta name="description" content="Mechanical Workshop Article">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Mechanical Workshop</a>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" onclick="toggleMenu()">Home</a></li>
+                    <li><a href="categories/general-machinery.html" onclick="toggleMenu()">General Machinery</a></li>
+                    <li><a href="categories/construction-machinery.html" onclick="toggleMenu()">Construction Machinery</a></li>
+                    <li><a href="categories/cleaning-ventilation.html" onclick="toggleMenu()">Cleaning & Ventilation</a></li>
+                    <li><a href="categories/machine-tools.html" onclick="toggleMenu()">Machine Tools</a></li>
+                    <li><a href="categories/logistics-equipment.html" onclick="toggleMenu()">Logistics Equipment</a></li>
+                    <li><a href="categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>
+                    <li><a href="categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>
+                    <li><a href="categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container">
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="index.html">Home</a> > <span>Loading...</span>
+        </div>
+
+        <article class="article-detail">
+            <h1 id="article-title">Loading...</h1>
+            <div class="meta" id="article-meta">
+                <span>Category: ...</span> | <span>Published: ...</span>
+            </div>
+            <img id="article-image" src="" alt="" style="display:none; max-width:100%; margin:20px 0;">
+            
+            <div class="content" id="article-content">
+                <p>Loading article...</p>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="index.html" class="footer-logo">Mechanical Workshop</a>
+                <p>Your trusted source for professional machinery information, technical articles, and industry insights.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="categories/general-machinery.html">General Machinery</a></li>
+                    <li><a href="categories/construction-machinery.html">Construction Machinery</a></li>
+                    <li><a href="categories/cleaning-ventilation.html">Cleaning & Ventilation</a></li>
+                    <li><a href="categories/machine-tools.html">Machine Tools</a></li>
+                    <li><a href="categories/logistics-equipment.html">Logistics Equipment</a></li>
+                    <li><a href="categories/food-machinery.html">Food Machinery</a></li>
+                    <li><a href="categories/other-machinery.html">Other Machinery</a></li>
+                    <li><a href="categories/hardware-parts.html">Hardware Parts</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#articles">Latest Articles</a></li>
+                    <li><a href="index.html#categories">Browse Categories</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Mechanical Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // 获取 URL 参数 ?file=articles/xxx.md
+        const params = new URLSearchParams(window.location.search);
+        const filePath = params.get('file');
+
+        if (!filePath) {
+            document.getElementById('article-content').innerHTML = '<p style="color:red;">Error: No article specified. Use ?file=articles/your-article.md</p>';
+            document.getElementById('article-title').textContent = 'Error';
+        } else {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('Article not found');
+                    return response.text();
+                })
+                .then(text => {
+                    // 解析 YAML frontmatter
+                    let frontmatter = {};
+                    let content = text;
+                    
+                    if (text.startsWith('---')) {
+                        const end = text.indexOf('---', 3);
+                        if (end !== -1) {
+                            const yamlText = text.substring(3, end).trim();
+                            content = text.substring(end + 3).trim();
+                            
+                            // 简单解析 YAML
+                            yamlText.split('\n').forEach(line => {
+                                const colon = line.indexOf(':');
+                                if (colon > 0) {
+                                    const key = line.substring(0, colon).trim();
+                                    let value = line.substring(colon + 1).trim();
+                                    // 去掉引号
+                                    value = value.replace(/^["'](.*)["']$/, '$1');
+                                    frontmatter[key] = value;
+                                }
+                            });
+                        }
+                    }
+
+                    // 设置页面信息
+                    document.title = (frontmatter.title || 'Article') + ' - Mechanical Workshop';
+                    document.getElementById('article-title').textContent = frontmatter.title || 'Untitled';
+                    document.getElementById('article-meta').innerHTML = 
+                        '<span>Category: ' + (frontmatter.category || 'General') + '</span> | ' +
+                        '<span>Published: ' + (frontmatter.date || 'Unknown') + '</span>';
+                    
+                    // 面包屑
+                    const catUrl = frontmatter.category_url || 'categories/other-machinery.html';
+                    const catName = frontmatter.category || 'Other Equipment';
+                    document.getElementById('breadcrumb').innerHTML = 
+                        '<a href="index.html">Home</a> > ' +
+                        '<a href="' + catUrl + '">' + catName + '</a> > ' +
+                        (frontmatter.title || 'Article');
+
+                    // 封面图
+                    if (frontmatter.image) {
+                        const img = document.getElementById('article-image');
+                        img.src = frontmatter.image;
+                        img.alt = frontmatter.title || 'Article image';
+                        img.style.display = 'block';
+                    }
+
+                    // 渲染 Markdown
+                    document.getElementById('article-content').innerHTML = marked.parse(content);
+                })
+                .catch(err => {
+                    document.getElementById('article-content').innerHTML = '<p style="color:red;">Failed to load article: ' + err.message + '</p>';
+                    document.getElementById('article-title').textContent = 'Error';
+                });
+        }
+    </script>
+</body>
+</html>
