@@ -8,7 +8,11 @@
     <div id="nc-root"></div>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
     <script>
-      // 手动配置 Decap CMS
+      // 确保只有一个配置
+      if (window.CMS_CONFIG) {
+        delete window.CMS_CONFIG;
+      }
+      
       CMS.init({
         config: {
           backend: {
@@ -22,7 +26,7 @@
           public_folder: '/images',
           collections: [
             {
-              name: 'pages',
+              name: 'site_pages',  // ← 改成唯一名称，不要叫 'pages'
               label: 'Pages',
               folder: 'mechanical-workshop',
               create: false,
