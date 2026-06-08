@@ -3,6 +3,8 @@ backend:
   repo: YunWU914/HSKB
   branch: main
   base_url: https://www.smartmanu.net
+  auth_endpoint: /auth
+  auth_scope: repo
 
 media_folder: "mechanical-workshop/images"
 public_folder: "/images"
