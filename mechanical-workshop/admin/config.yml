@@ -2,18 +2,21 @@ backend:
   name: github
   repo: YunWU914/HSKB
   branch: main
-  base_url: https://api.github.com
+  base_url: https://red-cherry-429e.1477652021.workers.dev
+  auth_endpoint: auth
 
 media_folder: "mechanical-workshop/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "posts"
-    label: "文章"
-    folder: "mechanical-workshop/content/posts"
+  - name: "articles"
+    label: "Articles"
+    folder: "mechanical-workshop/articles"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "标题", name: "title", widget: "string" }
-      - { label: "发布日期", name: "date", widget: "datetime" }
-      - { label: "正文", name: "body", widget: "markdown" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Category", name: "category", widget: "select", options: ["General Machinery", "Construction Machinery", "Cleaning & Ventilation", "Machine Tools", "Logistics Equipment", "Food Machinery", "Other Equipment", "Hardware Parts"] }
+      - { label: "Featured Image", name: "image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" }
