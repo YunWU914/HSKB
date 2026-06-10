@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>General Machinery - Mechanical Workshop</title>
+    <title>General Machinery - smartmanu.net</title>
     <meta name="description" content="General machinery equipment information, including technical articles and industry news about pumps, compressors, fans and other general machinery.">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
+<body class="category-page" data-category="General Machinery">
     <header>
         <div class="container">
-            <a href="../index.html" class="logo">Mechanical Workshop</a>
+            <a href="../index.html" class="logo">smartmanu.net</a>
             <div class="hamburger-menu" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
@@ -44,48 +44,14 @@
 
         <section>
             <h2 class="section-title">Related Articles</h2>
-            <div class="articles-list">
-                <article class="article-card">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600" alt="Centrifugal pump for industrial applications">
-                    <div class="article-content">
-                        <h3><a href="../articles/cnc-maintenance-guide.html">Centrifugal Pump Selection and Installation Essentials</a></h3>
-                        <p>Introduces centrifugal pump selection methods, including flow rate and head calculation, material selection, and installation considerations.</p>
-                        <div class="article-meta">
-                            <span>General Machinery</span>
-                            <span>2026-06-05</span>
-                        </div>
-                    </div>
-                </article>
-                <article class="article-card">
-                    <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600" alt="Industrial screw air compressor">
-                    <div class="article-content">
-                        <h3><a href="../articles/cnc-maintenance-guide.html">Screw Compressor Daily Maintenance</a></h3>
-                        <p>Details the maintenance cycle, lubricating oil replacement, filter replacement and other maintenance essentials for screw compressors.</p>
-                        <div class="article-meta">
-                            <span>General Machinery</span>
-                            <span>2026-06-05</span>
-                        </div>
-                    </div>
-                </article>
-                <article class="article-card">
-                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600" alt="Industrial exhaust fan and blower">
-                    <div class="article-content">
-                        <h3><a href="../articles/cnc-maintenance-guide.html">Industrial Fan Selection and Application Scenarios</a></h3>
-                        <p>Analyzes the characteristics of different types of industrial fans and their application choices in different industries.</p>
-                        <div class="article-meta">
-                            <span>General Machinery</span>
-                            <span>2026-06-05</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
+            <div class="articles-list" id="articlesList"></div>
         </section>
     </main>
 
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <a href="../index.html" class="footer-logo">Mechanical Workshop</a>
+                <a href="../index.html" class="footer-logo">smartmanu.net</a>
                 <p>Your trusted source for professional machinery information, technical articles, and industry insights. We provide comprehensive resources for machinery professionals worldwide.</p>
                 <div class="social-links">
                     <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>
@@ -94,7 +60,6 @@
                     <a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
                 </div>
             </div>
-
             <div class="footer-section">
                 <h3>Categories</h3>
                 <ul>
@@ -108,19 +73,17 @@
                     <li><a href="hardware-parts.html">Hardware Parts</a></li>
                 </ul>
             </div>
-
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="../index.html">Home</a></li>
                     <li><a href="../index.html#articles">Latest Articles</a></li>
                     <li><a href="../index.html#categories">Browse Categories</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="../contact.html">Contact Us</a></li>
                     <li><a href="#advertise">Advertise</a></li>
                 </ul>
             </div>
-
             <div class="footer-section">
                 <h3>Newsletter</h3>
                 <p>Subscribe to our newsletter for the latest machinery news and technical updates.</p>
@@ -129,19 +92,17 @@
                     <button type="submit">Subscribe</button>
                 </form>
                 <div class="contact-info">
-                    <span>Email: <a href="mailto:info@mechanicalworkshop.com">info@mechanicalworkshop.com</a></span>
-                    <span>Phone: +1 (555) 123-4567</span>
+                    <span>Submission Email: <a href="mailto:NB914Y@163.com">NB914Y@163.com</a></span>
                 </div>
             </div>
         </div>
-
         <div class="footer-bottom">
-            <p>&copy; 2026 Mechanical Workshop. All rights reserved.</p>
+            <p>&copy; 2026 smartmanu.net. All rights reserved.</p>
             <div class="footer-bottom-links">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Service</a>
-                <a href="#cookies">Cookie Policy</a>
-                <a href="#sitemap">Sitemap</a>
+                <a href="../privacy-policy.html">Privacy Policy</a>
+                <a href="../terms-of-service.html">Terms of Service</a>
+                <a href="../cookie-policy.html">Cookie Policy</a>
+                <a href="../dmca.html">DMCA</a><a href="../community-guidelines.html">Community Guidelines</a><a href="#sitemap">Sitemap</a>
             </div>
         </div>
     </footer>
