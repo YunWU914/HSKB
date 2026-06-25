@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://smartmanu.net/sitemap.xml
-Sitemap: https://smartmanu.net/image-sitemap.xml
-
-Disallow: /admin/
-Disallow: /private/
-Disallow: /cgi-bin/
