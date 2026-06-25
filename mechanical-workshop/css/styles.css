@@ -273,7 +273,7 @@ nav {
 }
 
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/hero/hero-banner.jpg');
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('../images/hero/hero-banner.webp');
     background-size: cover;
     background-position: center;
     color: white;
@@ -677,11 +677,45 @@ footer {
 }
 
 .category-header {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9)), url('../images/categories/general-machinery.webp');
+    background-size: cover;
+    background-position: center;
     color: white;
     padding: 40px 20px;
     text-align: center;
     margin-bottom: 30px;
+}
+
+.category-page[data-category="General Machinery"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/general-machinery.webp');
+}
+
+.category-page[data-category="Construction Machinery"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/construction-machinery.webp');
+}
+
+.category-page[data-category="Cleaning and Ventilation Equipment"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Cleaning and Ventilation Equipment.webp');
+}
+
+.category-page[data-category="Machine Tools and Tooling Machinery"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Machine Tools and Tooling Machinery.webp');
+}
+
+.category-page[data-category="Logistics Equipment"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Logistics Equipment.webp');
+}
+
+.category-page[data-category="Food Machinery"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Food Machinery.webp');
+}
+
+.category-page[data-category="Other Special-purpose Equipment"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Other Special-purpose Equipment.webp');
+}
+
+.category-page[data-category="Hardware Accessories & Standard Parts"] .category-header {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85)), url('../images/categories/Hardware Accessories & Standard Parts.webp');
 }
 
 .category-header h1 {

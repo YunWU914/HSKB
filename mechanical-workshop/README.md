@@ -1,6 +1,6 @@
 # Mechanical Workshop - Professional Machinery Information Platform
 
-Mechanical Workshop is a professional machinery information platform, providing technical articles and industry news in general machinery, construction machinery, cleaning & ventilation, machine tools, logistics equipment, food machinery and other fields.
+Mechanical Workshop is a professional machinery information platform, providing technical articles and industry news in general machinery, construction machinery, Cleaning and Ventilation Equipment, Machine Tools and Tooling Machinery, logistics equipment, food machinery and other fields.
 
 ## Project Structure
 
@@ -8,29 +8,29 @@ Mechanical Workshop is a professional machinery information platform, providing 
 mechanical-workshop/
 ├── index.html                 # Home page
 ├── categories/               # Category pages
-│   ├── general-machinery.html    # General Machinery
-│   ├── construction-machinery.html # Construction Machinery
-│   ├── cleaning-ventilation.html  # Cleaning & Ventilation
-│   ├── machine-tools.html         # Machine Tools
-│   ├── logistics-equipment.html   # Logistics Equipment
-│   ├── food-machinery.html        # Food Machinery
-│   ├── other-machinery.html       # Other Equipment
-│   └── hardware-parts.html        # Hardware Parts
+�?  ├── general-machinery.html    # General Machinery
+�?  ├── construction-machinery.html # Construction Machinery
+�?  ├── cleaning-ventilation.html  # Cleaning and Ventilation Equipment
+�?  ├── machine-tools.html         # Machine Tools and Tooling Machinery
+�?  ├── logistics-equipment.html   # Logistics Equipment
+�?  ├── food-machinery.html        # Food Machinery
+�?  ├── other-machinery.html       # Other Special-purpose Equipment
+�?  └── hardware-parts.html        # Hardware Accessories & Standard Parts
 ├── articles/                 # Article detail pages
-│   ├── cnc-maintenance-guide.html
-│   ├── hydraulic-excavator-fault.html
-│   ├── industrial-ventilation-design.html
-│   ├── asrs-conveyor-selection.html
-│   ├── food-packaging-hygiene.html
-│   └── 3d-printing-industrial.html
+�?  ├── cnc-maintenance-guide.html
+�?  ├── hydraulic-excavator-fault.html
+�?  ├── industrial-ventilation-design.html
+�?  ├── asrs-conveyor-selection.html
+�?  ├── food-packaging-hygiene.html
+�?  └── 3d-printing-industrial.html
 ├── css/
-│   └── styles.css            # Style file
+�?  └── styles.css            # Style file
 ├── js/
-│   └── main.js               # JavaScript file
+�?  └── main.js               # JavaScript file
 ├── images/
-│   ├── categories/           # Category cover images
-│   ├── articles/             # Article images
-│   └── icons/                # Icons
+�?  ├── categories/           # Category cover images
+�?  ├── articles/             # Article images
+�?  └── icons/                # Icons
 └── README.md
 ```
 

@@ -3,53 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
+    <title>Register | smartmanu.net</title>
+    <meta name="description" content="Create a new account on smartmanu.net to access exclusive features and content.">
     <meta name="robots" content="noindex, nofollow">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 4rem;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>404</h1>
-        <p>Page Not Found</p>
-        <p>The page you are looking for does not exist.</p>
-        <a href="index.html" class="btn">Go to Home</a>
-    </div>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">smartmanu.net</a>
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" onclick="toggleMenu()">Home</a></li>
+                    <li><a href="categories/general-machinery.html" onclick="toggleMenu()">General Machinery</a></li>
+                    <li><a href="categories/construction-machinery.html" onclick="toggleMenu()">Construction Machinery</a></li>
+                    <li><a href="categories/cleaning-ventilation.html" onclick="toggleMenu()">Cleaning and Ventilation</a></li>
+                    <li><a href="categories/machine-tools.html" onclick="toggleMenu()">Machine Tools</a></li>
+                    <li><a href="categories/logistics-equipment.html" onclick="toggleMenu()">Logistics Equipment</a></li>
+                    <li><a href="categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>
+                    <li><a href="categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>
+                    <li><a href="categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-box">
+                <h1>Register</h1>
+                <form action="#" method="post" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="agree" name="agree" required>
+                        <label for="agree">I agree to the <a href="terms-of-service.html">Terms of Service</a> and <a href="privacy-policy.html">Privacy Policy</a></label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <div class="auth-links">
+                    <a href="login.html">Already have an account? Login</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2026 smartmanu.net. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
