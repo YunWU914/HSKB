@@ -2,7 +2,14 @@ let articlesData = [];
 
 async function loadArticles() {
     try {
-        const response = await fetch('articles/articles.json');
+        const currentPath = window.location.pathname;
+        let jsonPath = 'articles/articles.json';
+        
+        if (currentPath.includes('/categories/') || currentPath.includes('/articles/')) {
+            jsonPath = '../articles/articles.json';
+        }
+        
+        const response = await fetch(jsonPath);
         articlesData = await response.json();
         return articlesData;
     } catch (error) {
@@ -16,6 +23,15 @@ function renderArticles(category = null) {
     const articlesList = document.getElementById('articlesList');
     if (!articlesList) return;
 
+    const currentPath = window.location.pathname;
+    let basePath = '';
+    
+    if (currentPath.includes('/categories/')) {
+        basePath = '../';
+    } else if (currentPath.includes('/articles/')) {
+        basePath = '../';
+    }
+
     let filteredArticles = [...articlesData];
     
     if (category) {
@@ -28,9 +44,9 @@ function renderArticles(category = null) {
 
     articlesList.innerHTML = sortedArticles.map(article => `
         <article class="article-card">
-            <img src="${article.image}" alt="${article.title}">
+            <img src="${basePath}${article.image}" alt="${article.title}">
             <div class="article-content">
-                <h3><a href="${article.link}">${article.title}</a></h3>
+                <h3><a href="${basePath}${article.link}">${article.title}</a></h3>
                 <p>${article.description}</p>
                 <div class="article-meta">
                     <span>${article.category}</span>
@@ -121,7 +137,7 @@ function renderRelatedArticles(currentArticleId) {
 
     relatedArticlesList.innerHTML = recommended.map(article => `
         <article class="related-article">
-            <img src="${article.image}" alt="${article.title}">
+            <img src="../${article.image}" alt="${article.title}">
             <div class="related-article-content">
                 <h3><a href="../${article.link}">${article.title}</a></h3>
                 <p>${article.description.slice(0, 100)}...</p>

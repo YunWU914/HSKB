@@ -1,72 +1,82 @@
 [
     {
         "id": 1,
-        "title": "CNC Machine Tool Daily Maintenance Guide",
-        "link": "articles/cnc-maintenance-guide.html",
-        "image": "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600",
-        "description": "This article details the daily maintenance essentials for CNC Machine Tools and Tooling Machinery, including spindle maintenance, lubrication system care, cooling system inspection and other key aspects to help extend equipment lifespan.",
-        "category": "Machine Tools and Tooling Machinery",
-        "date": "2026-06-05",
-        "author": "Sarah Liu"
+        "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
+        "link": "articles/seizing-the-manufacturing-trend-high-efficiency-stainless-steel-pipe-production-lines-drive-enterprise-transformation-and-upgrading.html",
+        "image": "images/categories/general-machinery.webp",
+        "description": "This article explores the latest manufacturing trends in stainless steel pipe production, analyzing how high-efficiency production lines are enabling enterprises to transform and upgrade their operations.",
+        "category": "General Machinery",
+        "date": "2026-06-25",
+        "author": "Mike Zhang"
     },
     {
         "id": 2,
-        "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators",
-        "link": "articles/hydraulic-excavator-fault.html",
-        "image": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600",
-        "description": "Analyzes common fault phenomena of hydraulic excavators, including diagnosis methods and solutions for walking weakness, reduced digging efficiency, hydraulic system noise and other issues.",
-        "category": "Construction Machinery",
-        "date": "2026-06-06",
-        "author": "Tom Huang"
-    },
-    {
-        "id": 3,
-        "title": "Design Essentials for Industrial Workshop Ventilation Systems",
-        "link": "articles/industrial-ventilation-design.html",
-        "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
-        "description": "Discusses the design principles of industrial ventilation systems, including key technologies such as air volume calculation, duct layout, and fan selection to ensure workshop air quality standards.",
-        "category": "Cleaning and Ventilation Equipment",
-        "date": "2026-06-07",
-        "author": "Lisa Chen"
-    },
-    {
-        "id": 4,
-        "title": "ASRS and Conveyor Selection Guide",
-        "link": "articles/asrs-conveyor-selection.html",
-        "image": "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600",
-        "description": "Introduces the composition structure of automated storage and retrieval systems, shelf type selection, conveyor system configuration and other contents to help enterprises achieve warehouse automation upgrade.",
-        "category": "Logistics Equipment",
-        "date": "2026-06-08",
-        "author": "James Wu"
-    },
-    {
-        "id": 5,
-        "title": "Hygienic Design Specifications for Food Packaging Machinery",
-        "link": "articles/food-packaging-hygiene.html",
-        "image": "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600",
-        "description": "Explains the hygienic design requirements for food packaging machinery, including material selection, structural design, cleaning methods and other aspects to ensure compliance with food production safety standards.",
-        "category": "Food Machinery",
-        "date": "2026-06-09",
-        "author": "Emma Yang"
-    },
-    {
-        "id": 6,
-        "title": "Industrial 3D Printing Technology Applications and Development Trends",
+        "title": "Industrial 3D Printing Technology Applications and Development Trends - smartmanu.net",
         "link": "articles/3d-printing-industrial.html",
-        "image": "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=600",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Analyzes the application scenarios of industrial 3D printing technology in manufacturing, including technical characteristics of metal printing, plastic printing and future development trends.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-10",
         "author": "Chris Zhao"
     },
     {
-        "id": 7,
-        "title": "Advanced Robotics in Industrial Automation",
+        "id": 3,
+        "title": "Advanced Robotics in Industrial Automation - smartmanu.net",
         "link": "articles/industrial-robotics.html",
-        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600",
+        "image": "images/categories/general-machinery.webp",
         "description": "Explores the latest advancements in industrial robotics technology, including collaborative robots, AI-powered automation, and smart factory integration strategies for improved productivity.",
         "category": "General Machinery",
         "date": "2026-06-10",
         "author": "John Chen"
+    },
+    {
+        "id": 4,
+        "title": "Hygienic Design Specifications for Food Packaging Machinery - smartmanu.net",
+        "link": "articles/food-packaging-hygiene.html",
+        "image": "images/categories/Food Machinery.webp",
+        "description": "Explains the hygienic design requirements for food packaging machinery, including material selection, structural design, cleaning methods and other aspects to ensure compliance with food production safety standards.",
+        "category": "Food Machinery",
+        "date": "2026-06-09",
+        "author": "Emma Yang"
+    },
+    {
+        "id": 5,
+        "title": "ASRS and Conveyor Selection Guide - smartmanu.net",
+        "link": "articles/asrs-conveyor-selection.html",
+        "image": "images/categories/Logistics Equipment.webp",
+        "description": "Introduces the composition structure of automated storage and retrieval systems, shelf type selection, conveyor system configuration and other contents to help enterprises achieve warehouse automation upgrade.",
+        "category": "Logistics Equipment",
+        "date": "2026-06-08",
+        "author": "James Wu"
+    },
+    {
+        "id": 6,
+        "title": "Design Essentials for Industrial Workshop Ventilation Systems - smartmanu.net",
+        "link": "articles/industrial-ventilation-design.html",
+        "image": "images/categories/Cleaning and Ventilation Equipment.webp",
+        "description": "Discusses the design principles of industrial ventilation systems, including key technologies such as air volume calculation, duct layout, and fan selection to ensure workshop air quality standards.",
+        "category": "Cleaning and Ventilation Equipment",
+        "date": "2026-06-07",
+        "author": "Lisa Chen"
+    },
+    {
+        "id": 7,
+        "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators - smartmanu.net",
+        "link": "articles/hydraulic-excavator-fault.html",
+        "image": "images/categories/construction-machinery.webp",
+        "description": "Analyzes common fault phenomena of hydraulic excavators, including diagnosis methods and solutions for walking weakness, reduced digging efficiency, hydraulic system noise and other issues.",
+        "category": "Construction Machinery",
+        "date": "2026-06-06",
+        "author": "Tom Huang"
+    },
+    {
+        "id": 8,
+        "title": "CNC Machine Tool Daily Maintenance Guide - smartmanu.net",
+        "link": "articles/cnc-maintenance-guide.html",
+        "image": "images/categories/Machine Tools and Tooling Machinery.webp",
+        "description": "This article details the daily maintenance essentials for CNC Machine Tools and Tooling Machinery, including spindle maintenance, lubrication system care, cooling system inspection and other key aspects to help extend equipment lifespan.",
+        "category": "Machine Tools and Tooling Machinery",
+        "date": "2026-06-05",
+        "author": "Sarah Liu"
     }
 ]
