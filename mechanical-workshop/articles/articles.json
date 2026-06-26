@@ -1,6 +1,16 @@
 [
     {
         "id": 1,
+        "title": "The Ultimate Guide to Pipe-Making Machine Maintenance: Practical Methods to Extend Equipment Lifespan and Boost Production Efficiency",
+        "link": "articles/TheUltimateGuidetoPipe-MakingMachineMaintenancePracticalMethodstoExtendEquipmentLifespanandBoostProductionEfficiency.html",
+        "image": "images/categories/general-machinery.webp",
+        "description": "A comprehensive guide to pipe-making machine maintenance covering core methods, efficiency strategies, and cost optimization for stainless steel and high-frequency welded pipe production.",
+        "category": "General Machinery",
+        "date": "2026-06-26",
+        "author": "Yun Ng"
+    },
+    {
+        "id": 2,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/seizing-the-manufacturing-trend-high-efficiency-stainless-steel-pipe-production-lines-drive-enterprise-transformation-and-upgrading.html",
         "image": "images/categories/general-machinery.webp",
@@ -10,8 +20,8 @@
         "author": "Mike Zhang"
     },
     {
-        "id": 2,
-        "title": "Industrial 3D Printing Technology Applications and Development Trends - smartmanu.net",
+        "id": 3,
+        "title": "Industrial 3D Printing Technology Applications and Development Trends",
         "link": "articles/3d-printing-industrial.html",
         "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Analyzes the application scenarios of industrial 3D printing technology in manufacturing, including technical characteristics of metal printing, plastic printing and future development trends.",
@@ -20,8 +30,8 @@
         "author": "Chris Zhao"
     },
     {
-        "id": 3,
-        "title": "Advanced Robotics in Industrial Automation - smartmanu.net",
+        "id": 4,
+        "title": "Advanced Robotics in Industrial Automation",
         "link": "articles/industrial-robotics.html",
         "image": "images/categories/general-machinery.webp",
         "description": "Explores the latest advancements in industrial robotics technology, including collaborative robots, AI-powered automation, and smart factory integration strategies for improved productivity.",
@@ -30,8 +40,8 @@
         "author": "John Chen"
     },
     {
-        "id": 4,
-        "title": "Hygienic Design Specifications for Food Packaging Machinery - smartmanu.net",
+        "id": 5,
+        "title": "Hygienic Design Specifications for Food Packaging Machinery",
         "link": "articles/food-packaging-hygiene.html",
         "image": "images/categories/Food Machinery.webp",
         "description": "Explains the hygienic design requirements for food packaging machinery, including material selection, structural design, cleaning methods and other aspects to ensure compliance with food production safety standards.",
@@ -40,8 +50,8 @@
         "author": "Emma Yang"
     },
     {
-        "id": 5,
-        "title": "ASRS and Conveyor Selection Guide - smartmanu.net",
+        "id": 6,
+        "title": "ASRS and Conveyor Selection Guide",
         "link": "articles/asrs-conveyor-selection.html",
         "image": "images/categories/Logistics Equipment.webp",
         "description": "Introduces the composition structure of automated storage and retrieval systems, shelf type selection, conveyor system configuration and other contents to help enterprises achieve warehouse automation upgrade.",
@@ -50,8 +60,8 @@
         "author": "James Wu"
     },
     {
-        "id": 6,
-        "title": "Design Essentials for Industrial Workshop Ventilation Systems - smartmanu.net",
+        "id": 7,
+        "title": "Design Essentials for Industrial Workshop Ventilation Systems",
         "link": "articles/industrial-ventilation-design.html",
         "image": "images/categories/Cleaning and Ventilation Equipment.webp",
         "description": "Discusses the design principles of industrial ventilation systems, including key technologies such as air volume calculation, duct layout, and fan selection to ensure workshop air quality standards.",
@@ -60,8 +70,8 @@
         "author": "Lisa Chen"
     },
     {
-        "id": 7,
-        "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators - smartmanu.net",
+        "id": 8,
+        "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators",
         "link": "articles/hydraulic-excavator-fault.html",
         "image": "images/categories/construction-machinery.webp",
         "description": "Analyzes common fault phenomena of hydraulic excavators, including diagnosis methods and solutions for walking weakness, reduced digging efficiency, hydraulic system noise and other issues.",
@@ -70,8 +80,8 @@
         "author": "Tom Huang"
     },
     {
-        "id": 8,
-        "title": "CNC Machine Tool Daily Maintenance Guide - smartmanu.net",
+        "id": 9,
+        "title": "CNC Machine Tool Daily Maintenance Guide",
         "link": "articles/cnc-maintenance-guide.html",
         "image": "images/categories/Machine Tools and Tooling Machinery.webp",
         "description": "This article details the daily maintenance essentials for CNC Machine Tools and Tooling Machinery, including spindle maintenance, lubrication system care, cooling system inspection and other key aspects to help extend equipment lifespan.",

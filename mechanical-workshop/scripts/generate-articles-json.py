@@ -31,8 +31,11 @@ def extract_metadata_from_html(filepath):
         
         category = category_match.group(1).strip() if category_match else 'General Machinery'
         
+        title = title_match.group(1).strip() if title_match else os.path.basename(filepath).replace('.html', '').replace('-', ' ').title()
+        title = re.sub(r'\s*-\s*smartmanu\.net$', '', title, flags=re.IGNORECASE)
+        
         return {
-            'title': title_match.group(1).strip() if title_match else os.path.basename(filepath).replace('.html', '').replace('-', ' ').title(),
+            'title': title,
             'description': description_match.group(1).strip() if description_match else 'No description available',
             'author': author_match.group(1).strip() if author_match else 'Unknown Author',
             'category': category,
