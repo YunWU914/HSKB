@@ -3,121 +3,121 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
-    <loc>https://smartmanu.net/</loc>
+    <loc>https://www.smartmanu.net/</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/hero/mechanical-gears-industrial-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/hero/mechanical-gears-industrial-machinery.jpg</image:loc>
       <image:title>Mechanical gears industrial machinery - smartmanu.net</image:title>
       <image:caption>Blue metallic mechanical gears and cogwheels for industrial machinery</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/general-machinery.webp</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/general-machinery.webp</image:loc>
       <image:title>Industrial machinery dashboard - smartmanu.net</image:title>
       <image:caption>Industrial machinery equipment dashboard with analytics charts</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/construction-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/construction-machinery.jpg</image:loc>
       <image:title>Construction machinery excavator - smartmanu.net</image:title>
       <image:caption>Heavy construction excavator machinery at building site</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/cleaning-ventilation.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/cleaning-ventilation.jpg</image:loc>
       <image:title>Industrial ventilation system - smartmanu.net</image:title>
       <image:caption>Industrial air ventilation and cleaning system equipment</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/machine-tools.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/machine-tools.jpg</image:loc>
       <image:title>CNC machine tools manufacturing - smartmanu.net</image:title>
       <image:caption>CNC precision machine tools for manufacturing industry</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/logistics-equipment.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/logistics-equipment.jpg</image:loc>
       <image:title>Warehouse logistics conveyor - smartmanu.net</image:title>
       <image:caption>Warehouse automated conveyor belt logistics system</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/food-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/food-machinery.jpg</image:loc>
       <image:title>Food processing machinery - smartmanu.net</image:title>
       <image:caption>Food processing and packaging machinery equipment</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/other-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/other-machinery.jpg</image:loc>
       <image:title>Industrial machinery parts - smartmanu.net</image:title>
       <image:caption>Industrial machinery equipment and mechanical parts</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/hardware-parts.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/hardware-parts.jpg</image:loc>
       <image:title>Mechanical hardware parts - smartmanu.net</image:title>
       <image:caption>Mechanical hardware spare parts and components</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/general-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/general-machinery.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/general-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/general-machinery.jpg</image:loc>
       <image:title>General machinery category - smartmanu.net</image:title>
       <image:caption>Industrial general machinery equipment overview</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/construction-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/construction-machinery.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/construction-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/construction-machinery.jpg</image:loc>
       <image:title>Construction machinery category - smartmanu.net</image:title>
       <image:caption>Heavy construction machinery and equipment</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/cleaning-ventilation.html</loc>
+    <loc>https://www.smartmanu.net/categories/cleaning-ventilation.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/cleaning-ventilation.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/cleaning-ventilation.jpg</image:loc>
       <image:title>Cleaning ventilation category - smartmanu.net</image:title>
       <image:caption>Industrial cleaning and ventilation systems</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/machine-tools.html</loc>
+    <loc>https://www.smartmanu.net/categories/machine-tools.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/machine-tools.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/machine-tools.jpg</image:loc>
       <image:title>Machine tools category - smartmanu.net</image:title>
       <image:caption>CNC machine tools and precision equipment</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/logistics-equipment.html</loc>
+    <loc>https://www.smartmanu.net/categories/logistics-equipment.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/logistics-equipment.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/logistics-equipment.jpg</image:loc>
       <image:title>Logistics equipment category - smartmanu.net</image:title>
       <image:caption>Warehouse and logistics automation equipment</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/food-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/food-machinery.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/food-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/food-machinery.jpg</image:loc>
       <image:title>Food machinery category - smartmanu.net</image:title>
       <image:caption>Food processing and packaging equipment</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/other-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/other-machinery.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/other-machinery.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/other-machinery.jpg</image:loc>
       <image:title>Other machinery category - smartmanu.net</image:title>
       <image:caption>Miscellaneous industrial machinery</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://smartmanu.net/categories/hardware-parts.html</loc>
+    <loc>https://www.smartmanu.net/categories/hardware-parts.html</loc>
     <image:image>
-      <image:loc>https://smartmanu.net/images/categories/hardware-parts.jpg</image:loc>
+      <image:loc>https://www.smartmanu.net/images/categories/hardware-parts.jpg</image:loc>
       <image:title>Hardware parts category - smartmanu.net</image:title>
       <image:caption>Mechanical hardware components and spare parts</image:caption>
     </image:image>

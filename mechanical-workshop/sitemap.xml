@@ -1,118 +1,177 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://smartmanu.net/</loc>
+    <loc>https://www.smartmanu.net/</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/about.html</loc>
+    <loc>https://www.smartmanu.net/about.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/contact.html</loc>
+    <loc>https://www.smartmanu.net/contact.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/privacy-policy.html</loc>
+    <loc>https://www.smartmanu.net/privacy-policy.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/terms-of-service.html</loc>
+    <loc>https://www.smartmanu.net/terms-of-service.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/cookie-policy.html</loc>
+    <loc>https://www.smartmanu.net/cookie-policy.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/dmca.html</loc>
+    <loc>https://www.smartmanu.net/dmca.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/community-guidelines.html</loc>
+    <loc>https://www.smartmanu.net/community-guidelines.html</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/general-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/general-machinery.html</loc>
+    <lastmod>2026-06-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/construction-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/construction-machinery.html</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/cleaning-ventilation.html</loc>
+    <loc>https://www.smartmanu.net/categories/cleaning-ventilation.html</loc>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/machine-tools.html</loc>
+    <loc>https://www.smartmanu.net/categories/machine-tools.html</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/logistics-equipment.html</loc>
+    <loc>https://www.smartmanu.net/categories/logistics-equipment.html</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/food-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/food-machinery.html</loc>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/other-machinery.html</loc>
+    <loc>https://www.smartmanu.net/categories/other-machinery.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/categories/hardware-parts.html</loc>
+    <loc>https://www.smartmanu.net/categories/hardware-parts.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/industrial-robotics.html</loc>
+    <loc>https://www.smartmanu.net/articles/packaging-machinery-tech-trends.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/industrial-ventilation-design.html</loc>
+    <loc>https://www.smartmanu.net/articles/sintered-stone-cutting-machines.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/hydraulic-excavator-fault.html</loc>
+    <loc>https://www.smartmanu.net/articles/sintered-stone-faults-prevention.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/food-packaging-hygiene.html</loc>
+    <loc>https://www.smartmanu.net/articles/vertical-packaging-machine-guide.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/cnc-maintenance-guide.html</loc>
+    <loc>https://www.smartmanu.net/articles/TheUltimateGuidetoPipe-MakingMachineMaintenancePracticalMethodstoExtendEquipmentLifespanandBoostProductionEfficiency.html</loc>
+    <lastmod>2026-06-26</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/asrs-conveyor-selection.html</loc>
+    <loc>https://www.smartmanu.net/articles/seizing-the-manufacturing-trend-high-efficiency-stainless-steel-pipe-production-lines-drive-enterprise-transformation-and-upgrading.html</loc>
+    <lastmod>2026-06-25</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://smartmanu.net/articles/3d-printing-industrial.html</loc>
+    <loc>https://www.smartmanu.net/articles/3d-printing-industrial.html</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/industrial-robotics.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/food-packaging-hygiene.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/asrs-conveyor-selection.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/industrial-ventilation-design.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/hydraulic-excavator-fault.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.smartmanu.net/articles/cnc-maintenance-guide.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

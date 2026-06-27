@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.mechanicalworkshop.com/sitemap.xml
+Sitemap: https://www.smartmanu.net/sitemap.xml
+Sitemap: https://www.smartmanu.net/image-sitemap.xml
 
 Disallow: /admin/
 Disallow: /private/
