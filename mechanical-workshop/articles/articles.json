@@ -1,6 +1,46 @@
 [
     {
         "id": 1,
+        "title": "New Technology Trends in Packaging Machinery: Intelligence, Low Energy Consumption, and Automation Drive Upgrades in the Food and Beverage Industry",
+        "link": "articles/packaging-machinery-tech-trends.html",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
+        "description": "Explore the latest technology trends in packaging machinery, including intelligent control systems, energy-efficient designs, and automation driving upgrades in the food and beverage industry.",
+        "category": "Other Special-purpose Equipment",
+        "date": "2026-06-27",
+        "author": "GU Wang"
+    },
+    {
+        "id": 2,
+        "title": "Demystifying Sintered Stone Cutting Machines: From Bulky to Efficient—The Ultimate Tool for Hard-Material Cutting",
+        "link": "articles/sintered-stone-cutting-machines.html",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
+        "description": "Discover how sintered stone cutting machines evolved from bulky manual tools to precise, efficient equipment using high-pressure water jet and abrasive technology for hard-material processing.",
+        "category": "Other Special-purpose Equipment",
+        "date": "2026-06-27",
+        "author": "Yong Ng"
+    },
+    {
+        "id": 3,
+        "title": "A Must-Read for Sintered Stone Cutting Machine Manufacturers: A Comprehensive Analysis of Common Faults and Preventive Measures",
+        "link": "articles/sintered-stone-faults-prevention.html",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
+        "description": "A comprehensive analysis of common failure modes in sintered stone cutting machines, covering wear, operational errors, and design flaws, with practical preventive measures for manufacturers.",
+        "category": "Other Special-purpose Equipment",
+        "date": "2026-06-27",
+        "author": "Da wang"
+    },
+    {
+        "id": 4,
+        "title": "Vertical Packaging Machine: Operational Precautions and Five Key Advantages Explained (Includes List of Suitable Materials)",
+        "link": "articles/vertical-packaging-machine-guide.html",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
+        "description": "Learn the four key operational precautions and five core advantages of vertical packaging machines, plus a comprehensive list of suitable materials for automated packaging lines.",
+        "category": "Other Special-purpose Equipment",
+        "date": "2026-06-27",
+        "author": "GU Ng"
+    },
+    {
+        "id": 5,
         "title": "The Ultimate Guide to Pipe-Making Machine Maintenance: Practical Methods to Extend Equipment Lifespan and Boost Production Efficiency",
         "link": "articles/TheUltimateGuidetoPipe-MakingMachineMaintenancePracticalMethodstoExtendEquipmentLifespanandBoostProductionEfficiency.html",
         "image": "images/categories/general-machinery.webp",
@@ -10,7 +50,7 @@
         "author": "Yun Ng"
     },
     {
-        "id": 2,
+        "id": 6,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/seizing-the-manufacturing-trend-high-efficiency-stainless-steel-pipe-production-lines-drive-enterprise-transformation-and-upgrading.html",
         "image": "images/categories/general-machinery.webp",
@@ -20,7 +60,7 @@
         "author": "Mike Zhang"
     },
     {
-        "id": 3,
+        "id": 7,
         "title": "Industrial 3D Printing Technology Applications and Development Trends",
         "link": "articles/3d-printing-industrial.html",
         "image": "images/categories/Other Special-purpose Equipment.webp",
@@ -30,7 +70,7 @@
         "author": "Chris Zhao"
     },
     {
-        "id": 4,
+        "id": 8,
         "title": "Advanced Robotics in Industrial Automation",
         "link": "articles/industrial-robotics.html",
         "image": "images/categories/general-machinery.webp",
@@ -40,7 +80,7 @@
         "author": "John Chen"
     },
     {
-        "id": 5,
+        "id": 9,
         "title": "Hygienic Design Specifications for Food Packaging Machinery",
         "link": "articles/food-packaging-hygiene.html",
         "image": "images/categories/Food Machinery.webp",
@@ -50,7 +90,7 @@
         "author": "Emma Yang"
     },
     {
-        "id": 6,
+        "id": 10,
         "title": "ASRS and Conveyor Selection Guide",
         "link": "articles/asrs-conveyor-selection.html",
         "image": "images/categories/Logistics Equipment.webp",
@@ -60,7 +100,7 @@
         "author": "James Wu"
     },
     {
-        "id": 7,
+        "id": 11,
         "title": "Design Essentials for Industrial Workshop Ventilation Systems",
         "link": "articles/industrial-ventilation-design.html",
         "image": "images/categories/Cleaning and Ventilation Equipment.webp",
@@ -70,7 +110,7 @@
         "author": "Lisa Chen"
     },
     {
-        "id": 8,
+        "id": 12,
         "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators",
         "link": "articles/hydraulic-excavator-fault.html",
         "image": "images/categories/construction-machinery.webp",
@@ -80,7 +120,7 @@
         "author": "Tom Huang"
     },
     {
-        "id": 9,
+        "id": 13,
         "title": "CNC Machine Tool Daily Maintenance Guide",
         "link": "articles/cnc-maintenance-guide.html",
         "image": "images/categories/Machine Tools and Tooling Machinery.webp",
