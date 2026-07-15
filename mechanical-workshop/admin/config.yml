@@ -2,5 +2,5 @@ backend:
   name: github
   repo: YunWU914/HSKB
   branch: main
-  base_url: https://hskb-oauth.你的用户名.workers.dev
+  base_url: https://hskb-oauth..1477652021.workers.dev
   auth_scope: repo
