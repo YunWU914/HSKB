@@ -1,6 +1,9 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: YunWU914/HSKB
   branch: main
+  base_url: https://courageous-gnome-93f317.netlify.app
+  auth_scope: repo
 
 media_folder: "mechanical-workshop/images"
 public_folder: "images"
