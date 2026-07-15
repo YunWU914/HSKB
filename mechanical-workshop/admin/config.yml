@@ -1,14 +1,6 @@
 backend:
-  name: github
-  repo: YunWU914/HSKB
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  auth_scope: repo
-
-# 网站根路径（你的 admin 在 /mechanical-workshop/admin/ 下）
-site_url: https://www.smartmanu.net
-display_url: https://www.smartmanu.net
-logo_url: https://www.smartmanu.net/images/logo.png
 
 media_folder: "mechanical-workshop/images"
 public_folder: "images"
