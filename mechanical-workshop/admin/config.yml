@@ -5,6 +5,11 @@ backend:
   base_url: https://api.netlify.com
   auth_scope: repo
 
+# 网站根路径（你的 admin 在 /mechanical-workshop/admin/ 下）
+site_url: https://www.smartmanu.net
+display_url: https://www.smartmanu.net
+logo_url: https://www.smartmanu.net/images/logo.png
+
 media_folder: "mechanical-workshop/images"
 public_folder: "images"
 
@@ -14,9 +19,11 @@ collections:
     folder: "mechanical-workshop/articles"
     create: true
     slug: "{{slug}}"
+    extension: md
+    format: frontmatter
     fields:
       - { label: "标题", name: "title", widget: "string" }
-      - { label: "发布日期", name: "date", widget: "datetime" }
-      - { label: "标签", name: "tags", widget: "list", default: [] }
+      - { label: "发布日期", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "标签", name: "tags", widget: "list", default: [], required: false }
       - { label: "封面图", name: "cover", widget: "image", required: false }
       - { label: "正文", name: "body", widget: "markdown" }
