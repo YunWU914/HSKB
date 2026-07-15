@@ -5,15 +5,15 @@ backend:
   base_url: https://api.netlify.com
   auth_scope: repo
 
-media_folder: "static/images/uploads"
-public_folder: "/images/uploads"
+media_folder: "mechanical-workshop/images"
+public_folder: "images"
 
 collections:
   - name: "articles"
     label: "文章"
-    folder: "content/articles"
+    folder: "mechanical-workshop/articles"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
     fields:
       - { label: "标题", name: "title", widget: "string" }
       - { label: "发布日期", name: "date", widget: "datetime" }
