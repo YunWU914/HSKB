@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSKB 文章编辑器</title>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif; 
+      background: #f0f2f5; 
+      min-height: 100vh;
+    }
+    .login-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    .login-box {
+      background: white; padding: 40px; border-radius: 16px; width: 90%; max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .login-box h2 { margin-bottom: 8px; font-size: 22px; }
+    .login-box p { color: #666; margin-bottom: 20px; font-size: 14px; }
+    .login-box input {
+      width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px;
+      font-size: 14px; margin-bottom: 12px;
+    }
+    .login-box button {
+      width: 100%; padding: 12px; background: #ff0080; color: white; border: none;
+      border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 500;
+    }
+    .login-box button:hover { background: #e00070; }
+    .login-box .hint { margin-top: 12px; font-size: 12px; color: #999; }
+    .login-box .hint a { color: #ff0080; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+    .toolbar {
+      background: white; padding: 20px; border-radius: 12px; margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .toolbar h1 { font-size: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .toolbar input[type="text"] {
+      width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 16px; margin-bottom: 12px;
+    }
+    .toolbar input[type="text"]:focus { outline: none; border-color: #ff0080; }
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: #24292e; color: white; }
+    .btn-primary:hover { background: #000; }
+    .btn-secondary { background: #ff0080; color: white; }
+    .btn-secondary:hover { background: #e00070; }
+    .btn input[type="file"] { display: none; }
+
+    .editor-wrap {
+      background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    #editor { height: 520px; font-size: 16px; }
+    .ql-toolbar { border: none; border-bottom: 1px solid #eee; padding: 12px !important; }
+    .ql-container { border: none; font-size: 16px; }
+    .ql-editor { padding: 24px; line-height: 1.8; }
+
+    .status {
+      margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 14px;
+      display: none;
+    }
+    .status.show { display: block; }
+    .status.success { background: #d4edda; color: #155724; }
+    .status.error { background: #f8d7da; color: #721c24; }
+    .status.info { background: #d1ecf1; color: #0c5460; }
+
+    .footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- 登录框 -->
+  <div class="login-modal" id="loginModal">
+    <div class="login-box">
+      <h2>🔐 编辑器登录</h2>
+      <p>请输入 GitHub Personal Access Token 以继续</p>
+      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+      <button onclick="saveToken()">进入编辑器</button>
+      <p class="hint">
+        没有 Token？<a href="https://github.com/settings/tokens" target="_blank">去 GitHub 生成</a>（勾选 repo 权限）<br>
+        Token 仅保存在本机浏览器，不会上传到其他服务器
+      </p>
+    </div>
+  </div>
+
+  <!-- 编辑器主体 -->
+  <div class="container" id="editorContainer" style="display:none;">
+    <div class="toolbar">
+      <h1>✍️ 写文章</h1>
+      <input type="text" id="articleTitle" placeholder="输入文章标题...">
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="publishArticle()">💾 保存并发布</button>
+        <label class="btn btn-secondary">
+          🖼️ 上传图片
+          <input type="file" accept="image/*" onchange="uploadImage(this)">
+        </label>
+      </div>
+      <div id="status" class="status"></div>
+    </div>
+
+    <div class="editor-wrap">
+      <div id="editor"></div>
+    </div>
+
+    <div class="footer">
+      HSKB 内容管理系统 · 文章将保存至 GitHub 仓库
+    </div>
+  </div>
+
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <script>
+    const REPO = 'YunWU914/HSKB';
+    const BRANCH = 'main';
+    const ARTICLES_PATH = 'mechanical-workshop/articles';
+    const IMAGES_PATH = 'mechanical-workshop/images';
+
+    let token = localStorage.getItem('hskb_editor_token');
+    let quill;
+
+    // 检查登录
+    function init() {
+      if (!token) {
+        document.getElementById('loginModal').style.display = 'flex';
+      } else {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('editorContainer').style.display = 'block';
+        startEditor();
+      }
+    }
+
+    function saveToken() {
+      const val = document.getElementById('tokenInput').value.trim();
+      if (val && val.startsWith('ghp_')) {
+        token = val;
+        localStorage.setItem('hskb_editor_token', token);
+        init();
+      } else {
+        alert('请输入正确的 GitHub Token（以 ghp_ 开头）');
+      }
+    }
+
+    function startEditor() {
+      quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: '从这里开始写文章，支持文字排版、插入图片...',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        }
+      });
+    }
+
+    // 上传图片
+    async function uploadImage(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      if (file.size > 5 * 1024 * 1024) {
+        showStatus('图片不能超过 5MB', 'error');
+        return;
+      }
+
+      showStatus('正在上传图片...', 'info');
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64 = e.target.result.split(',')[1];
+        const ext = file.name.split('.').pop().toLowerCase();
+        const filename = 'img-' + Date.now() + '.' + ext;
+
+        try {
+          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'token ' + token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: 'Upload image: ' + filename,
+              content: base64,
+              branch: BRANCH
+            })
+          });
+
+          if (res.ok) {
+            const range = quill.getSelection() || { index: 0 };
+            quill.insertEmbed(range.index, 'image', `../images/${filename}`);
+            quill.setSelection(range.index + 1);
+            showStatus('✅ 图片上传成功，已插入文章', 'success');
+          } else {
+            const err = await res.json();
+            showStatus('上传失败: ' + (err.message || '未知错误'), 'error');
+          }
+        } catch(e) {
+          showStatus('网络错误: ' + e.message, 'error');
+        }
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    }
+
+    // 发布文章
+    async function publishArticle() {
+      const title = document.getElementById('articleTitle').value.trim();
+      if (!title) {
+        alert('请输入文章标题');
+        return;
+      }
+
+      const content = quill.root.innerHTML;
+      if (!content || content === '<p><br></p>') {
+        alert('文章内容不能为空');
+        return;
+      }
+
+      // 生成文件名：日期-标题.html
+      const date = new Date();
+      const dateStr = date.toISOString().split('T')[0];
+      const slug = title.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '-').replace(/-+/g, '-').toLowerCase();
+      const filename = `${dateStr}-${slug}.html`;
+
+      // 包装成完整 HTML
+      const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <article class="article-page">
+    <header class="article-header">
+      <h1>${title}</h1>
+      <time>${dateStr}</time>
+    </header>
+    <div class="article-content">
+${content}
+    </div>
+  </article>
+</body>
+</html>`;
+
+      // 转 base64
+      const base64 = btoa(unescape(encodeURIComponent(html)));
+
+      showStatus('正在保存文章...', 'info');
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARTICLES_PATH}/${filename}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'token ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Add article: ' + title,
+            content: base64,
+            branch: BRANCH
+          })
+        });
+
+        if (res.ok) {
+          showStatus('✅ 文章发布成功！约 2 分钟后网站自动更新', 'success');
+          document.getElementById('articleTitle').value = '';
+          quill.setContents([]);
+        } else {
+          const err = await res.json();
+          if (res.status === 401) {
+            showStatus('Token 无效或已过期，请重新登录', 'error');
+            localStorage.removeItem('hskb_editor_token');
+            setTimeout(() => location.reload(), 2000);
+          } else {
+            showStatus('保存失败: ' + (err.message || '未知错误'), 'error');
+          }
+        }
+      } catch(e) {
+        showStatus('网络错误: ' + e.message, 'error');
+      }
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = 'status show ' + type;
+      if (type === 'success') {
+        setTimeout(() => el.classList.remove('show'), 6000);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
