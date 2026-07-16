@@ -8,11 +8,11 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; }
-    #login, #token-page { display: flex; justify-content: center; align-items: center; height: 100vh; }
+    #login-box { display: flex; justify-content: center; align-items: center; height: 100vh; }
     .box { background: white; padding: 48px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 90%; max-width: 400px; text-align: center; }
     .logo { width: 64px; height: 64px; margin: 0 auto 24px; background: #ff0080; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold; }
     h2 { font-size: 24px; margin-bottom: 8px; }
-    p { color: #666; margin-bottom: 32px; font-size: 14px; }
+    p { color: #666; margin-bottom: 24px; font-size: 14px; }
     input { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
     button { width: 100%; padding: 12px; background: #24292e; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; }
     button:hover { background: #000; }
@@ -22,69 +22,60 @@
   </style>
 </head>
 <body>
-  <!-- 第一层：密码保护 -->
-  <div id="login">
+  <div id="login-box">
     <div class="box">
       <div class="logo">H</div>
       <h2>HSKB 内容管理</h2>
-      <p>请输入管理员密码</p>
+      <p id="msg">请输入管理员密码</p>
       <input type="password" id="admin-pass" placeholder="密码" />
-      <button onclick="checkPassword()">进入</button>
-      <p class="error" id="pass-error"></p>
-    </div>
-  </div>
-
-  <!-- 第二层：Token 输入 -->
-  <div id="token-page" style="display:none;">
-    <div class="box">
-      <div class="logo">H</div>
-      <h2>HSKB 内容管理</h2>
-      <p>请输入 GitHub Personal Access Token</p>
-      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" />
-      <button onclick="login()">登录</button>
-      <p class="hint"><a href="https://github.com/settings/tokens" target="_blank">去 GitHub 生成 Token</a>（勾选 repo 权限）</p>
+      <input type="password" id="token" placeholder="GitHub Token" style="display:none;" />
+      <button onclick="go()">进入</button>
+      <p class="hint"><a href="https://github.com/settings/tokens" target="_blank">去 GitHub 生成 Token</a></p>
+      <p class="error" id="err"></p>
     </div>
   </div>
 
   <script>
-    // ==================== 修改这里！设置你的管理员密码 ====================
-    var ADMIN_PASSWORD = 'HsKb@2026!Admin';
-    // =================================================================
-    
-    function checkPassword() {
-      var pass = document.getElementById('admin-pass').value;
-      if (pass === ADMIN_PASSWORD) {
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('token-page').style.display = 'flex';
+    var ADMIN_PASSWORD = 'HsKb@2026!Admin';  // ← 改成你的密码
+    var step = 1;
+
+    function go() {
+      var err = document.getElementById('err');
+      if (step === 1) {
+        if (document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
+          step = 2;
+          document.getElementById('msg').textContent = '请输入 GitHub Token';
+          document.getElementById('admin-pass').style.display = 'none';
+          document.getElementById('token').style.display = 'block';
+          err.textContent = '';
+        } else {
+          err.textContent = '密码错误';
+        }
       } else {
-        document.getElementById('pass-error').textContent = '密码错误';
+        var token = document.getElementById('token').value.trim();
+        if (token && token.startsWith('ghp_')) {
+          localStorage.setItem('netlify-cms-user', JSON.stringify({ token: token, provider: 'github' }));
+          loadCMS();
+        } else {
+          err.textContent = 'Token 错误';
+        }
       }
     }
-    
-    function login() {
-      var token = document.getElementById('token').value.trim();
-      if (token && token.startsWith('ghp_')) {
-        // 关键：必须保存到 netlify-cms-user，Decap CMS 才能读取
-        localStorage.setItem('netlify-cms-user', JSON.stringify({
-          token: token,
-          provider: 'github'
-        }));
-        location.reload();
-      } else {
-        alert('请输入正确的 GitHub Token（以 ghp_ 开头）');
-      }
+
+    function loadCMS() {
+      document.getElementById('login-box').style.display = 'none';
+      var s = document.createElement('script');
+      s.src = './decap-cms.js';  // ← 本地文件，不走 CDN
+      document.body.appendChild(s);
     }
-    
-    // 检查是否已登录（Decap CMS 会读取 netlify-cms-user）
+
+    // 检查是否已登录
     var user = localStorage.getItem('netlify-cms-user');
     if (user) {
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('token-page').style.display = 'none';
-      
-      // 加载 Decap CMS
-      var script = document.createElement('script');
-      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-      document.body.appendChild(script);
+      try {
+        var d = JSON.parse(user);
+        if (d.token && d.token.startsWith('ghp_')) { loadCMS(); }
+      } catch(e) { localStorage.removeItem('netlify-cms-user'); }
     }
   </script>
 </body>
