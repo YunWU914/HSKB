@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HSKB 文章编辑器</title>
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -247,7 +247,6 @@
           🖼️ 上传文章图片
           <input type="file" accept="image/*" onchange="uploadImage(this)">
         </label>
-        <button class="btn btn-ghost" onclick="insertTable()">📊 插入表格</button>
       </div>
       <div id="status" class="status"></div>
     </div>
@@ -261,7 +260,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
   <script>
     const REPO = 'YunWU914/HSKB';
     const BRANCH = 'main';
@@ -298,20 +297,21 @@
 
     function startEditor() {
       quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: '从这里开始写文章，支持文字排版、插入图片、插入表格...',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'align': [] }],
-            ['link', 'image'],
-            ['clean']
-          ]
-        }
-      });
+  theme: 'snow',
+  placeholder: '从这里开始写文章，支持文字排版、插入图片、插入表格...',
+  modules: {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      [{ 'table': [] }],   // ← Quill 2.0 原生表格按钮
+      ['clean']
+    ]
+  }
+});
     }
 
     function toggleSeo() {
@@ -362,30 +362,6 @@
         <option value="活动公告">活动公告</option>
         <option value="未分类">未分类</option>
       `;
-    }
-
-    // 插入表格
-    function insertTable() {
-      const rows = parseInt(prompt('请输入表格行数：', '3'));
-      const cols = parseInt(prompt('请输入表格列数：', '3'));
-      if (!rows || !cols || rows < 1 || cols < 1 || rows > 20 || cols > 10) {
-        alert('请输入有效的行列数（行 1-20，列 1-10）');
-        return;
-      }
-      
-      let html = '<table><tbody>';
-      for (let i = 0; i < rows; i++) {
-        html += '<tr>';
-        for (let j = 0; j < cols; j++) {
-          html += '<td>单元格</td>';
-        }
-        html += '</tr>';
-      }
-      html += '</tbody></table><p><br></p>';
-      
-      const range = quill.getSelection() || { index: quill.getLength() };
-      quill.clipboard.dangerouslyPasteHTML(range.index, html);
-      quill.setSelection(range.index + 1);
     }
 
     // 上传封面图片
