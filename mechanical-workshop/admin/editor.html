@@ -41,12 +41,12 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .toolbar h1 { font-size: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    
+
     .section-title {
       font-size: 14px; font-weight: 600; color: #333; margin: 16px 0 10px;
       padding-bottom: 6px; border-bottom: 1px solid #f0f0f0;
     }
-    
+
     .meta-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
     .meta-item { flex: 1; min-width: 200px; }
     .meta-item label {
@@ -60,13 +60,13 @@
       outline: none; border-color: #ff0080; background: white;
     }
     .meta-item textarea { resize: vertical; min-height: 60px; }
-    
+
     .toolbar input[type="text"]#articleTitle {
       width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px;
       font-size: 18px; font-weight: 600; margin-bottom: 12px;
     }
     .toolbar input[type="text"]#articleTitle:focus { outline: none; border-color: #ff0080; }
-    
+
     /* 文档属性复选框 */
     .attr-group {
       display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
@@ -78,7 +78,7 @@
     .attr-item input[type="checkbox"] {
       width: 16px; height: 16px; cursor: pointer;
     }
-    
+
     /* 封面图片 */
     .cover-preview {
       width: 200px; height: 120px; border: 2px dashed #ddd; border-radius: 8px;
@@ -86,7 +86,7 @@
       font-size: 13px; margin-top: 8px; overflow: hidden; background: #fafafa;
     }
     .cover-preview img { width: 100%; height: 100%; object-fit: cover; }
-    
+
     /* SEO 折叠面板 */
     .seo-toggle {
       display: flex; align-items: center; gap: 8px; cursor: pointer;
@@ -97,7 +97,7 @@
       display: none; background: #fafafa; padding: 16px; border-radius: 8px; margin-bottom: 12px;
     }
     .seo-panel.open { display: block; }
-    
+
     .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     .btn {
       padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
@@ -119,12 +119,29 @@
     .ql-toolbar { border: none; border-bottom: 1px solid #eee; padding: 12px !important; }
     .ql-container { border: none; font-size: 16px; }
     .ql-editor { padding: 24px; line-height: 1.8; }
-    /* 表格样式 */
-    .ql-editor table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-    .ql-editor table td, .ql-editor table th {
-      border: 1px solid #ddd; padding: 8px 12px; text-align: left;
+    /* 表格样式 - 自适应宽度 + 自动换行 */
+    .ql-editor table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      table-layout: auto;           /* 列宽根据内容自适应 */
     }
-    .ql-editor table th { background: #f5f5f5; font-weight: 600; }
+    .ql-editor table td,
+    .ql-editor table th {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+      word-break: break-word;         /* 长单词/URL 自动换行 */
+      overflow-wrap: break-word;      /* 兼容处理 */
+      white-space: normal;            /* 允许换行 */
+      vertical-align: top;            /* 内容顶部对齐 */
+      min-width: 40px;                /* 最小宽度，避免太窄 */
+    }
+    .ql-editor table th {
+      background: #f5f5f5;
+      font-weight: 600;
+      white-space: nowrap;            /* 表头默认不换行，保持整洁 */
+    }
 
     .status {
       margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 14px;
@@ -136,7 +153,115 @@
     .status.info { background: #d1ecf1; color: #0c5460; }
 
     .footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+
+    /* ===== 表格选择器样式 - 与 Quill toolbar 原生按钮对齐 ===== */
+    .ql-formats .ql-table-picker-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 24px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      border-radius: 3px;
+      padding: 0;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+    .ql-formats .ql-table-picker-btn:hover {
+      background: #f0f0f0;
+    }
+    .ql-formats .ql-table-picker-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: #444;
+      pointer-events: none;
+    }
+    .ql-formats .ql-table-picker-btn.active {
+      background: #e0e0e0;
+    }
+
+    /* 下拉面板 */
+    .table-picker-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      padding: 12px;
+      z-index: 100;
+      display: none;
+      min-width: 220px;
+    }
+    .table-picker-dropdown.show {
+      display: block;
+    }
+    .table-picker-info {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      text-align: center;
+      height: 18px;
+      line-height: 18px;
+      font-weight: 500;
+    }
+    .table-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
+    }
+    .table-picker-cell {
+      width: 22px;
+      height: 22px;
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+      cursor: pointer;
+      background: #fafafa;
+      transition: all 0.08s;
+    }
+    .table-picker-cell:hover,
+    .table-picker-cell.active {
+      background: #ff0080;
+      border-color: #ff0080;
+    }
+    .table-picker-footer {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .table-picker-footer span {
+      font-size: 12px;
+      color: #999;
+    }
+    .table-picker-footer button {
+      font-size: 12px;
+      padding: 4px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #ff0080;
+      color: white;
+      font-weight: 500;
+    }
+    .table-picker-footer button:hover {
+      background: #e00070;
+    }
+    .table-picker-footer button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* 让 ql-formats 作为定位上下文 */
+    .ql-formats { position: relative; }
   </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -158,10 +283,10 @@
   <div class="container" id="editorContainer" style="display:none;">
     <div class="toolbar">
       <h1>✍️ 发布文档</h1>
-      
+
       <!-- 基础内容 -->
       <div class="section-title">📋 基础内容</div>
-      
+
       <div class="meta-row">
         <div class="meta-item" style="flex: 2;">
           <label>* 文档标题</label>
@@ -172,7 +297,7 @@
           <input type="text" id="articleSubtitle" placeholder="输入副标题（可选）">
         </div>
       </div>
-      
+
       <div class="meta-row">
         <div class="meta-item">
           <label>📅 发布日期</label>
@@ -189,17 +314,17 @@
           </select>
         </div>
       </div>
-      
-      <!-- 文档属性 -->
-      <div class="section-title">🏷️ 文档属性</div>
+
+      <!-- Document Attributes -->
+      <div class="section-title">🏷️ Document Attributes</div>
       <div class="attr-group">
-        <label class="attr-item"><input type="checkbox" id="attrTop"> 头条</label>
-        <label class="attr-item"><input type="checkbox" id="attrRec"> 推荐</label>
-        <label class="attr-item"><input type="checkbox" id="attrPush"> 加推</label>
-        <label class="attr-item"><input type="checkbox" id="attrBold"> 标粗</label>
-        <label class="attr-item"><input type="checkbox" id="attrImg"> 有图</label>
+        <label class="attr-item"><input type="checkbox" id="attrTop"> Top Story</label>
+        <label class="attr-item"><input type="checkbox" id="attrRec"> Recommended</label>
+        <label class="attr-item"><input type="checkbox" id="attrPush"> Featured</label>
+        <label class="attr-item"><input type="checkbox" id="attrBold"> Bold Title</label>
+        <label class="attr-item"><input type="checkbox" id="attrImg"> With Image</label>
       </div>
-      
+
       <!-- 标签 & 封面 -->
       <div class="meta-row">
         <div class="meta-item" style="flex: 2;">
@@ -215,7 +340,7 @@
           <div class="cover-preview" id="coverPreview">暂无封面</div>
         </div>
       </div>
-      
+
       <!-- SEO 优化（可折叠） -->
       <div class="seo-toggle" onclick="toggleSeo()">
         <span id="seoArrow">▶</span> 🔍 SEO 优化设置
@@ -295,23 +420,204 @@
       }
     }
 
+    /* ========== 表格选择器 ========== */
+    function initTablePicker() {
+      const toolbar = document.querySelector('.ql-toolbar');
+      if (!toolbar) return;
+
+      // 找到最后一个 ql-formats，把按钮插进去；如果没有就新建一个
+      let formats = toolbar.querySelector('.ql-formats:last-child');
+      if (!formats) {
+        formats = document.createElement('span');
+        formats.className = 'ql-formats';
+        toolbar.appendChild(formats);
+      }
+
+      // 创建按钮
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ql-table-picker-btn';
+      btn.title = '插入表格';
+      btn.innerHTML = `<svg viewBox="0 0 18 18"><rect x="3" y="3" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="15" stroke="currentColor" stroke-width="1.5"/><line x1="11" y1="3" x2="11" y2="15" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="11" x2="15" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>`;
+      formats.appendChild(btn);
+
+      // 创建下拉面板
+      const dropdown = document.createElement('div');
+      dropdown.className = 'table-picker-dropdown';
+      dropdown.innerHTML = `
+        <div class="table-picker-info" id="tablePickerInfo">0列 x 0行</div>
+        <div class="table-picker-grid" id="tablePickerGrid"></div>
+        <div class="table-picker-footer">
+          <span>滑动选择大小</span>
+          <button type="button" id="tablePickerConfirm" disabled>插入</button>
+        </div>
+      `;
+      formats.appendChild(dropdown);
+
+      const grid = dropdown.querySelector('#tablePickerGrid');
+      const info = dropdown.querySelector('#tablePickerInfo');
+      const confirmBtn = dropdown.querySelector('#tablePickerConfirm');
+
+      const MAX_COLS = 10;
+      const MAX_ROWS = 8;
+      let selectedCols = 0;
+      let selectedRows = 0;
+
+      // 创建网格
+      for (let r = 1; r <= MAX_ROWS; r++) {
+        for (let c = 1; c <= MAX_COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'table-picker-cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          grid.appendChild(cell);
+        }
+      }
+
+      function highlight(rows, cols) {
+        grid.querySelectorAll('.table-picker-cell').forEach(cell => {
+          const r = parseInt(cell.dataset.row);
+          const c = parseInt(cell.dataset.col);
+          if (r <= rows && c <= cols) {
+            cell.classList.add('active');
+          } else {
+            cell.classList.remove('active');
+          }
+        });
+        selectedCols = cols;
+        selectedRows = rows;
+        info.textContent = cols + '列 x ' + rows + '行';
+        confirmBtn.disabled = !(rows > 0 && cols > 0);
+      }
+
+      // 鼠标滑动选择
+      grid.addEventListener('mouseover', function(e) {
+        if (e.target.classList.contains('table-picker-cell')) {
+          const r = parseInt(e.target.dataset.row);
+          const c = parseInt(e.target.dataset.col);
+          highlight(r, c);
+        }
+      });
+
+      // 点击网格直接插入
+      grid.addEventListener('click', function(e) {
+        if (e.target.classList.contains('table-picker-cell')) {
+          const r = parseInt(e.target.dataset.row);
+          const c = parseInt(e.target.dataset.col);
+          insertTable(r, c);
+          dropdown.classList.remove('show');
+          btn.classList.remove('active');
+          highlight(0, 0);
+        }
+      });
+
+      // 确认按钮
+      confirmBtn.addEventListener('click', function() {
+        if (selectedRows > 0 && selectedCols > 0) {
+          insertTable(selectedRows, selectedCols);
+        }
+        dropdown.classList.remove('show');
+        btn.classList.remove('active');
+        highlight(0, 0);
+      });
+
+      // 切换下拉显示
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.contains('show');
+        // 先关闭所有其他的
+        document.querySelectorAll('.table-picker-dropdown.show').forEach(d => d.classList.remove('show'));
+        document.querySelectorAll('.ql-table-picker-btn.active').forEach(b => b.classList.remove('active'));
+        if (!isOpen) {
+          dropdown.classList.add('show');
+          btn.classList.add('active');
+          highlight(0, 0);
+        }
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', function(e) {
+        if (!formats.contains(e.target)) {
+          dropdown.classList.remove('show');
+          btn.classList.remove('active');
+          highlight(0, 0);
+        }
+      });
+    }
+
+    function insertTable(rows, cols) {
+      const range = quill.getSelection(true);
+      if (!range) return;
+
+      // 使用 Quill 原生 table 模块
+      const tableModule = quill.getModule('table');
+      if (tableModule && typeof tableModule.insertTable === 'function') {
+        // 先确保有换行，避免表格和文字粘在一起
+        quill.insertText(range.index, '\n', Quill.sources.USER);
+        tableModule.insertTable(rows, cols);
+        // 在表格后再插入一个空段落，方便删除表格（光标移到表格后面按退格即可删除）
+        const newRange = quill.getSelection(true);
+        if (newRange) {
+          quill.insertText(newRange.index + newRange.length, '\n', Quill.sources.USER);
+        }
+      } else {
+        // fallback: 手动构建表格 HTML
+        let html = '<table><tbody>';
+        for (let r = 0; r < rows; r++) {
+          html += '<tr>';
+          for (let c = 0; c < cols; c++) {
+            html += '<td><br></td>';
+          }
+          html += '</tr>';
+        }
+        html += '</tbody></table><p><br></p>';
+        quill.clipboard.dangerouslyPasteHTML(range.index, html);
+      }
+
+      // 聚焦编辑器
+      quill.focus();
+    }
+    /* ========== 表格选择器结束 ========== */
+
     function startEditor() {
       quill = new Quill('#editor', {
-  theme: 'snow',
-  placeholder: '从这里开始写文章，支持文字排版、插入图片、插入表格...',
-  modules: {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['link', 'image'],
-      [{ 'table': [] }],   // ← Quill 2.0 原生表格按钮
-      ['clean']
-    ]
-  }
-});
+        theme: 'snow',
+        placeholder: '从这里开始写文章，支持文字排版、插入图片、插入表格...',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            ['link', 'image'],
+            ['clean']
+          ],
+          table: true
+        }
+      });
+
+      // 初始化表格选择器（在 Quill toolbar 渲染完成后）
+      setTimeout(initTablePicker, 200);
+
+      // 修复：监听 backspace，当光标在表格后的空行时，允许删除表格
+      quill.keyboard.addBinding({ key: 'Backspace' }, function(range, context) {
+        // 如果光标在表格后面的空段落，且按 backspace，删除前面的表格
+        const [line, offset] = quill.getLine(range.index);
+        if (line && line.domNode && line.domNode.tagName === 'P' && 
+            line.domNode.innerHTML === '<br>' && offset === 0) {
+          const prev = line.prev;
+          if (prev && prev.domNode && prev.domNode.tagName === 'TABLE') {
+            const tableBlot = prev;
+            const tableParent = tableBlot.parent;
+            const tableIndex = tableParent.children.indexOf(tableBlot);
+            const deleteLength = tableBlot.length();
+            quill.deleteText(tableBlot.offset(), deleteLength, Quill.sources.USER);
+            return false; // 阻止默认行为
+          }
+        }
+        return true; // 允许默认行为
+      });
     }
 
     function toggleSeo() {
@@ -327,7 +633,7 @@
         const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CATEGORIES_PATH}?ref=${BRANCH}`, {
           headers: { 'Authorization': 'token ' + token }
         });
-        
+
         if (res.ok) {
           const data = await res.json();
           const categories = data
@@ -336,7 +642,7 @@
               const name = item.name.replace(/\.(html|md)$/, '');
               return { name, path: item.path };
             });
-          
+
           if (categories.length > 0) {
             select.innerHTML = '<option value="">请选择分类</option>' + 
               categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
@@ -465,18 +771,18 @@
       const author = document.getElementById('articleAuthor').value.trim() || '匿名';
       const category = document.getElementById('articleCategory').value || '未分类';
       const tags = document.getElementById('articleTags').value.trim();
-      
+
       const attrs = [];
       if (document.getElementById('attrTop').checked) attrs.push('头条');
       if (document.getElementById('attrRec').checked) attrs.push('推荐');
       if (document.getElementById('attrPush').checked) attrs.push('加推');
       if (document.getElementById('attrBold').checked) attrs.push('标粗');
       if (document.getElementById('attrImg').checked) attrs.push('有图');
-      
+
       const seoTitle = document.getElementById('seoTitle').value.trim();
       const seoKeywords = document.getElementById('seoKeywords').value.trim();
       const seoDesc = document.getElementById('seoDesc').value.trim();
-      
+
       if (!title) {
         alert('请输入文章标题');
         return;
@@ -499,7 +805,7 @@
       if (seoTitle) metaTags += `  <meta name="title" content="${seoTitle}">\n`;
       if (seoKeywords) metaTags += `  <meta name="keywords" content="${seoKeywords}">\n`;
       if (seoDesc) metaTags += `  <meta name="description" content="${seoDesc}">\n`;
-      
+
       const attrStr = attrs.length > 0 ? attrs.join(',') : '';
       const tagsHtml = tags ? tags.split(/[,，]/).map(t => `<span class="tag">${t.trim()}</span>`).join('') : '';
 
