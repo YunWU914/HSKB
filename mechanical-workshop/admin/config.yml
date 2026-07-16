@@ -2,7 +2,7 @@ backend:
   name: github
   repo: YunWU914/HSKB
   branch: main
-  base_url: https://hskb-oauth.1477652021.workers.dev
+  base_url: https://api.netlify.com
   auth_scope: repo
 
 media_folder: "mechanical-workshop/images"
