@@ -41,12 +41,27 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .toolbar h1 { font-size: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .toolbar input[type="text"] {
-      width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px;
-      font-size: 16px; margin-bottom: 12px;
+    
+    .meta-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .meta-item { flex: 1; min-width: 200px; }
+    .meta-item label {
+      display: block; font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 500;
     }
-    .toolbar input[type="text"]:focus { outline: none; border-color: #ff0080; }
-    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .meta-item input, .meta-item select {
+      width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 14px; background: #fafafa;
+    }
+    .meta-item input:focus, .meta-item select:focus {
+      outline: none; border-color: #ff0080; background: white;
+    }
+    
+    .toolbar input[type="text"]#articleTitle {
+      width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 18px; font-weight: 600; margin-bottom: 12px;
+    }
+    .toolbar input[type="text"]#articleTitle:focus { outline: none; border-color: #ff0080; }
+    
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     .btn {
       padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
       font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
@@ -61,7 +76,7 @@
       background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       overflow: hidden;
     }
-    #editor { height: 520px; font-size: 16px; }
+    #editor { height: 480px; font-size: 16px; }
     .ql-toolbar { border: none; border-bottom: 1px solid #eee; padding: 12px !important; }
     .ql-container { border: none; font-size: 16px; }
     .ql-editor { padding: 24px; line-height: 1.8; }
@@ -98,7 +113,28 @@
   <div class="container" id="editorContainer" style="display:none;">
     <div class="toolbar">
       <h1>✍️ 写文章</h1>
+      
+      <!-- 标题 -->
       <input type="text" id="articleTitle" placeholder="输入文章标题...">
+      
+      <!-- 元信息：日期、作者、分类 -->
+      <div class="meta-row">
+        <div class="meta-item">
+          <label>📅 发布日期</label>
+          <input type="date" id="articleDate">
+        </div>
+        <div class="meta-item">
+          <label>✏️ 作者</label>
+          <input type="text" id="articleAuthor" placeholder="输入作者名字">
+        </div>
+        <div class="meta-item">
+          <label>📂 分类</label>
+          <select id="articleCategory">
+            <option value="">加载中...</option>
+          </select>
+        </div>
+      </div>
+
       <div class="btn-group">
         <button class="btn btn-primary" onclick="publishArticle()">💾 保存并发布</button>
         <label class="btn btn-secondary">
@@ -124,11 +160,12 @@
     const BRANCH = 'main';
     const ARTICLES_PATH = 'mechanical-workshop/articles';
     const IMAGES_PATH = 'mechanical-workshop/images';
+    const CATEGORIES_PATH = 'mechanical-workshop/categories';
 
     let token = localStorage.getItem('hskb_editor_token');
     let quill;
 
-    // 检查登录
+    // 初始化
     function init() {
       if (!token) {
         document.getElementById('loginModal').style.display = 'flex';
@@ -136,6 +173,9 @@
         document.getElementById('loginModal').style.display = 'none';
         document.getElementById('editorContainer').style.display = 'block';
         startEditor();
+        loadCategories();
+        // 默认日期为今天
+        document.getElementById('articleDate').value = new Date().toISOString().split('T')[0];
       }
     }
 
@@ -166,6 +206,40 @@
           ]
         }
       });
+    }
+
+    // 从 GitHub 读取分类列表
+    async function loadCategories() {
+      const select = document.getElementById('articleCategory');
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CATEGORIES_PATH}?ref=${BRANCH}`, {
+          headers: { 'Authorization': 'token ' + token }
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          // 过滤出文件夹和.html/.md文件，提取名称
+          const categories = data
+            .filter(item => item.type === 'dir' || item.name.endsWith('.html') || item.name.endsWith('.md'))
+            .map(item => {
+              const name = item.name.replace(/\.(html|md)$/, '');
+              return { name, path: item.path };
+            });
+          
+          if (categories.length > 0) {
+            select.innerHTML = categories.map(c => 
+              `<option value="${c.name}">${c.name}</option>`
+            ).join('');
+          } else {
+            select.innerHTML = '<option value="未分类">未分类</option>';
+          }
+        } else {
+          select.innerHTML = '<option value="未分类">未分类</option><option value="新闻">新闻</option><option value="教程">教程</option><option value="活动">活动</option>';
+        }
+      } catch(e) {
+        // 如果读取失败，提供默认分类
+        select.innerHTML = '<option value="未分类">未分类</option><option value="新闻">新闻</option><option value="教程">教程</option><option value="活动">活动</option><option value="产品">产品</option>';
+      }
     }
 
     // 上传图片
@@ -220,8 +294,16 @@
     // 发布文章
     async function publishArticle() {
       const title = document.getElementById('articleTitle').value.trim();
+      const date = document.getElementById('articleDate').value;
+      const author = document.getElementById('articleAuthor').value.trim() || '匿名';
+      const category = document.getElementById('articleCategory').value || '未分类';
+      
       if (!title) {
         alert('请输入文章标题');
+        return;
+      }
+      if (!date) {
+        alert('请选择发布日期');
         return;
       }
 
@@ -231,11 +313,9 @@
         return;
       }
 
-      // 生成文件名：日期-标题.html
-      const date = new Date();
-      const dateStr = date.toISOString().split('T')[0];
+      // 生成文件名
       const slug = title.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '-').replace(/-+/g, '-').toLowerCase();
-      const filename = `${dateStr}-${slug}.html`;
+      const filename = `${date}-${slug}.html`;
 
       // 包装成完整 HTML
       const html = `<!DOCTYPE html>
@@ -249,8 +329,12 @@
 <body>
   <article class="article-page">
     <header class="article-header">
+      <span class="article-category">${category}</span>
       <h1>${title}</h1>
-      <time>${dateStr}</time>
+      <div class="article-meta">
+        <span class="article-author">👤 ${author}</span>
+        <span class="article-date">📅 ${date}</span>
+      </div>
     </header>
     <div class="article-content">
 ${content}
@@ -272,7 +356,7 @@ ${content}
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: 'Add article: ' + title,
+            message: `Add article: ${title} [${category}]`,
             content: base64,
             branch: BRANCH
           })
@@ -280,7 +364,9 @@ ${content}
 
         if (res.ok) {
           showStatus('✅ 文章发布成功！约 2 分钟后网站自动更新', 'success');
+          // 清空表单
           document.getElementById('articleTitle').value = '';
+          document.getElementById('articleAuthor').value = '';
           quill.setContents([]);
         } else {
           const err = await res.json();
