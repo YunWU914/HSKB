@@ -35,31 +35,68 @@
     .login-box .hint { margin-top: 12px; font-size: 12px; color: #999; }
     .login-box .hint a { color: #ff0080; }
 
-    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
     .toolbar {
       background: white; padding: 20px; border-radius: 12px; margin-bottom: 16px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .toolbar h1 { font-size: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
     
+    .section-title {
+      font-size: 14px; font-weight: 600; color: #333; margin: 16px 0 10px;
+      padding-bottom: 6px; border-bottom: 1px solid #f0f0f0;
+    }
+    
     .meta-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
     .meta-item { flex: 1; min-width: 200px; }
     .meta-item label {
       display: block; font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 500;
     }
-    .meta-item input, .meta-item select {
+    .meta-item input, .meta-item select, .meta-item textarea {
       width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
-      font-size: 14px; background: #fafafa;
+      font-size: 14px; background: #fafafa; font-family: inherit;
     }
-    .meta-item input:focus, .meta-item select:focus {
+    .meta-item input:focus, .meta-item select:focus, .meta-item textarea:focus {
       outline: none; border-color: #ff0080; background: white;
     }
+    .meta-item textarea { resize: vertical; min-height: 60px; }
     
     .toolbar input[type="text"]#articleTitle {
       width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px;
       font-size: 18px; font-weight: 600; margin-bottom: 12px;
     }
     .toolbar input[type="text"]#articleTitle:focus { outline: none; border-color: #ff0080; }
+    
+    /* 文档属性复选框 */
+    .attr-group {
+      display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .attr-item {
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      font-size: 14px; color: #555;
+    }
+    .attr-item input[type="checkbox"] {
+      width: 16px; height: 16px; cursor: pointer;
+    }
+    
+    /* 封面图片 */
+    .cover-preview {
+      width: 200px; height: 120px; border: 2px dashed #ddd; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; color: #999;
+      font-size: 13px; margin-top: 8px; overflow: hidden; background: #fafafa;
+    }
+    .cover-preview img { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* SEO 折叠面板 */
+    .seo-toggle {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      color: #666; font-size: 14px; margin: 12px 0; user-select: none;
+    }
+    .seo-toggle:hover { color: #ff0080; }
+    .seo-panel {
+      display: none; background: #fafafa; padding: 16px; border-radius: 8px; margin-bottom: 12px;
+    }
+    .seo-panel.open { display: block; }
     
     .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     .btn {
@@ -70,6 +107,8 @@
     .btn-primary:hover { background: #000; }
     .btn-secondary { background: #ff0080; color: white; }
     .btn-secondary:hover { background: #e00070; }
+    .btn-ghost { background: #f0f0f0; color: #333; }
+    .btn-ghost:hover { background: #e0e0e0; }
     .btn input[type="file"] { display: none; }
 
     .editor-wrap {
@@ -80,6 +119,12 @@
     .ql-toolbar { border: none; border-bottom: 1px solid #eee; padding: 12px !important; }
     .ql-container { border: none; font-size: 16px; }
     .ql-editor { padding: 24px; line-height: 1.8; }
+    /* 表格样式 */
+    .ql-editor table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    .ql-editor table td, .ql-editor table th {
+      border: 1px solid #ddd; padding: 8px 12px; text-align: left;
+    }
+    .ql-editor table th { background: #f5f5f5; font-weight: 600; }
 
     .status {
       margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 14px;
@@ -112,12 +157,22 @@
   <!-- 编辑器主体 -->
   <div class="container" id="editorContainer" style="display:none;">
     <div class="toolbar">
-      <h1>✍️ 写文章</h1>
+      <h1>✍️ 发布文档</h1>
       
-      <!-- 标题 -->
-      <input type="text" id="articleTitle" placeholder="输入文章标题...">
+      <!-- 基础内容 -->
+      <div class="section-title">📋 基础内容</div>
       
-      <!-- 元信息：日期、作者、分类 -->
+      <div class="meta-row">
+        <div class="meta-item" style="flex: 2;">
+          <label>* 文档标题</label>
+          <input type="text" id="articleTitle" placeholder="输入文章标题...">
+        </div>
+        <div class="meta-item" style="flex: 1;">
+          <label>副标题</label>
+          <input type="text" id="articleSubtitle" placeholder="输入副标题（可选）">
+        </div>
+      </div>
+      
       <div class="meta-row">
         <div class="meta-item">
           <label>📅 发布日期</label>
@@ -128,19 +183,71 @@
           <input type="text" id="articleAuthor" placeholder="输入作者名字">
         </div>
         <div class="meta-item">
-          <label>📂 分类</label>
+          <label>📂 栏目分类</label>
           <select id="articleCategory">
             <option value="">加载中...</option>
           </select>
+        </div>
+      </div>
+      
+      <!-- 文档属性 -->
+      <div class="section-title">🏷️ 文档属性</div>
+      <div class="attr-group">
+        <label class="attr-item"><input type="checkbox" id="attrTop"> 头条</label>
+        <label class="attr-item"><input type="checkbox" id="attrRec"> 推荐</label>
+        <label class="attr-item"><input type="checkbox" id="attrPush"> 加推</label>
+        <label class="attr-item"><input type="checkbox" id="attrBold"> 标粗</label>
+        <label class="attr-item"><input type="checkbox" id="attrImg"> 有图</label>
+      </div>
+      
+      <!-- 标签 & 封面 -->
+      <div class="meta-row">
+        <div class="meta-item" style="flex: 2;">
+          <label>🏷️ 文档标签（多个标签用逗号隔开）</label>
+          <input type="text" id="articleTags" placeholder="例如：机械加工, 工艺, 教程">
+        </div>
+        <div class="meta-item" style="flex: 1;">
+          <label>🖼️ 封面图片</label>
+          <label class="btn btn-ghost" style="width: 100%; justify-content: center;">
+            📤 选择上传
+            <input type="file" accept="image/*" onchange="uploadCover(this)">
+          </label>
+          <div class="cover-preview" id="coverPreview">暂无封面</div>
+        </div>
+      </div>
+      
+      <!-- SEO 优化（可折叠） -->
+      <div class="seo-toggle" onclick="toggleSeo()">
+        <span id="seoArrow">▶</span> 🔍 SEO 优化设置
+      </div>
+      <div class="seo-panel" id="seoPanel">
+        <div class="meta-row">
+          <div class="meta-item">
+            <label>SEO 标题</label>
+            <input type="text" id="seoTitle" placeholder="搜索引擎显示的标题">
+          </div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <label>SEO 关键词</label>
+            <input type="text" id="seoKeywords" placeholder="关键词1, 关键词2, 关键词3">
+          </div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <label>SEO 描述</label>
+            <textarea id="seoDesc" placeholder="搜索引擎显示的摘要描述..."></textarea>
+          </div>
         </div>
       </div>
 
       <div class="btn-group">
         <button class="btn btn-primary" onclick="publishArticle()">💾 保存并发布</button>
         <label class="btn btn-secondary">
-          🖼️ 上传图片
+          🖼️ 上传文章图片
           <input type="file" accept="image/*" onchange="uploadImage(this)">
         </label>
+        <button class="btn btn-ghost" onclick="insertTable()">📊 插入表格</button>
       </div>
       <div id="status" class="status"></div>
     </div>
@@ -164,8 +271,8 @@
 
     let token = localStorage.getItem('hskb_editor_token');
     let quill;
+    let coverImagePath = '';
 
-    // 初始化
     function init() {
       if (!token) {
         document.getElementById('loginModal').style.display = 'flex';
@@ -174,7 +281,6 @@
         document.getElementById('editorContainer').style.display = 'block';
         startEditor();
         loadCategories();
-        // 默认日期为今天
         document.getElementById('articleDate').value = new Date().toISOString().split('T')[0];
       }
     }
@@ -193,7 +299,7 @@
     function startEditor() {
       quill = new Quill('#editor', {
         theme: 'snow',
-        placeholder: '从这里开始写文章，支持文字排版、插入图片...',
+        placeholder: '从这里开始写文章，支持文字排版、插入图片、插入表格...',
         modules: {
           toolbar: [
             [{ 'header': [1, 2, 3, false] }],
@@ -208,7 +314,13 @@
       });
     }
 
-    // 从 GitHub 读取分类列表
+    function toggleSeo() {
+      const panel = document.getElementById('seoPanel');
+      const arrow = document.getElementById('seoArrow');
+      panel.classList.toggle('open');
+      arrow.textContent = panel.classList.contains('open') ? '▼' : '▶';
+    }
+
     async function loadCategories() {
       const select = document.getElementById('articleCategory');
       try {
@@ -218,7 +330,6 @@
         
         if (res.ok) {
           const data = await res.json();
-          // 过滤出文件夹和.html/.md文件，提取名称
           const categories = data
             .filter(item => item.type === 'dir' || item.name.endsWith('.html') || item.name.endsWith('.md'))
             .map(item => {
@@ -227,33 +338,112 @@
             });
           
           if (categories.length > 0) {
-            select.innerHTML = categories.map(c => 
-              `<option value="${c.name}">${c.name}</option>`
-            ).join('');
+            select.innerHTML = '<option value="">请选择分类</option>' + 
+              categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
           } else {
-            select.innerHTML = '<option value="未分类">未分类</option>';
+            setDefaultCategories();
           }
         } else {
-          select.innerHTML = '<option value="未分类">未分类</option><option value="新闻">新闻</option><option value="教程">教程</option><option value="活动">活动</option>';
+          setDefaultCategories();
         }
       } catch(e) {
-        // 如果读取失败，提供默认分类
-        select.innerHTML = '<option value="未分类">未分类</option><option value="新闻">新闻</option><option value="教程">教程</option><option value="活动">活动</option><option value="产品">产品</option>';
+        setDefaultCategories();
       }
     }
 
-    // 上传图片
+    function setDefaultCategories() {
+      const select = document.getElementById('articleCategory');
+      select.innerHTML = `
+        <option value="">请选择分类</option>
+        <option value="公司动态">公司动态</option>
+        <option value="新闻资讯">新闻资讯</option>
+        <option value="技术教程">技术教程</option>
+        <option value="产品展示">产品展示</option>
+        <option value="活动公告">活动公告</option>
+        <option value="未分类">未分类</option>
+      `;
+    }
+
+    // 插入表格
+    function insertTable() {
+      const rows = parseInt(prompt('请输入表格行数：', '3'));
+      const cols = parseInt(prompt('请输入表格列数：', '3'));
+      if (!rows || !cols || rows < 1 || cols < 1 || rows > 20 || cols > 10) {
+        alert('请输入有效的行列数（行 1-20，列 1-10）');
+        return;
+      }
+      
+      let html = '<table><tbody>';
+      for (let i = 0; i < rows; i++) {
+        html += '<tr>';
+        for (let j = 0; j < cols; j++) {
+          html += '<td>单元格</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table><p><br></p>';
+      
+      const range = quill.getSelection() || { index: quill.getLength() };
+      quill.clipboard.dangerouslyPasteHTML(range.index, html);
+      quill.setSelection(range.index + 1);
+    }
+
+    // 上传封面图片
+    async function uploadCover(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        showStatus('封面图片不能超过 5MB', 'error');
+        return;
+      }
+
+      showStatus('正在上传封面...', 'info');
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64 = e.target.result.split(',')[1];
+        const ext = file.name.split('.').pop().toLowerCase();
+        const filename = 'cover-' + Date.now() + '.' + ext;
+
+        try {
+          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'token ' + token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: 'Upload cover: ' + filename,
+              content: base64,
+              branch: BRANCH
+            })
+          });
+
+          if (res.ok) {
+            coverImagePath = `../images/${filename}`;
+            document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面预览">`;
+            showStatus('✅ 封面上传成功', 'success');
+          } else {
+            const err = await res.json();
+            showStatus('封面上传失败: ' + (err.message || '未知错误'), 'error');
+          }
+        } catch(e) {
+          showStatus('网络错误: ' + e.message, 'error');
+        }
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    }
+
+    // 上传文章内图片
     async function uploadImage(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
-
       if (file.size > 5 * 1024 * 1024) {
         showStatus('图片不能超过 5MB', 'error');
         return;
       }
 
       showStatus('正在上传图片...', 'info');
-
       const reader = new FileReader();
       reader.onload = async function(e) {
         const base64 = e.target.result.split(',')[1];
@@ -294,9 +484,22 @@
     // 发布文章
     async function publishArticle() {
       const title = document.getElementById('articleTitle').value.trim();
+      const subtitle = document.getElementById('articleSubtitle').value.trim();
       const date = document.getElementById('articleDate').value;
       const author = document.getElementById('articleAuthor').value.trim() || '匿名';
       const category = document.getElementById('articleCategory').value || '未分类';
+      const tags = document.getElementById('articleTags').value.trim();
+      
+      const attrs = [];
+      if (document.getElementById('attrTop').checked) attrs.push('头条');
+      if (document.getElementById('attrRec').checked) attrs.push('推荐');
+      if (document.getElementById('attrPush').checked) attrs.push('加推');
+      if (document.getElementById('attrBold').checked) attrs.push('标粗');
+      if (document.getElementById('attrImg').checked) attrs.push('有图');
+      
+      const seoTitle = document.getElementById('seoTitle').value.trim();
+      const seoKeywords = document.getElementById('seoKeywords').value.trim();
+      const seoDesc = document.getElementById('seoDesc').value.trim();
       
       if (!title) {
         alert('请输入文章标题');
@@ -313,28 +516,40 @@
         return;
       }
 
-      // 生成文件名
       const slug = title.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '-').replace(/-+/g, '-').toLowerCase();
       const filename = `${date}-${slug}.html`;
 
-      // 包装成完整 HTML
+      let metaTags = '';
+      if (seoTitle) metaTags += `  <meta name="title" content="${seoTitle}">\n`;
+      if (seoKeywords) metaTags += `  <meta name="keywords" content="${seoKeywords}">\n`;
+      if (seoDesc) metaTags += `  <meta name="description" content="${seoDesc}">\n`;
+      
+      const attrStr = attrs.length > 0 ? attrs.join(',') : '';
+      const tagsHtml = tags ? tags.split(/[,，]/).map(t => `<span class="tag">${t.trim()}</span>`).join('') : '';
+
       const html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
+${metaTags}  <title>${title}${subtitle ? ' - ' + subtitle : ''}</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <article class="article-page">
+  <article class="article-page" data-category="${category}" data-attrs="${attrStr}" data-date="${date}">
     <header class="article-header">
-      <span class="article-category">${category}</span>
+      <div class="article-category-row">
+        <span class="article-category">${category}</span>
+        ${attrStr ? `<span class="article-attrs">${attrStr}</span>` : ''}
+      </div>
       <h1>${title}</h1>
+      ${subtitle ? `<h2 class="article-subtitle">${subtitle}</h2>` : ''}
       <div class="article-meta">
         <span class="article-author">👤 ${author}</span>
         <span class="article-date">📅 ${date}</span>
+        ${tagsHtml ? `<div class="article-tags">🏷️ ${tagsHtml}</div>` : ''}
       </div>
+      ${coverImagePath ? `<div class="article-cover"><img src="${coverImagePath}" alt="${title}"></div>` : ''}
     </header>
     <div class="article-content">
 ${content}
@@ -343,7 +558,6 @@ ${content}
 </body>
 </html>`;
 
-      // 转 base64
       const base64 = btoa(unescape(encodeURIComponent(html)));
 
       showStatus('正在保存文章...', 'info');
@@ -364,9 +578,21 @@ ${content}
 
         if (res.ok) {
           showStatus('✅ 文章发布成功！约 2 分钟后网站自动更新', 'success');
-          // 清空表单
+          // 清空
           document.getElementById('articleTitle').value = '';
+          document.getElementById('articleSubtitle').value = '';
           document.getElementById('articleAuthor').value = '';
+          document.getElementById('articleTags').value = '';
+          document.getElementById('seoTitle').value = '';
+          document.getElementById('seoKeywords').value = '';
+          document.getElementById('seoDesc').value = '';
+          document.getElementById('coverPreview').innerHTML = '暂无封面';
+          document.getElementById('attrTop').checked = false;
+          document.getElementById('attrRec').checked = false;
+          document.getElementById('attrPush').checked = false;
+          document.getElementById('attrBold').checked = false;
+          document.getElementById('attrImg').checked = false;
+          coverImagePath = '';
           quill.setContents([]);
         } else {
           const err = await res.json();
