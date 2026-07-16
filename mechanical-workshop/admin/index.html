@@ -7,125 +7,80 @@
   <title>HSKB 内容管理</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      background: #f0f2f5; 
-      min-height: 100vh;
-    }
-    #login-box { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      height: 100vh; 
-    }
-    .login-inner { 
-      text-align: center; 
-      background: white; 
-      padding: 48px; 
-      border-radius: 12px; 
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-      max-width: 400px;
-      width: 90%;
-    }
-    .logo { 
-      width: 64px; 
-      height: 64px; 
-      margin: 0 auto 24px; 
-      background: #ff0080; 
-      border-radius: 16px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    h2 { 
-      font-size: 24px; 
-      color: #1a1a1a; 
-      margin-bottom: 8px; 
-    }
-    p { 
-      color: #666; 
-      margin-bottom: 32px; 
-      font-size: 14px;
-    }
-    .btn { 
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px; 
-      background: #24292e; 
-      color: white; 
-      text-decoration: none; 
-      border-radius: 8px; 
-      font-size: 15px; 
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn:hover { background: #000; }
-    .btn svg { width: 20px; height: 20px; }
-    
-    /* Decap CMS 容器 */
-    #nc-root { 
-      display: none; 
-    }
-    #nc-root.active {
-      display: block;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; min-height: 100vh; }
+    #login, #token-page { display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .box { background: white; padding: 48px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 90%; max-width: 400px; text-align: center; }
+    .logo { width: 64px; height: 64px; margin: 0 auto 24px; background: #ff0080; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold; }
+    h2 { font-size: 24px; margin-bottom: 8px; }
+    p { color: #666; margin-bottom: 32px; font-size: 14px; }
+    input { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    button { width: 100%; padding: 12px; background: #24292e; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; }
+    button:hover { background: #000; }
+    .hint { margin-top: 16px; font-size: 12px; color: #999; }
+    .hint a { color: #ff0080; }
+    .error { color: #e74c3c; font-size: 14px; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <!-- 自定义登录界面 -->
-  <div id="login-box">
-    <div class="login-inner">
+  <!-- 第一层：密码保护 -->
+  <div id="login">
+    <div class="box">
       <div class="logo">H</div>
       <h2>HSKB 内容管理</h2>
-      <p>请先登录 GitHub 账号以继续</p>
-      <a class="btn" href="https://hskb-oauth.1477652021.workers.dev/auth">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        Login with GitHub
-      </a>
+      <p>请输入管理员密码</p>
+      <input type="password" id="admin-pass" placeholder="密码" />
+      <button onclick="checkPassword()">进入</button>
+      <p class="error" id="pass-error"></p>
     </div>
   </div>
 
-  <!-- Decap CMS 容器 -->
-  <div id="nc-root"></div>
+  <!-- 第二层：Token 输入 -->
+  <div id="token-page" style="display:none;">
+    <div class="box">
+      <div class="logo">H</div>
+      <h2>HSKB 内容管理</h2>
+      <p>请输入 GitHub Personal Access Token</p>
+      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" />
+      <button onclick="login()">登录</button>
+      <p class="hint"><a href="https://github.com/settings/tokens" target="_blank">去 GitHub 生成 Token</a>（勾选 repo 权限）</p>
+    </div>
+  </div>
 
   <script>
-    (function() {
-      // 检查 URL hash 是否有 token（OAuth 回调后）
-      var hash = window.location.hash.substring(1);
-      var params = new URLSearchParams(hash);
-      var token = params.get('token');
-      
-      if (token) {
-        // 保存 token
-        localStorage.setItem('netlify-cms-user', JSON.stringify({
-          token: token,
-          provider: 'github'
-        }));
-        // 清除 hash
-        history.replaceState(null, null, window.location.pathname + window.location.search);
+    // 第一层密码验证（修改这里！）
+    var ADMIN_PASSWORD = '你的管理员密码';
+    
+    function checkPassword() {
+      var pass = document.getElementById('admin-pass').value;
+      if (pass === ADMIN_PASSWORD) {
+        // 密码正确，显示 Token 输入页面
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('token-page').style.display = 'flex';
+      } else {
+        document.getElementById('pass-error').textContent = '密码错误';
       }
-      
-      // 检查是否已有登录状态
-      var user = localStorage.getItem('netlify-cms-user');
-      
-      if (user) {
-        // 已登录，隐藏登录框，显示 CMS
-        document.getElementById('login-box').style.display = 'none';
-        document.getElementById('nc-root').classList.add('active');
-        
-        // 加载 Decap CMS
-        var script = document.createElement('script');
-        script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-        document.body.appendChild(script);
+    }
+    
+    // Token 登录
+    function login() {
+      var token = document.getElementById('token').value.trim();
+      if (token && token.startsWith('ghp_')) {
+        localStorage.setItem('hskb_token', token);
+        location.reload();
+      } else {
+        alert('请输入正确的 GitHub Token');
       }
-      // 如果没有登录，保持登录界面显示，不加载 CMS
-    })();
+    }
+    
+    // 检查是否已登录
+    var token = localStorage.getItem('hskb_token');
+    if (token) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('token-page').style.display = 'none';
+      var script = document.createElement('script');
+      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+      document.body.appendChild(script);
+    }
   </script>
 </body>
 </html>
