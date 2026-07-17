@@ -1,273 +1,85 @@
-let articlesData = [];
+// Article loading system
+const ARTICLES_JSON_URL = 'articles.json';
+const ARTICLES_PATH = 'mechanical-workshop/articles/';
 
 async function loadArticles() {
-    try {
-        const currentPath = window.location.pathname;
-        let jsonPath = 'articles/articles.json';
-        
-        if (currentPath.includes('/categories/') || currentPath.includes('/articles/')) {
-            jsonPath = '../articles/articles.json';
-        }
-        
-        const response = await fetch(jsonPath);
-        articlesData = await response.json();
-        return articlesData;
-    } catch (error) {
-        console.error('Error loading articles:', error);
-        articlesData = [];
-        return articlesData;
+  const container = document.getElementById('articlesList');
+  if (!container) return;
+
+  let articles = [];
+
+  // Try to load pre-generated JSON first
+  try {
+    const res = await fetch(ARTICLES_JSON_URL + '?t=' + Date.now());
+    if (res.ok) {
+      articles = await res.json();
     }
+  } catch(e) {
+    console.log('JSON not available, will try fallback');
+  }
+
+  // If no articles from JSON, show message
+  if (!articles || articles.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:#999;padding:40px;">No articles found. New articles may take a few minutes to appear after publishing.</p>';
+    return;
+  }
+
+  // Sort by date descending
+  articles.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  // Render articles
+  container.innerHTML = articles.map(article => `
+    <div class="article-card" onclick="location.href='${article.url || article.path || '#'}'">
+      <div class="article-image">
+        ${article.cover ? `<img src="${article.cover}" alt="${article.title}" loading="lazy">` : '<div class="no-image">📄</div>'}
+      </div>
+      <div class="article-info">
+        <span class="article-category">${article.category || 'Uncategorized'}</span>
+        <h3>${article.title || 'Untitled'}</h3>
+        <p class="article-excerpt">${article.excerpt || ''}</p>
+        <div class="article-meta">
+          <span>${article.author || 'Anonymous'}</span>
+          <span>${article.date || ''}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-function renderArticles(category = null) {
-    const articlesList = document.getElementById('articlesList');
-    if (!articlesList) return;
+// Load articles when DOM is ready
+document.addEventListener('DOMContentLoaded', loadArticles);
 
-    const currentPath = window.location.pathname;
-    let basePath = '';
-    
-    if (currentPath.includes('/categories/')) {
-        basePath = '../';
-    } else if (currentPath.includes('/articles/')) {
-        basePath = '../';
-    }
-
-    let filteredArticles = [...articlesData];
-    
-    if (category) {
-        filteredArticles = filteredArticles.filter(article => article.category === category);
-    }
-    
-    const sortedArticles = filteredArticles.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-    }).slice(0, category ? undefined : 6);
-
-    articlesList.innerHTML = sortedArticles.map(article => `
-        <article class="article-card">
-            <img src="${basePath}${article.image}" alt="${article.title}">
-            <div class="article-content">
-                <h3><a href="${basePath}${article.link}">${article.title}</a></h3>
-                <p>${article.description}</p>
-                <div class="article-meta">
-                    <span>${article.category}</span>
-                    <span>${article.date}</span>
-                    <span>By ${article.author}</span>
-                </div>
-            </div>
-        </article>
-    `).join('');
+// Mobile menu toggle
+function toggleMenu() {
+  const nav = document.getElementById('navLinks');
+  if (nav) nav.classList.toggle('active');
 }
 
-function checkCookieConsent() {
-    const consent = localStorage.getItem('cookieConsent');
-    const cookiePopup = document.getElementById('cookiePopup');
-    if (consent && cookiePopup) {
-        cookiePopup.classList.add('hide');
-    }
-}
-
-function loadCookiePreferences() {
-    const analytics = localStorage.getItem('analyticsCookies') === 'true';
-    const advertising = localStorage.getItem('advertisingCookies') === 'true';
-    
-    const analyticsCheckbox = document.getElementById('analyticsCookies');
-    const advertisingCheckbox = document.getElementById('advertisingCookies');
-    
-    if (analyticsCheckbox) analyticsCheckbox.checked = analytics;
-    if (advertisingCheckbox) advertisingCheckbox.checked = advertising;
-}
-
-function saveCookiePreferences() {
-    const analyticsCheckbox = document.getElementById('analyticsCookies');
-    const advertisingCheckbox = document.getElementById('advertisingCookies');
-    
-    if (analyticsCheckbox) localStorage.setItem('analyticsCookies', analyticsCheckbox.checked);
-    if (advertisingCheckbox) localStorage.setItem('advertisingCookies', advertisingCheckbox.checked);
+// Cookie popup
+function toggleCookiePopup() {
+  const popup = document.getElementById('cookiePopup');
+  if (popup) popup.classList.toggle('hidden');
 }
 
 function acceptAllCookies() {
-    localStorage.setItem('cookieConsent', 'accepted');
-    localStorage.setItem('analyticsCookies', 'true');
-    localStorage.setItem('advertisingCookies', 'true');
-    
-    const analyticsCheckbox = document.getElementById('analyticsCookies');
-    const advertisingCheckbox = document.getElementById('advertisingCookies');
-    
-    if (analyticsCheckbox) analyticsCheckbox.checked = true;
-    if (advertisingCheckbox) advertisingCheckbox.checked = true;
-    
-    const cookiePopup = document.getElementById('cookiePopup');
-    if (cookiePopup) {
-        cookiePopup.classList.add('hide');
-    }
+  localStorage.setItem('cookieConsent', 'all');
+  toggleCookiePopup();
 }
 
 function rejectNonNecessaryCookies() {
-    localStorage.setItem('cookieConsent', 'rejected');
-    localStorage.setItem('analyticsCookies', 'false');
-    localStorage.setItem('advertisingCookies', 'false');
-    
-    const analyticsCheckbox = document.getElementById('analyticsCookies');
-    const advertisingCheckbox = document.getElementById('advertisingCookies');
-    
-    if (analyticsCheckbox) analyticsCheckbox.checked = false;
-    if (advertisingCheckbox) advertisingCheckbox.checked = false;
-    
-    const cookiePopup = document.getElementById('cookiePopup');
-    if (cookiePopup) {
-        cookiePopup.classList.add('hide');
-    }
+  localStorage.setItem('cookieConsent', 'necessary');
+  toggleCookiePopup();
 }
 
 function showCookieSettings() {
-    const cookieSettings = document.getElementById('cookieSettings');
-    if (cookieSettings) {
-        cookieSettings.classList.toggle('show');
-    }
+  const settings = document.getElementById('cookieSettings');
+  if (settings) settings.style.display = 'block';
 }
 
-function renderRelatedArticles(currentArticleId) {
-    const relatedArticlesList = document.getElementById('relatedArticlesList');
-    if (!relatedArticlesList) return;
-
-    const otherArticles = articlesData.filter(article => article.id !== currentArticleId);
-    
-    const shuffled = otherArticles.sort(() => 0.5 - Math.random());
-    const recommended = shuffled.slice(0, 3);
-
-    relatedArticlesList.innerHTML = recommended.map(article => `
-        <article class="related-article">
-            <img src="../${article.image}" alt="${article.title}">
-            <div class="related-article-content">
-                <h3><a href="../${article.link}">${article.title}</a></h3>
-                <p>${article.description.slice(0, 100)}...</p>
-                <span class="category-tag">${article.category}</span>
-            </div>
-        </article>
-    `).join('');
-}
-
-function toggleCookiePopup() {
-    const cookiePopup = document.getElementById('cookiePopup');
-    if (cookiePopup) {
-        cookiePopup.classList.add('hide');
-    }
-}
-
-function saveCustomCookies() {
-    saveCookiePreferences();
-    localStorage.setItem('cookieConsent', 'custom');
-    
-    const cookiePopup = document.getElementById('cookiePopup');
-    if (cookiePopup) {
-        cookiePopup.classList.add('hide');
-    }
-}
-
-function toggleMenu() {
-    const navLinks = document.getElementById('navLinks');
-    const hamburger = document.querySelector('.hamburger-menu');
-    if (navLinks && hamburger) {
-        navLinks.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function() {
-    checkCookieConsent();
-    loadCookiePreferences();
-    
-    await loadArticles();
-    
-    const body = document.body;
-    if (body.classList.contains('category-page')) {
-        const categoryName = body.getAttribute('data-category');
-        renderArticles(categoryName);
-    } else {
-        renderArticles();
-    }
-
-    const navLinks = document.querySelectorAll('.nav-links a');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-
-    const categoryCards = document.querySelectorAll('.category-card');
-    
-    categoryCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-
-    setTimeout(() => {
-        const articleCards = document.querySelectorAll('.article-card');
-        
-        articleCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    }, 100);
-
-    const breadcrumbLinks = document.querySelectorAll('.breadcrumb a');
-    
-    breadcrumbLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const href = this.getAttribute('href');
-            if (href !== '#' && href !== '') {
-                window.location.href = href;
-            }
-        });
-    });
-
-    function smoothScroll(target) {
-        const element = document.querySelector(target);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-
-    const buttons = document.querySelectorAll('.btn:not(.cookie-buttons .btn)');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const href = this.getAttribute('href');
-            if (href.startsWith('#')) {
-                smoothScroll(href);
-            } else {
-                window.location.href = href;
-            }
-        });
-    });
-
-    const cookieCategoryLabels = document.querySelectorAll('.cookie-category-label input');
-    cookieCategoryLabels.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            if (!this.disabled) {
-                saveCookiePreferences();
-            }
-        });
-    });
-
-    if (document.body.classList.contains('article-page')) {
-        const articleId = parseInt(document.body.getAttribute('data-article-id'));
-        if (!isNaN(articleId)) {
-            renderRelatedArticles(articleId);
-        }
-    }
+// Check cookie consent on load
+document.addEventListener('DOMContentLoaded', function() {
+  if (!localStorage.getItem('cookieConsent')) {
+    const popup = document.getElementById('cookiePopup');
+    if (popup) popup.classList.remove('hidden');
+  }
 });
