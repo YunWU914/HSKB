@@ -1,0 +1,80 @@
+name: Generate Articles JSON
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'mechanical-workshop/articles/**'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate articles.json
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const articlesDir = 'mechanical-workshop/articles';
+
+          if (!fs.existsSync(articlesDir)) {
+            console.log('No articles directory found');
+            fs.writeFileSync('articles.json', '[]');
+            process.exit(0);
+          }
+
+          const files = fs.readdirSync(articlesDir).filter(f => f.endsWith('.html'));
+          const articles = [];
+
+          for (const file of files) {
+            try {
+              const html = fs.readFileSync(path.join(articlesDir, file), 'utf-8');
+
+              // Extract data attributes
+              const categoryMatch = html.match(/data-category="([^"]*)"/);
+              const dateMatch = html.match(/data-date="([^"]*)"/);
+              const titleMatch = html.match(/<title>(.*?)<\/title>/);
+              const h1Match = html.match(/<h1>(.*?)<\/h1>/);
+              const authorMatch = html.match(/article-author[^>]*>.*?([^<]+)<\/span>/);
+              const coverMatch = html.match(/article-cover.*?src="([^"]*)"/);
+
+              // Extract excerpt from first paragraph
+              const excerptMatch = html.match(/<p>([^<]{50,200})/);
+
+              articles.push({
+                title: (h1Match ? h1Match[1].trim() : (titleMatch ? titleMatch[1].trim() : file)),
+                category: categoryMatch ? categoryMatch[1] : 'Uncategorized',
+                date: dateMatch ? dateMatch[1] : '',
+                author: authorMatch ? authorMatch[1].replace('👤', '').trim() : 'Anonymous',
+                cover: coverMatch ? coverMatch[1] : '',
+                excerpt: excerptMatch ? excerptMatch[1].trim() + '...' : '',
+                path: 'mechanical-workshop/articles/' + file,
+                url: 'mechanical-workshop/articles/' + file
+              });
+            } catch(e) {
+              console.log('Error parsing ' + file + ': ' + e.message);
+            }
+          }
+
+          // Sort by date descending
+          articles.sort((a, b) => b.date.localeCompare(a.date));
+
+          fs.writeFileSync('articles.json', JSON.stringify(articles, null, 2));
+          console.log('Generated articles.json with ' + articles.length + ' articles');
+          "
+
+      - name: Commit articles.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add articles.json
+          git diff --cached --quiet || git commit -m "Update articles.json"
+          git push
