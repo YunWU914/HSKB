@@ -951,33 +951,49 @@
       const title = document.getElementById('articleTitle').value.trim();
       const subtitle = document.getElementById('articleSubtitle').value.trim();
       const date = document.getElementById('articleDate').value;
-      const author = document.getElementById('articleAuthor').value.trim() || '匿名';
-      const category = document.getElementById('articleCategory').value || '未分类';
+      const author = document.getElementById('articleAuthor').value.trim() || 'Anonymous';
+      const category = document.getElementById('articleCategory').value || 'Uncategorized';
       const tags = document.getElementById('articleTags').value.trim();
 
       const attrs = [];
-      if (document.getElementById('attrTop').checked) attrs.push('头条');
-      if (document.getElementById('attrRec').checked) attrs.push('推荐');
-      if (document.getElementById('attrPush').checked) attrs.push('加推');
-      if (document.getElementById('attrBold').checked) attrs.push('标粗');
-      if (document.getElementById('attrImg').checked) attrs.push('有图');
+      if (document.getElementById('attrTop').checked) attrs.push('Top Story');
+      if (document.getElementById('attrRec').checked) attrs.push('Recommended');
+      if (document.getElementById('attrPush').checked) attrs.push('Featured');
+      if (document.getElementById('attrBold').checked) attrs.push('Bold Title');
+      if (document.getElementById('attrImg').checked) attrs.push('With Image');
 
       const seoTitle = document.getElementById('seoTitle').value.trim();
       const seoKeywords = document.getElementById('seoKeywords').value.trim();
       const seoDesc = document.getElementById('seoDesc').value.trim();
 
       if (!title) {
-        alert('请输入文章标题');
+        alert('Please enter article title');
         return;
       }
       if (!date) {
-        alert('请选择Publish Date');
+        alert('Please select publish date');
         return;
       }
 
-      const content = quill.root.innerHTML;
+      // Clean Quill's internal markup before saving
+      let rawHtml = quill.root.innerHTML;
+
+      // Remove Quill internal UI spans
+      rawHtml = rawHtml.replace(/<span class="ql-ui"[^>]*>.*?<\/span>/gi, '');
+      // Remove data-row attributes from table cells
+      rawHtml = rawHtml.replace(/\s*data-row="[^"]*"/gi, '');
+      // Remove inline background-color: rgb(255, 255, 255) and color: rgba(0,0,0,0.9) styles (Quill defaults)
+      rawHtml = rawHtml.replace(/\s*style="[^"]*background-color:\s*rgb\(255,\s*255,\s*255\)[^"]*"/gi, '');
+      rawHtml = rawHtml.replace(/\s*style="[^"]*color:\s*rgba\(0,\s*0,\s*0,\s*0\.9\)[^"]*"/gi, '');
+      // Clean up empty style attributes
+      rawHtml = rawHtml.replace(/\s*style=""/gi, '');
+      // Remove contenteditable="false" from spans
+      rawHtml = rawHtml.replace(/\s*contenteditable="false"/gi, '');
+
+      const content = rawHtml;
+
       if (!content || content === '<p><br></p>') {
-        alert('文章内容不能为空');
+        alert('Article content cannot be empty');
         return;
       }
 
@@ -1025,7 +1041,7 @@ ${content}
 
       const base64 = btoa(unescape(encodeURIComponent(html)));
 
-      showStatus('正在保存文章...', 'info');
+      showStatus('Saving article...', 'info');
 
       try {
         const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARTICLES_PATH}/${filename}`, {
@@ -1042,8 +1058,8 @@ ${content}
         });
 
         if (res.ok) {
-          showStatus('✅ 文章发布成功！约 2 分钟后网站自动更新', 'success');
-          // 清空
+          showStatus('Article published successfully! Site updates in ~2 minutes', 'success');
+          // Clear form
           document.getElementById('articleTitle').value = '';
           document.getElementById('articleSubtitle').value = '';
           document.getElementById('articleAuthor').value = '';
@@ -1062,19 +1078,18 @@ ${content}
         } else {
           const err = await res.json();
           if (res.status === 401) {
-            showStatus('Token 无效或已过期，请重新登录', 'error');
+            showStatus('Token expired. Please log in again.', 'error');
             localStorage.removeItem('hskb_editor_token');
             setTimeout(() => location.reload(), 2000);
           } else {
-            showStatus('保存失败: ' + (err.message || '未知错误'), 'error');
+            showStatus('Save failed: ' + (err.message || 'Unknown error'), 'error');
           }
         }
       } catch(e) {
-        showStatus('网络错误: ' + e.message, 'error');
+        showStatus('Network error: ' + e.message, 'error');
       }
     }
-
-    function showStatus(msg, type) {
+function showStatus(msg, type) {
       const el = document.getElementById('status');
       el.textContent = msg;
       el.className = 'status show ' + type;
