@@ -79,7 +79,7 @@
       width: 16px; height: 16px; cursor: pointer;
     }
 
-    /* 封面图片 */
+    /* Cover Image */
     .cover-preview {
       width: 200px; height: 120px; border: 2px dashed #ddd; border-radius: 8px;
       display: flex; align-items: center; justify-content: center; color: #999;
@@ -302,13 +302,13 @@
   <!-- 登录框 -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
-      <h2>🔐 编辑器登录</h2>
-      <p>请输入 GitHub Personal Access Token 以继续</p>
+      <h2>🔐 Editor Login</h2>
+      <p>Enter your GitHub Personal Access Token to continue</p>
       <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
-      <button onclick="saveToken()">进入编辑器</button>
+      <button onclick="saveToken()">Enter Editor</button>
       <p class="hint">
-        没有 Token？<a href="https://github.com/settings/tokens" target="_blank">去 GitHub 生成</a>（勾选 repo 权限）<br>
-        Token 仅保存在本机浏览器，不会上传到其他服务器
+        No Token? <a href="https://github.com/settings/tokens" target="_blank">Generate on GitHub</a> (check repo scope)<br>
+        Token is stored locally in your browser only
       </p>
     </div>
   </div>
@@ -316,33 +316,33 @@
   <!-- 编辑器主体 -->
   <div class="container" id="editorContainer" style="display:none;">
     <div class="toolbar">
-      <h1>✍️ 发布文档</h1>
+      <h1>✍️ Publish Article</h1>
 
       <!-- 基础内容 -->
-      <div class="section-title">📋 基础内容</div>
+      <div class="section-title">📋 Basic Info</div>
 
       <div class="meta-row">
         <div class="meta-item" style="flex: 2;">
-          <label>* 文档标题</label>
-          <input type="text" id="articleTitle" placeholder="输入文章标题...">
+          <label>* Title</label>
+          <input type="text" id="articleTitle" placeholder="Enter article title...">
         </div>
         <div class="meta-item" style="flex: 1;">
-          <label>副标题</label>
-          <input type="text" id="articleSubtitle" placeholder="输入副标题（可选）">
+          <label>Subtitle</label>
+          <input type="text" id="articleSubtitle" placeholder="输入Subtitle（可选）">
         </div>
       </div>
 
       <div class="meta-row">
         <div class="meta-item">
-          <label>📅 发布日期</label>
+          <label>📅 Publish Date</label>
           <input type="date" id="articleDate">
         </div>
         <div class="meta-item">
-          <label>✏️ 作者</label>
-          <input type="text" id="articleAuthor" placeholder="输入作者名字">
+          <label>✏️ Author</label>
+          <input type="text" id="articleAuthor" placeholder="输入Author名字">
         </div>
         <div class="meta-item">
-          <label>📂 栏目分类</label>
+          <label>📂 Category</label>
           <select id="articleCategory">
             <option value="">加载中...</option>
           </select>
@@ -362,48 +362,48 @@
       <!-- 标签 & 封面 -->
       <div class="meta-row">
         <div class="meta-item" style="flex: 2;">
-          <label>🏷️ 文档标签（多个标签用逗号隔开）</label>
-          <input type="text" id="articleTags" placeholder="例如：机械加工, 工艺, 教程">
+          <label>🏷️ Tags (comma separated)</label>
+          <input type="text" id="articleTags" placeholder="e.g. machining, process, tutorial">
         </div>
         <div class="meta-item" style="flex: 1;">
-          <label>🖼️ 封面图片</label>
+          <label>🖼️ Cover Image</label>
           <label class="btn btn-ghost" style="width: 100%; justify-content: center;">
-            📤 选择上传
+            📤 Choose File
             <input type="file" accept="image/*" onchange="uploadCover(this)">
           </label>
-          <div class="cover-preview" id="coverPreview">暂无封面</div>
+          <div class="cover-preview" id="coverPreview">No cover</div>
         </div>
       </div>
 
       <!-- SEO 优化（可折叠） -->
       <div class="seo-toggle" onclick="toggleSeo()">
-        <span id="seoArrow">▶</span> 🔍 SEO 优化设置
+        <span id="seoArrow">▶</span> 🔍 SEO Settings
       </div>
       <div class="seo-panel" id="seoPanel">
         <div class="meta-row">
           <div class="meta-item">
-            <label>SEO 标题</label>
-            <input type="text" id="seoTitle" placeholder="搜索引擎显示的标题">
+            <label>SEO Title</label>
+            <input type="text" id="seoTitle" placeholder="Title shown in search engines">
           </div>
         </div>
         <div class="meta-row">
           <div class="meta-item">
-            <label>SEO 关键词</label>
-            <input type="text" id="seoKeywords" placeholder="关键词1, 关键词2, 关键词3">
+            <label>SEO Keywords</label>
+            <input type="text" id="seoKeywords" placeholder="keyword1, keyword2, keyword3">
           </div>
         </div>
         <div class="meta-row">
           <div class="meta-item">
-            <label>SEO 描述</label>
-            <textarea id="seoDesc" placeholder="搜索引擎显示的摘要描述..."></textarea>
+            <label>SEO Description</label>
+            <textarea id="seoDesc" placeholder="Description shown in search results..."></textarea>
           </div>
         </div>
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="publishArticle()">💾 保存并发布</button>
+        <button class="btn btn-primary" onclick="publishArticle()">💾 Save & Publish</button>
         <label class="btn btn-secondary">
-          🖼️ 上传文章图片
+          🖼️ Upload Image
           <input type="file" accept="image/*" onchange="uploadImage(this)">
         </label>
       </div>
@@ -415,7 +415,7 @@
     </div>
 
     <div class="footer">
-      HSKB 内容管理系统 · 文章将保存至 GitHub 仓库
+      HSKB CMS · Articles saved to GitHub repository
     </div>
   </div>
 
@@ -663,6 +663,97 @@
       // Init table picker after toolbar renders
       setTimeout(initTablePicker, 200);
 
+      // ===== Drag & Drop Image Upload =====
+      const editorEl = document.getElementById('editor');
+      const qlContainer = editorEl.querySelector('.ql-container') || editorEl;
+      const qlEditor = editorEl.querySelector('.ql-editor') || editorEl;
+
+      // Prevent default drag behaviors on the whole page
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(eventName) {
+        qlEditor.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Highlight editor on drag over
+      qlEditor.addEventListener('dragenter', function() {
+        qlEditor.style.outline = '2px dashed #ff0080';
+        qlEditor.style.outlineOffset = '4px';
+      });
+      qlEditor.addEventListener('dragleave', function(e) {
+        if (e.target === qlEditor) {
+          qlEditor.style.outline = '';
+          qlEditor.style.outlineOffset = '';
+        }
+      });
+      qlEditor.addEventListener('drop', function() {
+        qlEditor.style.outline = '';
+        qlEditor.style.outlineOffset = '';
+      });
+
+      // Handle dropped files
+      qlEditor.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        if (!dt || !dt.files) return;
+
+        const files = Array.from(dt.files).filter(function(f) {
+          return f.type.startsWith('image/');
+        });
+
+        if (files.length === 0) return;
+
+        // Get drop position in editor
+        const range = quill.getSelection(true) || { index: quill.getLength() };
+
+        files.forEach(function(file, i) {
+          if (file.size > 5 * 1024 * 1024) {
+            showStatus('Image too large (max 5MB): ' + file.name, 'error');
+            return;
+          }
+          uploadDroppedImage(file, range.index + i);
+        });
+      });
+
+      function uploadDroppedImage(file, insertIndex) {
+        showStatus('Uploading image: ' + file.name + '...', 'info');
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const base64 = e.target.result.split(',')[1];
+          const ext = file.name.split('.').pop().toLowerCase();
+          const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.' + ext;
+
+          try {
+            const res = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + IMAGES_PATH + '/' + filename, {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message: 'Upload image: ' + filename,
+                content: base64,
+                branch: BRANCH
+              })
+            });
+
+            if (res.ok) {
+              quill.insertEmbed(insertIndex, 'image', '../images/' + filename);
+              showStatus('Image uploaded: ' + file.name, 'success');
+            } else {
+              const err = await res.json();
+              showStatus('Upload failed: ' + (err.message || 'Unknown error'), 'error');
+            }
+          } catch(err) {
+            showStatus('Network error: ' + err.message, 'error');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
       // ===== Keyboard Table Deletion (backup) =====
       quill.root.addEventListener('keydown', function(e) {
         if (e.key !== 'Backspace' && e.key !== 'Delete') return;
@@ -734,7 +825,7 @@
             });
 
           if (categories.length > 0) {
-            select.innerHTML = '<option value="">请选择分类</option>' + 
+            select.innerHTML = '<option value="">Select Category</option>' + 
               categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
           } else {
             setDefaultCategories();
@@ -750,22 +841,24 @@
     function setDefaultCategories() {
       const select = document.getElementById('articleCategory');
       select.innerHTML = `
-        <option value="">请选择分类</option>
-        <option value="公司动态">公司动态</option>
-        <option value="新闻资讯">新闻资讯</option>
-        <option value="技术教程">技术教程</option>
-        <option value="产品展示">产品展示</option>
-        <option value="活动公告">活动公告</option>
-        <option value="未分类">未分类</option>
+        <option value="">Select Category</option>
+        <option value="General Machinery">General Machinery</option>
+        <option value="Construction Machinery">Construction Machinery</option>
+        <option value="Cleaning and Ventilation Equipment">Cleaning and Ventilation Equipment</option>
+        <option value="Machine Tools and Tooling Machinery">Machine Tools and Tooling Machinery</option>
+        <option value="Logistics Equipment">Logistics Equipment</option>
+        <option value="Food Machinery">Food Machinery</option>
+        <option value="Other Special-purpose Equipment">Other Special-purpose Equipment</option>
+        <option value="Hardware Accessories & Standard Parts">Hardware Accessories & Standard Parts</option>
       `;
     }
 
-    // 上传封面图片
+    // 上传Cover Image
     async function uploadCover(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
       if (file.size > 5 * 1024 * 1024) {
-        showStatus('封面图片不能超过 5MB', 'error');
+        showStatus('Cover Image不能超过 5MB', 'error');
         return;
       }
 
@@ -878,7 +971,7 @@
         return;
       }
       if (!date) {
-        alert('请选择发布日期');
+        alert('请选择Publish Date');
         return;
       }
 
@@ -958,7 +1051,7 @@ ${content}
           document.getElementById('seoTitle').value = '';
           document.getElementById('seoKeywords').value = '';
           document.getElementById('seoDesc').value = '';
-          document.getElementById('coverPreview').innerHTML = '暂无封面';
+          document.getElementById('coverPreview').innerHTML = 'No cover';
           document.getElementById('attrTop').checked = false;
           document.getElementById('attrRec').checked = false;
           document.getElementById('attrPush').checked = false;
