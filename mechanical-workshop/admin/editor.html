@@ -419,7 +419,7 @@
     </div>
   </div>
 
- <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
   <script>
     const REPO = 'YunWU914/HSKB';
     const BRANCH = 'main';
@@ -445,12 +445,12 @@
 
     function saveToken() {
       const val = document.getElementById('tokenInput').value.trim();
-      if (val && val.startsWith('ghp_')) {
+      if (val && (val.startsWith('ghp_') || val.startsWith('github_pat_'))) {
         token = val;
         localStorage.setItem('hskb_editor_token', token);
         init();
       } else {
-        alert('Please enter a valid GitHub Token (starting with ghp_)');
+        alert('Please enter a valid GitHub Token (starting with ghp_ or github_pat_)');
       }
     }
 
@@ -727,17 +727,28 @@
           const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.' + ext;
 
           try {
+            let sha = null;
+            const checkRes = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + IMAGES_PATH + '/' + filename + '?ref=' + BRANCH, {
+              headers: { 'Authorization': 'token ' + token }
+            });
+            if (checkRes.ok) {
+              const existingData = await checkRes.json();
+              sha = existingData.sha;
+            }
+
+            const body = {
+              message: 'Upload image: ' + filename,
+              content: base64,
+              branch: BRANCH
+            };
+            if (sha) body.sha = sha;
             const res = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + IMAGES_PATH + '/' + filename, {
               method: 'PUT',
               headers: {
                 'Authorization': 'token ' + token,
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({
-                message: 'Upload image: ' + filename,
-                content: base64,
-                branch: BRANCH
-              })
+              body: JSON.stringify(body)
             });
 
             if (res.ok) {
@@ -745,8 +756,15 @@
               await updateImageSitemap(`images/${filename}`, 'Article Content Image');
               showStatus('Image uploaded: ' + file.name, 'success');
             } else {
-              const err = await res.json();
-              showStatus('Upload failed: ' + (err.message || 'Unknown error'), 'error');
+              let errMsg = 'HTTP ' + res.status;
+              try {
+                const err = await res.json();
+                errMsg += ': ' + (err.message || JSON.stringify(err));
+              } catch(e) {
+                errMsg += ': ' + await res.text();
+              }
+              showStatus('Upload failed: ' + errMsg, 'error');
+              console.error('Dropped image upload error:', errMsg);
             }
           } catch(err) {
             showStatus('Network error: ' + err.message, 'error');
@@ -871,18 +889,29 @@
         const filename = 'cover-' + Date.now() + '.' + ext;
 
         try {
-          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
-            method: 'PUT',
-            headers: {
-              'Authorization': 'token ' + token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+          let sha = null;
+          const checkRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}?ref=${BRANCH}`, {
+            headers: { 'Authorization': 'token ' + token }
+          });
+          if (checkRes.ok) {
+            const existingData = await checkRes.json();
+            sha = existingData.sha;
+          }
+
+          const body = {
               message: 'Upload cover: ' + filename,
               content: base64,
               branch: BRANCH
-            })
-          });
+            };
+            if (sha) body.sha = sha;
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+            });
 
           if (res.ok) {
             coverImagePath = `../images/${filename}`;
@@ -890,8 +919,15 @@
             await updateImageSitemap(`images/${filename}`, 'Article Cover');
             showStatus('✅ 封面上传成功', 'success');
           } else {
-            const err = await res.json();
-            showStatus('封面上传失败: ' + (err.message || '未知错误'), 'error');
+            let errMsg = 'HTTP ' + res.status;
+            try {
+              const err = await res.json();
+              errMsg += ': ' + (err.message || JSON.stringify(err));
+            } catch(e) {
+              errMsg += ': ' + await res.text();
+            }
+            showStatus('封面上传失败: ' + errMsg, 'error');
+            console.error('Cover upload error:', errMsg);
           }
         } catch(e) {
           showStatus('网络错误: ' + e.message, 'error');
@@ -915,21 +951,32 @@
       reader.onload = async function(e) {
         const base64 = e.target.result.split(',')[1];
         const ext = file.name.split('.').pop().toLowerCase();
-        const filename = 'img-' + Date.now() + '.' + ext;
+        const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.' + ext;
 
         try {
-          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
-            method: 'PUT',
-            headers: {
-              'Authorization': 'token ' + token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+          let sha = null;
+          const checkRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}?ref=${BRANCH}`, {
+            headers: { 'Authorization': 'token ' + token }
+          });
+          if (checkRes.ok) {
+            const existingData = await checkRes.json();
+            sha = existingData.sha;
+          }
+
+          const body = {
               message: 'Upload image: ' + filename,
               content: base64,
               branch: BRANCH
-            })
-          });
+            };
+            if (sha) body.sha = sha;
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+            });
 
           if (res.ok) {
             const range = quill.getSelection() || { index: 0 };
@@ -938,8 +985,15 @@
             await updateImageSitemap(`images/${filename}`, 'Article Content Image');
             showStatus('✅ 图片上传成功，已插入文章', 'success');
           } else {
-            const err = await res.json();
-            showStatus('上传失败: ' + (err.message || '未知错误'), 'error');
+            let errMsg = 'HTTP ' + res.status;
+            try {
+              const err = await res.json();
+              errMsg += ': ' + (err.message || JSON.stringify(err));
+            } catch(e) {
+              errMsg += ': ' + await res.text();
+            }
+            showStatus('上传失败: ' + errMsg, 'error');
+            console.error('Image upload error:', errMsg);
           }
         } catch(e) {
           showStatus('网络错误: ' + e.message, 'error');
@@ -1148,137 +1202,137 @@
       };
       const finalCoverImage = coverImagePath || categoryImages[category] || '../images/categories/general-machinery.webp';
 
-      const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}${subtitle ? ' - ' + subtitle : ''} - smartmanu.net</title>
-${metaTags}    <meta name="author" content="${author}">
-    <meta name="category" content="${category}">
-    <meta name="date" content="${date}">
-    <link rel="stylesheet" href="../css/styles.css">
-</head>
-<body class="article-page" data-article-id="${articleId}">
-    <header>
-        <div class="container">
-            <a href="../index.html" class="logo">smartmanu.net</a>
-            <div class="hamburger-menu" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="../index.html" onclick="toggleMenu()">Home</a></li>
-                    <li><a href="../categories/general-machinery.html" onclick="toggleMenu()">General Machinery</a></li>
-                    <li><a href="../categories/construction-machinery.html" onclick="toggleMenu()">Construction Machinery</a></li>
-                    <li><a href="../categories/cleaning-ventilation.html" onclick="toggleMenu()">Cleaning & Ventilation</a></li>
-                    <li><a href="../categories/machine-tools.html" onclick="toggleMenu()">Machine Tools</a></li>
-                    <li><a href="../categories/logistics-equipment.html" onclick="toggleMenu()">Logistics Equipment</a></li>
-                    <li><a href="../categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>
-                    <li><a href="../categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>
-                    <li><a href="../categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a> > <a href="../categories/${categoryUrl}.html">${category}</a> > ${title}
-        </div>
-
-        <article class="article-detail">
-            <h1>${title}</h1>
-            <div class="meta">
-                <span>Author: ${author}</span> | <span>Category: ${category}</span> | <span>Published: ${date}</span>
-            </div>
-            <img src="${finalCoverImage}" alt="${title}">
-            
-            <div class="content">
-${content}
-            </div>
-        </article>
-
-        <section class="related-articles" id="relatedArticles">
-            <h2>Related Articles</h2>
-            <div class="related-articles-list" id="relatedArticlesList"></div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <a href="../index.html" class="footer-logo">smartmanu.net</a>
-                <p>Your trusted source for professional machinery information, technical articles, and industry insights. We provide comprehensive resources for machinery professionals worldwide.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>
-                    <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-                    <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                    <a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h3>Categories</h3>
-                <ul>
-                    <li><a href="../categories/general-machinery.html">General Machinery</a></li>
-                    <li><a href="../categories/construction-machinery.html">Construction Machinery</a></li>
-                    <li><a href="../categories/cleaning-ventilation.html">Cleaning & Ventilation</a></li>
-                    <li><a href="../categories/machine-tools.html">Machine Tools</a></li>
-                    <li><a href="../categories/logistics-equipment.html">Logistics Equipment</a></li>
-                    <li><a href="../categories/food-machinery.html">Food Machinery</a></li>
-                    <li><a href="../categories/other-machinery.html">Other Machinery</a></li>
-                    <li><a href="../categories/hardware-parts.html">Hardware Parts</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="../privacy-policy.html">Privacy Policy</a></li>
-                    <li><a href="../terms-of-service.html">Terms of Service</a></li>
-                    <li><a href="../dmca.html">DMCA & Copyright</a></li>
-                    <li><a href="../community-guidelines.html">Community Guidelines</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section footer-newsletter">
-                <div class="newsletter-content">
-                    <div class="newsletter-text">
-                        <h3>Newsletter</h3>
-                        <p>Subscribe to our newsletter for the latest machinery news and technical updates.</p>
-                    </div>
-                    <form class="newsletter-form" action="#" method="post">
-                        <input type="email" placeholder="Enter your email" required>
-                        <button type="submit">Subscribe</button>
-                    </form>
-                    <div class="contact-info">
-                        <span>Submission Email: <a href="mailto:NB914Y@163.com">NB914Y@163.com</a></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 smartmanu.net. All rights reserved.</p>
-            <div class="footer-bottom-links">
-                <a href="../privacy-policy.html">Privacy Policy</a>
-                <a href="../terms-of-service.html">Terms of Service</a>
-                <a href="../cookie-policy.html">Cookie Policy</a>
-                <a href="#" onclick="showCookieSettings(); return false;">Cookie Settings</a>
-                <a href="../privacy-policy.html#dsar">Do Not Sell or Share</a>
-                <a href="../dmca.html">DMCA</a>
-                <a href="../community-guidelines.html">Community Guidelines</a>
-                <a href="#sitemap">Sitemap</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="../js/main.js"></script>
-</body>
-</html>`;
+      const html = '<!DOCTYPE html>\n' +
+'<html lang="en">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>' + title + (subtitle ? ' - ' + subtitle : '') + ' - smartmanu.net</title>\n' +
+metaTags + '    <meta name="author" content="' + author + '">\n' +
+'    <meta name="category" content="' + category + '">\n' +
+'    <meta name="date" content="' + date + '">\n' +
+'    <link rel="stylesheet" href="../css/styles.css">\n' +
+'</head>\n' +
+'<body class="article-page" data-article-id="' + articleId + '">\n' +
+'    <header>\n' +
+'        <div class="container">\n' +
+'            <a href="../index.html" class="logo">smartmanu.net</a>\n' +
+'            <div class="hamburger-menu" onclick="toggleMenu()">\n' +
+'                <span></span>\n' +
+'                <span></span>\n' +
+'                <span></span>\n' +
+'            </div>\n' +
+'            <nav>\n' +
+'                <ul class="nav-links" id="navLinks">\n' +
+'                    <li><a href="../index.html" onclick="toggleMenu()">Home</a></li>\n' +
+'                    <li><a href="../categories/general-machinery.html" onclick="toggleMenu()">General Machinery</a></li>\n' +
+'                    <li><a href="../categories/construction-machinery.html" onclick="toggleMenu()">Construction Machinery</a></li>\n' +
+'                    <li><a href="../categories/cleaning-ventilation.html" onclick="toggleMenu()">Cleaning & Ventilation</a></li>\n' +
+'                    <li><a href="../categories/machine-tools.html" onclick="toggleMenu()">Machine Tools</a></li>\n' +
+'                    <li><a href="../categories/logistics-equipment.html" onclick="toggleMenu()">Logistics Equipment</a></li>\n' +
+'                    <li><a href="../categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>\n' +
+'                    <li><a href="../categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>\n' +
+'                    <li><a href="../categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>\n' +
+'                </ul>\n' +
+'            </nav>\n' +
+'        </div>\n' +
+'    </header>\n' +
+'\n' +
+'    <main class="container">\n' +
+'        <div class="breadcrumb">\n' +
+'            <a href="../index.html">Home</a> > <a href="../categories/' + categoryUrl + '.html">' + category + '</a> > ' + title + '\n' +
+'        </div>\n' +
+'\n' +
+'        <article class="article-detail">\n' +
+'            <h1>' + title + '</h1>\n' +
+'            <div class="meta">\n' +
+'                <span>Author: ' + author + '</span> | <span>Category: ' + category + '</span> | <span>Published: ' + date + '</span>\n' +
+'            </div>\n' +
+'            <img src="' + finalCoverImage + '" alt="' + title + '">\n' +
+'            \n' +
+'            <div class="content">\n' +
+content + '\n' +
+'            </div>\n' +
+'        </article>\n' +
+'\n' +
+'        <section class="related-articles" id="relatedArticles">\n' +
+'            <h2>Related Articles</h2>\n' +
+'            <div class="related-articles-list" id="relatedArticlesList"></div>\n' +
+'        </section>\n' +
+'    </main>\n' +
+'\n' +
+'    <footer>\n' +
+'        <div class="footer-content">\n' +
+'            <div class="footer-section">\n' +
+'                <a href="../index.html" class="footer-logo">smartmanu.net</a>\n' +
+'                <p>Your trusted source for professional machinery information, technical articles, and industry insights. We provide comprehensive resources for machinery professionals worldwide.</p>\n' +
+'                <div class="social-links">\n' +
+'                    <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>\n' +
+'                    <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>\n' +
+'                    <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>\n' +
+'                    <a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>\n' +
+'                </div>\n' +
+'            </div>\n' +
+'\n' +
+'            <div class="footer-section">\n' +
+'                <h3>Categories</h3>\n' +
+'                <ul>\n' +
+'                    <li><a href="../categories/general-machinery.html">General Machinery</a></li>\n' +
+'                    <li><a href="../categories/construction-machinery.html">Construction Machinery</a></li>\n' +
+'                    <li><a href="../categories/cleaning-ventilation.html">Cleaning & Ventilation</a></li>\n' +
+'                    <li><a href="../categories/machine-tools.html">Machine Tools</a></li>\n' +
+'                    <li><a href="../categories/logistics-equipment.html">Logistics Equipment</a></li>\n' +
+'                    <li><a href="../categories/food-machinery.html">Food Machinery</a></li>\n' +
+'                    <li><a href="../categories/other-machinery.html">Other Machinery</a></li>\n' +
+'                    <li><a href="../categories/hardware-parts.html">Hardware Parts</a></li>\n' +
+'                </ul>\n' +
+'            </div>\n' +
+'\n' +
+'            <div class="footer-section">\n' +
+'                <h3>Legal</h3>\n' +
+'                <ul>\n' +
+'                    <li><a href="../privacy-policy.html">Privacy Policy</a></li>\n' +
+'                    <li><a href="../terms-of-service.html">Terms of Service</a></li>\n' +
+'                    <li><a href="../dmca.html">DMCA & Copyright</a></li>\n' +
+'                    <li><a href="../community-guidelines.html">Community Guidelines</a></li>\n' +
+'                </ul>\n' +
+'            </div>\n' +
+'\n' +
+'            <div class="footer-section footer-newsletter">\n' +
+'                <div class="newsletter-content">\n' +
+'                    <div class="newsletter-text">\n' +
+'                        <h3>Newsletter</h3>\n' +
+'                        <p>Subscribe to our newsletter for the latest machinery news and technical updates.</p>\n' +
+'                    </div>\n' +
+'                    <form class="newsletter-form" action="#" method="post">\n' +
+'                        <input type="email" placeholder="Enter your email" required>\n' +
+'                        <button type="submit">Subscribe</button>\n' +
+'                    </form>\n' +
+'                    <div class="contact-info">\n' +
+'                    <span>Submission Email: <a href="mailto:NB914Y@163.com">NB914Y@163.com</a></span>\n' +
+'                    </div>\n' +
+'                </div>\n' +
+'            </div>\n' +
+'        </div>\n' +
+'\n' +
+'        <div class="footer-bottom">\n' +
+'            <p>&copy; 2026 smartmanu.net. All rights reserved.</p>\n' +
+'            <div class="footer-bottom-links">\n' +
+'                <a href="../privacy-policy.html">Privacy Policy</a>\n' +
+'                <a href="../terms-of-service.html">Terms of Service</a>\n' +
+'                <a href="../cookie-policy.html">Cookie Policy</a>\n' +
+'                <a href="#" onclick="showCookieSettings(); return false;">Cookie Settings</a>\n' +
+'                <a href="../privacy-policy.html#dsar">Do Not Sell or Share</a>\n' +
+'                <a href="../dmca.html">DMCA</a>\n' +
+'                <a href="../community-guidelines.html">Community Guidelines</a>\n' +
+'                <a href="#sitemap">Sitemap</a>\n' +
+'            </div>\n' +
+'        </div>\n' +
+'    </footer>\n' +
+'\n' +
+'    <script src="../js/main.js"></' + 'script>\n' +
+'</body>\n' +
+'</html>';
 
       const base64 = btoa(unescape(encodeURIComponent(html)));
 
