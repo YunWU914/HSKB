@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'mechanical-workshop/articles/*.html'
+  workflow_dispatch:
 
 jobs:
   generate:
