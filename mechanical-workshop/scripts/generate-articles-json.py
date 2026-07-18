@@ -146,7 +146,7 @@ def generate_sitemap(articles):
     print(f"Generated sitemap with {len(urlset)} URLs to {sitemap_path}")
 
 def main():
-    articles_dir = 'articles'
+    articles_dir = '../articles'
     json_path = os.path.join(articles_dir, 'articles.json')
     
     articles = []
