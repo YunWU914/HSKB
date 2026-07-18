@@ -22,7 +22,7 @@ jobs:
           python-version: '3.x'
 
       - name: Generate articles.json
-        run: python scripts/generate-articles-json.py
+        run: python mechanical-workshop/scripts/generate-articles-json.py
 
       - name: Check for changes
         id: check-changes
@@ -38,6 +38,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add articles/articles.json
+          git add mechanical-workshop/articles/articles.json
           git commit -m "Auto-generate articles.json"
           git push
