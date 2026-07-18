@@ -8,29 +8,29 @@ Mechanical Workshop is a professional machinery information platform, providing 
 mechanical-workshop/
 ├── index.html                 # Home page
 ├── categories/               # Category pages
-�?  ├── general-machinery.html    # General Machinery
-�?  ├── construction-machinery.html # Construction Machinery
-�?  ├── cleaning-ventilation.html  # Cleaning and Ventilation Equipment
-�?  ├── machine-tools.html         # Machine Tools and Tooling Machinery
-�?  ├── logistics-equipment.html   # Logistics Equipment
-�?  ├── food-machinery.html        # Food Machinery
-�?  ├── other-machinery.html       # Other Special-purpose Equipment
-�?  └── hardware-parts.html        # Hardware Accessories & Standard Parts
+�?  ├── general-machinery.html    # General Machinery
+�?  ├── construction-machinery.html # Construction Machinery
+�?  ├── cleaning-ventilation.html  # Cleaning and Ventilation Equipment
+�?  ├── machine-tools.html         # Machine Tools and Tooling Machinery
+�?  ├── logistics-equipment.html   # Logistics Equipment
+�?  ├── food-machinery.html        # Food Machinery
+�?  ├── other-machinery.html       # Other Special-purpose Equipment
+�?  └── hardware-parts.html        # Hardware Accessories & Standard Parts
 ├── articles/                 # Article detail pages
-�?  ├── cnc-maintenance-guide.html
-�?  ├── hydraulic-excavator-fault.html
-�?  ├── industrial-ventilation-design.html
-�?  ├── asrs-conveyor-selection.html
-�?  ├── food-packaging-hygiene.html
-�?  └── 3d-printing-industrial.html
+�?  ├── cnc-maintenance-guide.html
+�?  ├── hydraulic-excavator-fault.html
+�?  ├── industrial-ventilation-design.html
+�?  ├── asrs-conveyor-selection.html
+�?  ├── food-packaging-hygiene.html
+�?  └── 3d-printing-industrial.html
 ├── css/
-�?  └── styles.css            # Style file
+�?  └── styles.css            # Style file
 ├── js/
-�?  └── main.js               # JavaScript file
+�?  └── main.js               # JavaScript file
 ├── images/
-�?  ├── categories/           # Category cover images
-�?  ├── articles/             # Article images
-�?  └── icons/                # Icons
+�?  ├── categories/           # Category cover images
+�?  ├── articles/             # Article images
+�?  └── icons/                # Icons
 └── README.md
 ```
 
@@ -66,4 +66,4 @@ Mechanical Workshop Team
 
 ## Copyright
 
-© 2024 Mechanical Workshop - Professional Machinery Information Platform
+© 2026 Mechanical Workshop - Professional Machinery Information Platform

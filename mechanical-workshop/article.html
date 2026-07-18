@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+    <a href="#" onclick="showSubmitPopup(); return false;" class="float-submit-btn">✍️ Write for Us</a>
     <header>
         <div class="container">
             <a href="index.html" class="logo">Mechanical Workshop</a>
@@ -28,6 +29,7 @@
                     <li><a href="categories/food-machinery.html" onclick="toggleMenu()">Food Machinery</a></li>
                     <li><a href="categories/other-machinery.html" onclick="toggleMenu()">Other Machinery</a></li>
                     <li><a href="categories/hardware-parts.html" onclick="toggleMenu()">Hardware Parts</a></li>
+                    <li><a href="#" onclick="toggleMenu(); showSubmitPopup(); return false;">Write for Us</a></li>
                 </ul>
             </nav>
         </div>
@@ -70,17 +72,17 @@
                     <li><a href="categories/hardware-parts.html">Hardware Parts</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html#articles">Latest Articles</a></li>
-                    <li><a href="index.html#categories">Browse Categories</a></li>
-                </ul>
-            </div>
-        </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Mechanical Workshop. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="cookie-policy.html">Cookie Policy</a>
+                <a href="#" onclick="showCookieSettings(); return false;">Cookie Settings</a>
+                <a href="privacy-policy.html#dsar">Do Not Sell or Share</a>
+                <a href="dmca.html">DMCA</a>
+                <a href="community-guidelines.html">Community Guidelines</a>
+            </div>
         </div>
     </footer>
 
