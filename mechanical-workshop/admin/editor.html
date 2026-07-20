@@ -406,6 +406,7 @@
           🖼️ Upload Image
           <input type="file" accept="image/*" onchange="uploadImage(this)">
         </label>
+        <button class="btn btn-ghost" onclick="logoutAndRelogin()">🔑 Re-login</button>
       </div>
       <div id="status" class="status"></div>
     </div>
@@ -427,31 +428,53 @@
     const IMAGES_PATH = 'mechanical-workshop/images';
     const CATEGORIES_PATH = 'mechanical-workshop/categories';
 
-    let token = localStorage.getItem('hskb_editor_token');
+    let token = null;
     let quill;
     let coverImagePath = '';
 
     function init() {
-      if (!token) {
-        document.getElementById('loginModal').style.display = 'flex';
-      } else {
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('editorContainer').style.display = 'block';
-        startEditor();
-        loadCategories();
-        document.getElementById('articleDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('loginModal').style.display = 'flex';
+      document.getElementById('editorContainer').style.display = 'none';
+    }
+
+    async function saveToken() {
+      const val = document.getElementById('tokenInput').value.trim();
+      if (!val || (!val.startsWith('ghp_') && !val.startsWith('github_pat_'))) {
+        alert('Please enter a valid GitHub Token (starting with ghp_ or github_pat_)');
+        return;
+      }
+
+      showStatus('Verifying token...', 'info');
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARTICLES_PATH}?ref=${BRANCH}`, {
+          headers: { 'Authorization': 'token ' + val }
+        });
+
+        if (res.ok) {
+          token = val;
+          document.getElementById('loginModal').style.display = 'none';
+          document.getElementById('editorContainer').style.display = 'block';
+          startEditor();
+          loadCategories();
+          document.getElementById('articleDate').value = new Date().toISOString().split('T')[0];
+        } else if (res.status === 401) {
+          alert('Invalid token. Please check your GitHub token and try again.');
+        } else if (res.status === 403) {
+          alert('Token does not have sufficient permissions. Please ensure repo scope is checked.');
+        } else {
+          const err = await res.json();
+          alert('Token verification failed: ' + (err.message || 'Unknown error'));
+        }
+      } catch(e) {
+        alert('Network error during verification. Please try again.');
       }
     }
 
-    function saveToken() {
-      const val = document.getElementById('tokenInput').value.trim();
-      if (val && (val.startsWith('ghp_') || val.startsWith('github_pat_'))) {
-        token = val;
-        localStorage.setItem('hskb_editor_token', token);
-        init();
-      } else {
-        alert('Please enter a valid GitHub Token (starting with ghp_ or github_pat_)');
-      }
+    function logoutAndRelogin() {
+      token = null;
+      document.getElementById('loginModal').style.display = 'flex';
+      document.getElementById('editorContainer').style.display = 'none';
+      document.getElementById('tokenInput').value = '';
     }
 
     /* ========== Table Picker + Delete Buttons ========== */
@@ -767,7 +790,7 @@
               console.error('Dropped image upload error:', errMsg);
             }
           } catch(err) {
-            showStatus('Network error: ' + err.message, 'error');
+            showStatus('Network error. Please check your GitHub token. Click "Re-login" to refresh.', 'error');
           }
         };
         reader.readAsDataURL(file);
@@ -930,7 +953,7 @@
             console.error('Cover upload error:', errMsg);
           }
         } catch(e) {
-          showStatus('网络错误: ' + e.message, 'error');
+          showStatus('网络错误，请检查GitHub Token。点击"Re-login"重新登录。', 'error');
         }
       };
       reader.readAsDataURL(file);
@@ -996,7 +1019,7 @@
             console.error('Image upload error:', errMsg);
           }
         } catch(e) {
-          showStatus('网络错误: ' + e.message, 'error');
+          showStatus('网络错误，请检查GitHub Token。点击"Re-login"重新登录。', 'error');
         }
       };
       reader.readAsDataURL(file);
@@ -1053,6 +1076,69 @@
         }
       } catch(e) {
         console.error('Sitemap update error:', e.message);
+      }
+    }
+
+    async function updateArticlesJson(title, filename, category, date, author, image, description) {
+      const JSON_PATH = `${ARTICLES_PATH}/articles.json`;
+      
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${JSON_PATH}?ref=${BRANCH}`, {
+          headers: { 'Authorization': 'token ' + token }
+        });
+
+        let articles = [];
+        let sha = null;
+
+        if (getRes.ok) {
+          const data = await getRes.json();
+          articles = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+          sha = data.sha;
+        }
+
+        const link = `articles/${filename}`;
+        const cleanImage = image.replace('../', '');
+
+        const newArticle = {
+          id: Date.now(),
+          title: title,
+          link: link,
+          image: cleanImage,
+          description: description || 'No description available',
+          category: category,
+          date: date,
+          author: author
+        };
+
+        articles.push(newArticle);
+        articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+        articles.forEach((article, index) => {
+          article.id = index + 1;
+        });
+
+        const jsonContent = JSON.stringify(articles, null, 4);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonContent)));
+
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${JSON_PATH}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'token ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update articles.json: add ${filename}`,
+            content: base64Content,
+            branch: BRANCH,
+            sha: sha
+          })
+        });
+
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          console.error('Failed to update articles.json:', err.message);
+        }
+      } catch(e) {
+        console.error('articles.json update error:', e.message);
       }
     }
 
@@ -1356,6 +1442,7 @@ content + '\n' +
           showStatus('Article published! Updating sitemaps...', 'success');
           
           await updateSitemap(filename, category);
+          await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc || description);
           
           if (coverImagePath) {
             const articleUrl = `https://www.smartmanu.net/articles/${filename}`;
@@ -1392,7 +1479,7 @@ content + '\n' +
           }
         }
       } catch(e) {
-        showStatus('Network error: ' + e.message, 'error');
+        showStatus('Network error. Please check your GitHub token. Click "Re-login" to refresh.', 'error');
       }
     }
 function showStatus(msg, type) {

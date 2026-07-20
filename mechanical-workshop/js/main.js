@@ -1,38 +1,22 @@
-const articlesData = [
-    {
-        id: 6,
-        title: "Industrial 3D Printing Technology Applications and Development Trends",
-        author: "Chris Zhao",
-        category: "Other Special-purpose Equipment",
-        categoryUrl: "other-machinery.html",
-        date: "2026-06-10",
-        image: "images/categories/other-equipment.webp",
-        description: "Analyzes the application scenarios of industrial 3D printing technology in manufacturing, including technical characteristics of metal printing, plastic printing and future development trends.",
-        url: "articles/3d-printing-industrial.html"
-    },
-    {
-        id: 7,
-        title: "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
-        author: "Chris Zhao",
-        category: "General Machinery",
-        categoryUrl: "general-machinery.html",
-        date: "2026-06-25",
-        image: "images/categories/general-machinery.webp",
-        description: "Analyzes how high-efficiency stainless steel pipe production lines, high-frequency welded pipe units, and specialized drinking water pipe equipment drive enterprise transformation and upgrading.",
-        url: "articles/Seizing the Manufacturing Trend_ High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading.html"
-    },
-    {
-        id: 8,
-        title: "Tapered Pipe Machine Working Principle: Complete Technical Guide to Tube End Forming & Hydraulic Crimping",
-        author: "lrene",
-        category: "General Machinery",
-        categoryUrl: "general-machinery.html",
-        date: "2026-07-17",
-        image: "images/categories/Spinal Canal Machine 2026717.webp",
-        description: "Discover how tapered pipe machines work. Learn the complete working principle of tube end forming, high-frequency heating, hot-forging dies, and hydraulic crimping systems.",
-        url: "articles/2026-07-17-tapered-pipe-machine-working-principle-complete-technical-guide-to-tube-end-forming-hydraulic-crimping.html"
+let articlesData = [];
+
+async function loadArticlesData() {
+    try {
+        const basePath = getBasePath();
+        const response = await fetch(basePath + 'articles/articles.json?' + Date.now());
+        if (response.ok) {
+            const data = await response.json();
+            articlesData = data.map(article => ({
+                ...article,
+                url: article.link
+            }));
+        } else {
+            console.error('Failed to load articles.json');
+        }
+    } catch (error) {
+        console.error('Error loading articles.json:', error);
     }
-];
+}
 
 function getBasePath() {
     const pathname = window.location.pathname.toLowerCase();
@@ -597,8 +581,10 @@ function renderRelatedArticles(currentCategory, excludeId) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initCookiePopup();
+
+    await loadArticlesData();
 
     const articlesList = document.getElementById('articlesList');
     if (articlesList) {
