@@ -229,9 +229,11 @@ main {
 
 .article-detail {
     background: white;
-    padding: 2rem;
+    padding: 2rem 24px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 780px;
+    margin: 0 auto;
 }
 
 .article-detail h1 {
@@ -254,16 +256,17 @@ main {
 }
 
 .article-detail .content {
+    font-size: 16px;
     line-height: 1.8;
 }
 
 .article-detail .content h2 {
-    margin: 1.5rem 0 1rem;
+    margin: 2rem 0 1.25rem;
     color: #2c3e50;
 }
 
 .article-detail .content p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5em;
 }
 
 .related-articles {
@@ -616,7 +619,7 @@ footer {
     }
 
     .article-detail {
-        padding: 1rem;
+        padding: 1.5rem 24px;
     }
 
     .article-detail h1 {
@@ -674,7 +677,7 @@ footer {
 
 .article-detail th,
 .article-detail td {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: left;
     border: 1px solid #ddd;
 }

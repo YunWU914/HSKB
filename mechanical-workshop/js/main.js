@@ -545,10 +545,13 @@ function renderCategoryArticles(categoryName) {
     renderArticles(sortedArticles, 'articlesList');
 }
 
-function renderRelatedArticles(currentCategory, excludeId) {
-    const relatedArticles = articlesData.filter(
-        article => article.category === currentCategory && article.id !== excludeId
+function renderRelatedArticles(currentCategory, excludeLink) {
+    let relatedArticles = articlesData.filter(
+        article => article.category === currentCategory && article.link !== excludeLink
     );
+    
+    relatedArticles = relatedArticles.sort(() => Math.random() - 0.5).slice(0, 3);
+    
     const container = document.getElementById('relatedArticlesList');
     
     if (!container) return;
@@ -598,11 +601,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const relatedArticles = document.getElementById('relatedArticles');
     if (relatedArticles) {
-        const body = document.body;
-        const articleId = parseInt(body.dataset.articleId);
         const metaCategory = document.querySelector('meta[name="category"]');
-        if (metaCategory && articleId) {
-            renderRelatedArticles(metaCategory.content, articleId);
+        const currentUrl = window.location.pathname;
+        const articleLink = 'articles/' + currentUrl.split('/').pop();
+        if (metaCategory) {
+            renderRelatedArticles(metaCategory.content, articleLink);
         }
     }
 
