@@ -1,6 +1,16 @@
 [
     {
         "id": 1,
+        "title": "ccc",
+        "link": "articles/2026-07-20-ccc.html",
+        "image": "images/categories/general-machinery.webp",
+        "description": "No description available",
+        "category": "Uncategorized",
+        "date": "2026-07-20",
+        "author": "Anonymous"
+    },
+    {
+        "id": 2,
         "title": "Tapered Pipe Machine Working Principle: Complete Technical Guide to Tube End Forming & Hydraulic Crimping - Tapered Pipe Machine Working Principle | Tube End Forming & Hydraulic Crimping",
         "link": "articles/2026-07-17-tapered-pipe-machine-working-principle-complete-technical-guide-to-tube-end-forming-hydraulic-crimping.html",
         "image": "images/categories/general-machinery.webp",
@@ -10,47 +20,47 @@
         "author": "lrene"
     },
     {
-        "id": 2,
+        "id": 3,
         "title": "New Technology Trends in Packaging Machinery: Intelligence, Low Energy Consumption, and Automation Drive Upgrades in the Food and Beverage Industry",
         "link": "articles/packaging-machinery-tech-trends.html",
-        "image": "images/categories/other-equipment.webp",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Explore the latest technology trends in packaging machinery, including intelligent control systems, energy-efficient designs, and automation driving upgrades in the food and beverage industry.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-27",
         "author": "GU Wang"
     },
     {
-        "id": 3,
+        "id": 4,
         "title": "Demystifying Sintered Stone Cutting Machines: From Bulky to Efficient—The Ultimate Tool for Hard-Material Cutting",
         "link": "articles/sintered-stone-cutting-machines.html",
-        "image": "images/categories/other-equipment.webp",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Discover how sintered stone cutting machines evolved from bulky manual tools to precise, efficient equipment using high-pressure water jet and abrasive technology for hard-material processing.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-27",
         "author": "Yong Ng"
     },
     {
-        "id": 4,
+        "id": 5,
         "title": "A Must-Read for Sintered Stone Cutting Machine Manufacturers: A Comprehensive Analysis of Common Faults and Preventive Measures",
         "link": "articles/sintered-stone-faults-prevention.html",
-        "image": "images/categories/other-equipment.webp",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "A comprehensive analysis of common failure modes in sintered stone cutting machines, covering wear, operational errors, and design flaws, with practical preventive measures for manufacturers.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-27",
         "author": "Da wang"
     },
     {
-        "id": 5,
+        "id": 6,
         "title": "Vertical Packaging Machine: Operational Precautions and Five Key Advantages Explained (Includes List of Suitable Materials)",
         "link": "articles/vertical-packaging-machine-guide.html",
-        "image": "images/categories/other-equipment.webp",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Learn the four key operational precautions and five core advantages of vertical packaging machines, plus a comprehensive list of suitable materials for automated packaging lines.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-27",
         "author": "GU Ng"
     },
     {
-        "id": 6,
+        "id": 7,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/Seizing the Manufacturing Trend High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading.html",
         "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600",
@@ -60,7 +70,7 @@
         "author": "Chris Zhao"
     },
     {
-        "id": 7,
+        "id": 8,
         "title": "The Ultimate Guide to Pipe-Making Machine Maintenance: Practical Methods to Extend Equipment Lifespan and Boost Production Efficiency",
         "link": "articles/TheUltimateGuidetoPipe-MakingMachineMaintenancePracticalMethodstoExtendEquipmentLifespanandBoostProductionEfficiency.html",
         "image": "images/categories/general-machinery.webp",
@@ -70,7 +80,7 @@
         "author": "Yun Ng"
     },
     {
-        "id": 8,
+        "id": 9,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading.html",
         "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600",
@@ -80,17 +90,17 @@
         "author": "Chris Zhao"
     },
     {
-        "id": 9,
+        "id": 10,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/Seizing the Manufacturing Trend_ High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading.html",
-        "image": "images/categories/general-machinery.webp",
+        "image": "../images/categories/general-machinery.webp",
         "description": "Analyzes how high-efficiency stainless steel pipe production lines, high-frequency welded pipe units, and specialized drinking water pipe equipment drive enterprise transformation and upgrading in competitive markets.",
         "category": "General Machinery",
         "date": "2026-06-25",
         "author": "Chris Zhao"
     },
     {
-        "id": 10,
+        "id": 11,
         "title": "Seizing the Manufacturing Trend: High-Efficiency Stainless Steel Pipe Production Lines Drive Enterprise Transformation and Upgrading",
         "link": "articles/seizing-the-manufacturing-trend-high-efficiency-stainless-steel-pipe-production-lines-drive-enterprise-transformation-and-upgrading.html",
         "image": "images/categories/general-machinery.webp",
@@ -100,7 +110,7 @@
         "author": "Mike Zhang"
     },
     {
-        "id": 11,
+        "id": 12,
         "title": "Deep Dive into Smart Manufacturing: Value Chain Transformation in Stainless Steel Pipe Enterprises",
         "link": "articles/stainless-steel-pipe-smart-manufacturing.html",
         "image": "images/categories/general-machinery.webp",
@@ -110,17 +120,17 @@
         "author": "Unknown Author"
     },
     {
-        "id": 12,
+        "id": 13,
         "title": "Industrial 3D Printing Technology Applications and Development Trends",
         "link": "articles/3d-printing-industrial.html",
-        "image": "images/categories/other-equipment.webp",
+        "image": "images/categories/Other Special-purpose Equipment.webp",
         "description": "Analyzes the application scenarios of industrial 3D printing technology in manufacturing, including technical characteristics of metal printing, plastic printing and future development trends.",
         "category": "Other Special-purpose Equipment",
         "date": "2026-06-10",
         "author": "Chris Zhao"
     },
     {
-        "id": 13,
+        "id": 14,
         "title": "Advanced Robotics in Industrial Automation",
         "link": "articles/industrial-robotics.html",
         "image": "images/categories/general-machinery.webp",
@@ -130,37 +140,37 @@
         "author": "John Chen"
     },
     {
-        "id": 14,
+        "id": 15,
         "title": "Hygienic Design Specifications for Food Packaging Machinery",
         "link": "articles/food-packaging-hygiene.html",
-        "image": "images/categories/food-machinery.webp",
+        "image": "images/categories/Food Machinery.webp",
         "description": "Explains the hygienic design requirements for food packaging machinery, including material selection, structural design, cleaning methods and other aspects to ensure compliance with food production safety standards.",
         "category": "Food Machinery",
         "date": "2026-06-09",
         "author": "Emma Yang"
     },
     {
-        "id": 15,
+        "id": 16,
         "title": "ASRS and Conveyor Selection Guide",
         "link": "articles/asrs-conveyor-selection.html",
-        "image": "images/categories/logistics-equipment.webp",
+        "image": "images/categories/Logistics Equipment.webp",
         "description": "Introduces the composition structure of automated storage and retrieval systems, shelf type selection, conveyor system configuration and other contents to help enterprises achieve warehouse automation upgrade.",
         "category": "Logistics Equipment",
         "date": "2026-06-08",
         "author": "James Wu"
     },
     {
-        "id": 16,
+        "id": 17,
         "title": "Design Essentials for Industrial Workshop Ventilation Systems",
         "link": "articles/industrial-ventilation-design.html",
-        "image": "images/categories/cleaning-ventilation.webp",
+        "image": "images/categories/general-machinery.webp",
         "description": "Discusses the design principles of industrial ventilation systems, including key technologies such as air volume calculation, duct layout, and fan selection to ensure workshop air quality standards.",
         "category": "Cleaning & Ventilation",
         "date": "2026-06-07",
         "author": "Lisa Chen"
     },
     {
-        "id": 17,
+        "id": 18,
         "title": "Common Fault Diagnosis and Troubleshooting for Hydraulic Excavators",
         "link": "articles/hydraulic-excavator-fault.html",
         "image": "images/categories/construction-machinery.webp",
@@ -170,10 +180,10 @@
         "author": "Tom Huang"
     },
     {
-        "id": 18,
+        "id": 19,
         "title": "CNC Machine Tool Daily Maintenance Guide",
         "link": "articles/cnc-maintenance-guide.html",
-        "image": "images/categories/machine-tools.webp",
+        "image": "images/categories/general-machinery.webp",
         "description": "This article details the daily maintenance essentials for CNC Machine Tools and Tooling Machinery, including spindle maintenance, lubrication system care, cooling system inspection and other key aspects to help extend equipment lifespan.",
         "category": "Machine Tools",
         "date": "2026-06-05",
