@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -742,12 +742,11 @@
       });
 
       function uploadDroppedImage(file, insertIndex) {
-        showStatus('Uploading image: ' + file.name + '...', 'info');
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          const base64 = e.target.result.split(',')[1];
-          const ext = file.name.split('.').pop().toLowerCase();
-          const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.' + ext;
+        showStatus('Optimizing and uploading image: ' + file.name + '...', 'info');
+        try {
+          // 优化图片：最大宽度1200px，质量0.8
+          const optimized = await optimizeImage(file, 1200, 0.8);
+          const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.webp';
 
           try {
             let sha = null;
@@ -761,7 +760,7 @@
 
             const body = {
               message: 'Upload image: ' + filename,
-              content: base64,
+              content: optimized.base64,
               branch: BRANCH
             };
             if (sha) body.sha = sha;
@@ -777,7 +776,10 @@
             if (res.ok) {
               quill.insertEmbed(insertIndex, 'image', '../images/' + filename);
               await updateImageSitemap(`images/${filename}`, 'Article Content Image');
-              showStatus('Image uploaded: ' + file.name, 'success');
+              const originalSizeKB = (file.size / 1024).toFixed(1);
+              const optimizedSizeKB = (optimized.size / 1024).toFixed(1);
+              const savedPercent = ((file.size - optimized.size) / file.size * 100).toFixed(0);
+              showStatus(`✅ Image uploaded: ${file.name} (${originalSizeKB}KB → ${optimizedSizeKB}KB, saved ${savedPercent}%)`, 'success');
             } else {
               let errMsg = 'HTTP ' + res.status;
               try {
@@ -792,8 +794,10 @@
           } catch(err) {
             showStatus('Network error. Please check your GitHub token. Click "Re-login" to refresh.', 'error');
           }
-        };
-        reader.readAsDataURL(file);
+        } catch(e) {
+          showStatus('Image optimization failed: ' + e.message, 'error');
+          console.error('Image optimization error:', e);
+        }
       }
 
       // ===== Keyboard Table Deletion (backup) =====
@@ -895,21 +899,71 @@
       `;
     }
 
+    // 图片优化函数：压缩、转换为WebP、调整尺寸
+    async function optimizeImage(file, maxWidth = 1200, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            // 计算缩放尺寸
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = (height * maxWidth) / width;
+              width = maxWidth;
+            }
+
+            // 创建Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制图片
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // 导出为WebP格式
+            canvas.toBlob((blob) => {
+              const blobReader = new FileReader();
+              blobReader.onload = function(ev) {
+                resolve({
+                  base64: ev.target.result.split(',')[1],
+                  ext: 'webp',
+                  width: width,
+                  height: height,
+                  size: blob.size
+                });
+              };
+              blobReader.readAsDataURL(blob);
+            }, 'image/webp', quality);
+          };
+          img.onerror = function() {
+            reject(new Error('图片加载失败'));
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = function() {
+          reject(new Error('文件读取失败'));
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     // 上传Cover Image
     async function uploadCover(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        showStatus('Cover Image不能超过 5MB', 'error');
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('Cover Image不能超过 10MB', 'error');
         return;
       }
 
-      showStatus('正在上传封面...', 'info');
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64 = e.target.result.split(',')[1];
-        const ext = file.name.split('.').pop().toLowerCase();
-        const filename = 'cover-' + Date.now() + '.' + ext;
+      showStatus('正在优化并上传封面...', 'info');
+      try {
+        // 优化图片：最大宽度1200px，质量0.8
+        const optimized = await optimizeImage(file, 1200, 0.8);
+        const filename = 'cover-' + Date.now() + '.webp';
 
         try {
           let sha = null;
@@ -923,7 +977,7 @@
 
           const body = {
               message: 'Upload cover: ' + filename,
-              content: base64,
+              content: optimized.base64,
               branch: BRANCH
             };
             if (sha) body.sha = sha;
@@ -938,9 +992,12 @@
 
           if (res.ok) {
             coverImagePath = `../images/${filename}`;
-            document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面预览">`;
+            document.getElementById('coverPreview').innerHTML = `<img src="data:image/webp;base64,${optimized.base64}" alt="封面预览">`;
             await updateImageSitemap(`images/${filename}`, 'Article Cover');
-            showStatus('✅ 封面上传成功', 'success');
+            const originalSizeKB = (file.size / 1024).toFixed(1);
+            const optimizedSizeKB = (optimized.size / 1024).toFixed(1);
+            const savedPercent = ((file.size - optimized.size) / file.size * 100).toFixed(0);
+            showStatus(`✅ 封面上传成功 (${originalSizeKB}KB → ${optimizedSizeKB}KB，节省${savedPercent}%)`, 'success');
           } else {
             let errMsg = 'HTTP ' + res.status;
             try {
@@ -955,26 +1012,27 @@
         } catch(e) {
           showStatus('网络错误，请检查GitHub Token。点击"Re-login"重新登录。', 'error');
         }
-      };
-      reader.readAsDataURL(file);
+      } catch(e) {
+        showStatus('图片优化失败: ' + e.message, 'error');
+        console.error('Image optimization error:', e);
+      }
       input.value = '';
     }
 
-    // 上传文章内图片
+    // 上传文章内图片（带自动优化）
     async function uploadImage(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        showStatus('图片不能超过 5MB', 'error');
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('图片不能超过 10MB', 'error');
         return;
       }
 
-      showStatus('正在上传图片...', 'info');
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64 = e.target.result.split(',')[1];
-        const ext = file.name.split('.').pop().toLowerCase();
-        const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.' + ext;
+      showStatus('正在优化并上传图片...', 'info');
+      try {
+        // 优化图片：最大宽度1200px，质量0.8
+        const optimized = await optimizeImage(file, 1200, 0.8);
+        const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.webp';
 
         try {
           let sha = null;
@@ -988,7 +1046,7 @@
 
           const body = {
               message: 'Upload image: ' + filename,
-              content: base64,
+              content: optimized.base64,
               branch: BRANCH
             };
             if (sha) body.sha = sha;
@@ -1006,7 +1064,10 @@
             quill.insertEmbed(range.index, 'image', `../images/${filename}`);
             quill.setSelection(range.index + 1);
             await updateImageSitemap(`images/${filename}`, 'Article Content Image');
-            showStatus('✅ 图片上传成功，已插入文章', 'success');
+            const originalSizeKB = (file.size / 1024).toFixed(1);
+            const optimizedSizeKB = (optimized.size / 1024).toFixed(1);
+            const savedPercent = ((file.size - optimized.size) / file.size * 100).toFixed(0);
+            showStatus(`✅ 图片上传成功，已插入文章 (${originalSizeKB}KB → ${optimizedSizeKB}KB，节省${savedPercent}%)`, 'success');
           } else {
             let errMsg = 'HTTP ' + res.status;
             try {
@@ -1021,8 +1082,10 @@
         } catch(e) {
           showStatus('网络错误，请检查GitHub Token。点击"Re-login"重新登录。', 'error');
         }
-      };
-      reader.readAsDataURL(file);
+      } catch(e) {
+        showStatus('图片优化失败: ' + e.message, 'error');
+        console.error('Image optimization error:', e);
+      }
       input.value = '';
     }
 
@@ -1079,7 +1142,7 @@
       }
     }
 
-    async function updateArticlesJson(title, filename, category, date, author, image, description) {
+    async function updateArticlesJson(title, filename, category, date, author, image, description, tag, readTime) {
       const JSON_PATH = `${ARTICLES_PATH}/articles.json`;
       
       try {
@@ -1107,7 +1170,9 @@
           description: description || 'No description available',
           category: category,
           date: date,
-          author: author
+          author: author,
+          tag: tag || '',
+          readTime: readTime || '4 min read'
         };
 
         articles.push(newArticle);
@@ -1292,16 +1357,43 @@
       };
       const finalCoverImage = coverImagePath || categoryImages[category] || '../images/categories/general-machinery.webp';
 
+      const articleUrl = `https://www.smartmanu.net/articles/${filename}`;
+      const imageUrl = `https://www.smartmanu.net/${finalCoverImage.replace('../', '')}`;
+      
+      const structuredData = `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "${title.replace(/"/g, '\"')}",
+  "description": "${(seoDesc || description || title).replace(/"/g, '\"').substring(0, 200)}",
+  "image": "${imageUrl}",
+  "datePublished": "${date}T08:00:00+08:00",
+  "dateModified": "${date}T08:00:00+08:00",
+  "author": {
+    "@type": "Organization",
+    "name": "${author.replace(/"/g, '\"')}",
+    "url": "https://www.smartmanu.net"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "smartmanu.net",
+    "url": "https://www.smartmanu.net"
+  },
+  "url": "${articleUrl}"
+}
+</script>`;
+
       const html = '<!DOCTYPE html>\n' +
 '<html lang="en">\n' +
 '<head>\n' +
 '    <meta charset="UTF-8">\n' +
 '    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
 '    <title>' + title + (subtitle ? ' - ' + subtitle : '') + ' - smartmanu.net</title>\n' +
-metaTags + '    <meta name="author" content="' + author + '">\n' +
+metaTags + structuredData + '    <meta name="author" content="' + author + '">\n' +
 '    <meta name="category" content="' + category + '">\n' +
 '    <meta name="date" content="' + date + '">\n' +
-'    <link rel="stylesheet" href="../css/styles.css">\n' +
+'    <link rel="preload" href="../css/styles.css" as="style">
+<link rel="stylesheet" href="../css/styles.css" media="screen">\n' +
 '</head>\n' +
 '<body class="article-page" data-article-id="' + articleId + '">\n' +
 '    <header>\n' +
@@ -1446,7 +1538,15 @@ content + '\n' +
           showStatus('Article published! Updating sitemaps...', 'success');
           
           await updateSitemap(filename, category);
-          await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc || description);
+          // 计算阅读时长：按中文/英文平均阅读速度估算
+        const wordCount = content.replace(/<[^>]+>/g, '').replace(/\s+/g, '').length;
+        const minutes = Math.max(4, Math.ceil(wordCount / 400));
+        const readTime = `${minutes} min read`;
+        
+        // 使用第一个标签作为主tag（文章列表显示用）
+        const primaryTag = tags ? tags.split(/[,，]/)[0].trim() : '';
+        
+        await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc || description, primaryTag, readTime);
           
           if (coverImagePath) {
             const articleUrl = `https://www.smartmanu.net/articles/${filename}`;

@@ -1,13 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>smartmanu.net - Professional Machinery Information Platform</title>
-    <meta name="description" content="smartmanu.net is a professional machinery information platform, providing technical articles and industry news in general machinery, construction machinery, cleaning & ventilation, machine tools, logistics equipment, food machinery and other fields.">
+    <title>Latest Updates - smartmanu.net</title>
+    <meta name="description" content="Latest technical articles and industry news about machinery equipment, updated regularly.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="images/hero/hero-banner.webp" as="image" type="image/webp">
     <link rel="preload" href="css/styles.css" as="style">
     <link rel="stylesheet" href="css/styles.css" media="screen">
 </head>
@@ -45,63 +44,15 @@
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>smartmanu.net</h1>
-            <p>Focus on machinery equipment, sharing professional technical knowledge and industry information</p>
-        </div>
-    </section>
-
-    <section class="carousel-section">
-        <div class="container">
-            <div class="carousel-wrapper">
-                <button class="carousel-prev" onclick="prevSlide()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <button class="carousel-next" onclick="nextSlide()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-slide active" style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);"></div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);"></div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></div>
-                </div>
-                <div class="carousel-indicators">
-                    <button class="indicator active" onclick="goToSlide(0)"></button>
-                    <button class="indicator" onclick="goToSlide(1)"></button>
-                    <button class="indicator" onclick="goToSlide(2)"></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <main class="container">
-        <div class="category-tabs-wrapper">
-            <button class="tab-scroll-btn prev" onclick="scrollTabs('left')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <div class="category-tabs" id="categoryTabs">
-                <button class="tab-btn active" onclick="switchCategory('general-machinery')">General Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('construction-machinery')">Construction Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('cleaning-ventilation')">Cleaning & Ventilation</button>
-                <button class="tab-btn" onclick="switchCategory('machine-tools')">Machine Tools</button>
-                <button class="tab-btn" onclick="switchCategory('logistics-equipment')">Logistics Equipment</button>
-                <button class="tab-btn" onclick="switchCategory('food-machinery')">Food Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('other-machinery')">Special Equipment</button>
-                <button class="tab-btn" onclick="switchCategory('hardware-parts')">Hardware Parts</button>
-            </div>
-            <button class="tab-scroll-btn next" onclick="scrollTabs('right')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> > Latest Updates
         </div>
 
-        <section class="articles-section">
-            <div class="section-header">
-                <h2 class="section-title">General Machinery</h2>
-                <a href="categories/general-machinery.html" class="view-more">View More →</a>
-            </div>
-            <div class="articles-grid" id="articlesGrid">
-            </div>
+        <section>
+            <h1 class="section-title">Latest Updates</h1>
+            <p style="margin-bottom: 1.5rem; color: #666;">Explore the newest technical articles and industry news, updated regularly.</p>
+            <div class="latest-updates-list" id="latestUpdatesList"></div>
         </section>
     </main>
 
@@ -123,31 +74,11 @@
         </div>
     </section>
 
-    <section class="footer-content-area">
-        <div class="container">
-            <div class="footer-content-grid">
-                <div class="footer-column products-full-width">
-                    <h3>Products</h3>
-                    <div class="products-row">
-                        <div class="product-item">
-                            <div class="product-icon">📝</div>
-                            <a href="latest-updates.html" class="latest-updates-link"><span>Latest Updates</span></a>
-                        </div>
-                        <div class="product-item hot">
-                            <div class="product-icon">🔥</div>
-                            <a href="hot-topics.html" class="hot-topics-link" onclick="navigateToHotTopics()"><span>Hot Topics</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <a href="index.html" class="footer-logo">smartmanu.net</a>
-                <p>Your trusted source for professional machinery information, technical articles, and industry insights.</p>
+                <p>Your trusted source for professional machinery information, technical articles, and industry insights. We provide comprehensive resources for machinery professionals worldwide.</p>
                 <div class="social-links">
                     <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>
                     <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
@@ -173,12 +104,10 @@
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#">Technical Articles</a></li>
-                    <li><a href="#">Industry Trends</a></li>
-                    <li><a href="#">Community Center</a></li>
-                    <li><a href="#">Video Tutorials</a></li>
-                    <li><a href="#">Online Courses</a></li>
-                    <li><a href="#">Hot Ranking</a></li>
+                    <li><a href="latest-updates.html">Latest Updates</a></li>
+                    <li><a href="hot-topics.html">Hot Topics</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
                 </ul>
             </div>
 

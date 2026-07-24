@@ -1,0 +1,6 @@
+/en/* / 301
+/index-zh.html /index.html 301
+/index-en.html /index.html 301
+/blog/* /articles/$1 301
+/category/* /categories/$1 301
+/article/* /articles/$1 301

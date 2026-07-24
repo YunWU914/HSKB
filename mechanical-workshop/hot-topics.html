@@ -1,14 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>smartmanu.net - Professional Machinery Information Platform</title>
-    <meta name="description" content="smartmanu.net is a professional machinery information platform, providing technical articles and industry news in general machinery, construction machinery, cleaning & ventilation, machine tools, logistics equipment, food machinery and other fields.">
+    <title>Hot Rank - smartmanu.net</title>
+    <meta name="description" content="Industry Search Hotness Monitoring based on Google Search Console data.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="images/hero/hero-banner.webp" as="image" type="image/webp">
-    <link rel="preload" href="css/styles.css" as="style">
     <link rel="stylesheet" href="css/styles.css" media="screen">
 </head>
 <body>
@@ -45,64 +43,53 @@
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>smartmanu.net</h1>
-            <p>Focus on machinery equipment, sharing professional technical knowledge and industry information</p>
-        </div>
-    </section>
-
-    <section class="carousel-section">
-        <div class="container">
-            <div class="carousel-wrapper">
-                <button class="carousel-prev" onclick="prevSlide()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <button class="carousel-next" onclick="nextSlide()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-slide active" style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);"></div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);"></div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></div>
-                </div>
-                <div class="carousel-indicators">
-                    <button class="indicator active" onclick="goToSlide(0)"></button>
-                    <button class="indicator" onclick="goToSlide(1)"></button>
-                    <button class="indicator" onclick="goToSlide(2)"></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <main class="container">
-        <div class="category-tabs-wrapper">
-            <button class="tab-scroll-btn prev" onclick="scrollTabs('left')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <div class="category-tabs" id="categoryTabs">
-                <button class="tab-btn active" onclick="switchCategory('general-machinery')">General Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('construction-machinery')">Construction Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('cleaning-ventilation')">Cleaning & Ventilation</button>
-                <button class="tab-btn" onclick="switchCategory('machine-tools')">Machine Tools</button>
-                <button class="tab-btn" onclick="switchCategory('logistics-equipment')">Logistics Equipment</button>
-                <button class="tab-btn" onclick="switchCategory('food-machinery')">Food Machinery</button>
-                <button class="tab-btn" onclick="switchCategory('other-machinery')">Special Equipment</button>
-                <button class="tab-btn" onclick="switchCategory('hardware-parts')">Hardware Parts</button>
+        <div class="hot-rank-layout">
+            <!-- Left Column: Recommended Articles -->
+            <div class="hot-rank-left">
+                <div class="hot-rank-section-header">
+                    <h2>🔥 Recommended Articles</h2>
+                    <p>Based on hot topics</p>
+                </div>
+                <div class="hot-rank-articles-grid" id="hotRankArticles">
+                </div>
             </div>
-            <button class="tab-scroll-btn next" onclick="scrollTabs('right')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-        </div>
 
-        <section class="articles-section">
-            <div class="section-header">
-                <h2 class="section-title">General Machinery</h2>
-                <a href="categories/general-machinery.html" class="view-more">View More →</a>
+            <!-- Right Column: Hot Rank + Promotions -->
+            <div class="hot-rank-right">
+                <!-- Hot Rank Card -->
+                <div class="hot-rank-card">
+                    <div class="hot-rank-header">
+                        <div class="hot-rank-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2-1.6 3.5-4 4-6.5 2.224 1.946 3.072 3.857 2 6-.5 1-1 1.62-1 3a2.5 2.5 0 0 0 2.5 2.5c.4 0 .782-.068 1.129-.18-.879 2.237-2.7 4.18-5.129 4.18-3.4 0-6.186-2.517-6.5-6 .314 3.483-3.1 6-6.5 6-2.429 0-4.25-1.943-5.129-4.18C4.218 14.432 4.6 14.5 5 14.5Z"/>
+                            </svg>
+                        </div>
+                        <div class="hot-rank-title">
+                            <h2>Hot Rank</h2>
+                            <p>Industry Search Hotness Monitoring</p>
+                        </div>
+                    </div>
+                    <div class="hot-rank-subtitle">Based on Google global search traffic · Updated weekly</div>
+                    <div class="hot-rank-list" id="hotRankList">
+                    </div>
+                </div>
+
+                <!-- Promotion Cards -->
+                <div class="hot-rank-promotions">
+                    <div class="hot-rank-promo-card">
+                        <h3>Machine Tools & Equipment</h3>
+                        <p>CNC machines, cutting tools and precision equipment</p>
+                        <a href="https://www.smartmanu.net/categories/machine-tools.html" class="hot-rank-promo-btn" target="_blank">View Details</a>
+                    </div>
+                    <div class="hot-rank-promo-card">
+                        <h3>Food Processing Machinery</h3>
+                        <p>Packaging, processing and hygiene equipment</p>
+                        <a href="https://www.smartmanu.net/categories/food-machinery.html" class="hot-rank-promo-btn" target="_blank">View Details</a>
+                    </div>
+                </div>
             </div>
-            <div class="articles-grid" id="articlesGrid">
-            </div>
-        </section>
+        </div>
     </main>
 
     <section class="newsletter-section">
@@ -118,26 +105,6 @@
                         <button type="submit">Subscribe</button>
                     </form>
                     <p class="newsletter-privacy">No spam, unsubscribe anytime.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="footer-content-area">
-        <div class="container">
-            <div class="footer-content-grid">
-                <div class="footer-column products-full-width">
-                    <h3>Products</h3>
-                    <div class="products-row">
-                        <div class="product-item">
-                            <div class="product-icon">📝</div>
-                            <a href="latest-updates.html" class="latest-updates-link"><span>Latest Updates</span></a>
-                        </div>
-                        <div class="product-item hot">
-                            <div class="product-icon">🔥</div>
-                            <a href="hot-topics.html" class="hot-topics-link" onclick="navigateToHotTopics()"><span>Hot Topics</span></a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -178,7 +145,7 @@
                     <li><a href="#">Community Center</a></li>
                     <li><a href="#">Video Tutorials</a></li>
                     <li><a href="#">Online Courses</a></li>
-                    <li><a href="#">Hot Ranking</a></li>
+                    <li><a href="hot-topics.html">Hot Ranking</a></li>
                 </ul>
             </div>
 

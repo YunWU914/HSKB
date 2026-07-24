@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading... - Mechanical Workshop</title>
     <meta name="description" content="Mechanical Workshop Article">
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="stylesheet" href="css/styles.css" media="screen">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 </head>
 <body>
     <a href="#" onclick="showSubmitPopup(); return false;" class="float-submit-btn">✍️ Write for Us</a>
@@ -86,7 +87,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
     <script>
         // 获取 URL 参数 ?file=articles/xxx.md
         const params = new URLSearchParams(window.location.search);
@@ -129,9 +130,10 @@
                     // 设置页面信息
                     document.title = (frontmatter.title || 'Article') + ' - Mechanical Workshop';
                     document.getElementById('article-title').textContent = frontmatter.title || 'Untitled';
+                    const formattedDate = frontmatter.date ? formatDate(frontmatter.date) : 'Unknown';
                     document.getElementById('article-meta').innerHTML = 
                         '<span>Category: ' + (frontmatter.category || 'General') + '</span> | ' +
-                        '<span>Published: ' + (frontmatter.date || 'Unknown') + '</span>';
+                        '<span>Published: ' + formattedDate + '</span>';
                     
                     // 面包屑
                     const catUrl = frontmatter.category_url || 'categories/other-machinery.html';

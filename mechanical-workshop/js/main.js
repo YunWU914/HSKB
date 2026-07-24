@@ -1,4 +1,5 @@
 let articlesData = [];
+let hotTopicsData = [];
 
 async function loadArticlesData() {
     try {
@@ -16,6 +17,25 @@ async function loadArticlesData() {
     } catch (error) {
         console.error('Error loading articles.json:', error);
     }
+}
+
+async function loadHotTopicsData() {
+    try {
+        const basePath = getBasePath();
+        const response = await fetch(basePath + 'data/gsc_hot.json?' + Date.now());
+        if (response.ok) {
+            hotTopicsData = await response.json();
+        } else {
+            console.error('Failed to load gsc_hot.json');
+        }
+    } catch (error) {
+        console.error('Error loading gsc_hot.json:', error);
+    }
+}
+
+function navigateToHotTopics() {
+    // Smooth navigation to hot topics page
+    window.location.href = 'hot-topics.html';
 }
 
 function getBasePath() {
@@ -502,6 +522,12 @@ function showCookieSettings() {
     toggleCookieSettings();
 }
 
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 function renderArticles(articles, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -513,18 +539,32 @@ function renderArticles(articles, containerId) {
 
     const basePath = getBasePath();
 
-    container.innerHTML = articles.map(article => `
-        <article class="article-card">
-            <img src="${basePath}${article.image}" alt="${article.title}">
+    container.innerHTML = articles.map(article => {
+        const articleUrl = `https://www.smartmanu.net/${article.link}`;
+        const formattedDate = formatDate(article.date);
+        return `
+        <article class="article-card" itemscope itemtype="https://schema.org/Article">
+            <div class="article-card-image-wrapper">
+                <img itemprop="image" src="${basePath}${article.image}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200">
+                <meta itemprop="url" content="${articleUrl}">
+                <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
+            </div>
             <div class="article-card-content">
-                <h3>${article.title}</h3>
+                <h3 itemprop="headline">${article.title}</h3>
                 <div class="meta">
-                    <span>${article.author}</span> | <span>${article.date}</span>
+                    <span itemprop="author" itemscope itemtype="https://schema.org/Organization">
+                        <span itemprop="name">${article.author}</span>
+                    </span>
+                    <span>|</span>
+                    <span itemprop="datePublished" content="${article.date}">${formattedDate}</span>
+                    <span class="read-time">${article.readTime || '4 min'} read</span>
                 </div>
-                <p>${article.description}</p>
+                <p itemprop="description">${article.description}</p>
+                <span class="read-more">Read more →</span>
             </div>
         </article>
-    `).join('');
+    `;
+    }).join('');
 
     const cards = container.querySelectorAll('.article-card');
     cards.forEach((card, index) => {
@@ -539,10 +579,154 @@ function renderLatestArticles() {
     renderArticles(sortedArticles, 'articlesList');
 }
 
+function renderLatestUpdatesArticles() {
+    const container = document.getElementById('latestUpdatesList');
+    if (!container) return;
+
+    const sortedArticles = [...articlesData].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (sortedArticles.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No articles available.</p>';
+        return;
+    }
+
+    const basePath = getBasePath();
+
+    container.innerHTML = sortedArticles.map((article) => {
+        return `
+        <article class="latest-update-card" onclick="window.location.href='${basePath}${article.link}'">
+            <h3>${article.title}</h3>
+            <div class="latest-update-meta">
+                <span>${formatDate(article.date)}</span>
+                <span>${article.category}</span>
+                <span>${article.readTime || '4 min'} read</span>
+            </div>
+        </article>
+    `;
+    }).join('');
+}
+
 function renderCategoryArticles(categoryName) {
     const filteredArticles = articlesData.filter(article => article.category === categoryName);
     const sortedArticles = filteredArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
     renderArticles(sortedArticles, 'articlesList');
+}
+
+function renderHotTopics() {
+    const container = document.getElementById('hotTopicsList');
+    if (!container) return;
+
+    // Get top 5 hot topics
+    const topHot = hotTopicsData.slice(0, 5);
+
+    if (topHot.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No hot topics available.</p>';
+        return;
+    }
+
+    const basePath = getBasePath();
+
+    container.innerHTML = topHot.map((item, index) => {
+        // Find corresponding article data
+        const article = articlesData.find(a => a.link === item.url);
+        const title = article ? article.title : item.url.split('/').pop().replace(/-/g, ' ').replace('.html', '');
+        
+        return `
+        <article class="hot-topic-item" onclick="window.location.href='${basePath}${item.url}'">
+            <span class="hot-rank ${index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : ''}">${index + 1}</span>
+            <div class="hot-content">
+                <h4>${title}</h4>
+                <div class="hot-meta">
+                    <span class="hot-value">🔥 ${item.hot_value}</span>
+                </div>
+            </div>
+        </article>
+    `;
+    }).join('');
+}
+
+function renderHotTopicsFull() {
+    const container = document.getElementById('hotRankList');
+    if (!container) return;
+
+    if (hotTopicsData.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hot topics data available.</p>';
+        return;
+    }
+
+    const basePath = getBasePath();
+
+    // Format hot value as "XX万热度" (XX ten-thousand hotness)
+    function formatHotValue(value) {
+        const num = parseFloat(value);
+        if (num >= 10000) {
+            return (num / 10000).toFixed(1) + '万热度';
+        }
+        return num.toFixed(0) + '热度';
+    }
+
+    container.innerHTML = hotTopicsData.slice(0, 5).map((item, index) => {
+        // Find corresponding article data
+        const article = articlesData.find(a => a.link === item.url);
+        const title = article ? article.title : item.url.split('/').pop().replace(/-/g, ' ').replace('.html', '');
+        
+        // Determine rank style
+        let rankClass = '';
+        if (index === 0) rankClass = 'rank-top';
+        else if (index === 1) rankClass = 'rank-second';
+        else if (index === 2) rankClass = 'rank-third';
+        else rankClass = 'rank-normal';
+        
+        return `
+        <article class="hot-rank-item" onclick="window.location.href='${basePath}${item.url}'">
+            <span class="hot-rank-num ${rankClass}">${index + 1}</span>
+            <div class="hot-rank-content">
+                <h4>${title}</h4>
+            </div>
+            <span class="hot-rank-value">🔥 ${formatHotValue(item.hot_value)}</span>
+        </article>
+    `;
+    }).join('');
+}
+
+function renderHotRankArticles() {
+    const container = document.getElementById('hotRankArticles');
+    if (!container) return;
+
+    // Get articles sorted by hot value
+    const articlesWithHot = articlesData.map(article => {
+        const hotItem = hotTopicsData.find(h => h.url === article.link);
+        return {
+            ...article,
+            hot_value: hotItem ? hotItem.hot_value : 0
+        };
+    }).sort((a, b) => b.hot_value - a.hot_value);
+
+    if (articlesWithHot.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No articles available.</p>';
+        return;
+    }
+
+    const basePath = getBasePath();
+
+    container.innerHTML = articlesWithHot.map((article, index) => {
+        return `
+        <article class="hot-rank-article-card" onclick="window.location.href='${basePath}${article.link}'">
+            <div class="hot-rank-article-header">
+                <h3>${article.title}</h3>
+            </div>
+            <div class="hot-rank-article-meta">
+                <span class="hot-rank-article-date">${formatDate(article.date)}</span>
+                <span class="hot-rank-article-category">${article.category}</span>
+            </div>
+            <p class="hot-rank-article-summary">${article.summary || 'Read more about this topic...'}</p>
+            <div class="hot-rank-article-footer">
+                <span class="hot-rank-article-readtime">${article.readTime}</span>
+                <span class="hot-rank-article-tag">#${article.tag || 'Hot'}</span>
+            </div>
+        </article>
+    `;
+    }).join('');
 }
 
 function renderRelatedArticles(currentCategory, excludeLink) {
@@ -563,18 +747,29 @@ function renderRelatedArticles(currentCategory, excludeLink) {
 
     const basePath = getBasePath();
 
-    container.innerHTML = relatedArticles.map(article => `
-        <article class="article-card">
-            <img src="${basePath}${article.image}" alt="${article.title}">
+    container.innerHTML = relatedArticles.map(article => {
+        return `
+        <article class="article-card" itemscope itemtype="https://schema.org/Article">
+            <div class="article-card-image-wrapper">
+                <img itemprop="image" src="${basePath}${article.image}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200">
+                <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
+            </div>
             <div class="article-card-content">
-                <h3>${article.title}</h3>
+                <h3 itemprop="headline">${article.title}</h3>
                 <div class="meta">
-                    <span>${article.author}</span> | <span>${article.date}</span>
+                    <span itemprop="author" itemscope itemtype="https://schema.org/Organization">
+                        <span itemprop="name">${article.author}</span>
+                    </span>
+                    <span>|</span>
+                    <span itemprop="datePublished" content="${article.date}">${formatDate(article.date)}</span>
+                    <span class="read-time">${article.readTime || '4 min'} read</span>
                 </div>
-                <p>${article.description}</p>
+                <p itemprop="description">${article.description}</p>
+                <span class="read-more">Read more →</span>
             </div>
         </article>
-    `).join('');
+    `;
+    }).join('');
 
     const cards = container.querySelectorAll('.article-card');
     cards.forEach((card, index) => {
@@ -584,10 +779,163 @@ function renderRelatedArticles(currentCategory, excludeLink) {
     });
 }
 
+function switchCategory(categoryId) {
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    const activeBtn = Array.from(buttons).find(btn => btn.textContent.toLowerCase().includes(categoryId.replace('-', ' ')));
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    const categoryNames = {
+        'general-machinery': 'General Machinery',
+        'construction-machinery': 'Construction Machinery',
+        'cleaning-ventilation': 'Cleaning & Ventilation',
+        'machine-tools': 'Machine Tools',
+        'logistics-equipment': 'Logistics Equipment',
+        'food-machinery': 'Food Machinery',
+        'other-machinery': 'Other Special-purpose Equipment',
+        'hardware-parts': 'Hardware Accessories & Standard Parts'
+    };
+
+    const sectionTitle = document.querySelector('.articles-section .section-title');
+    if (sectionTitle) {
+        sectionTitle.textContent = categoryNames[categoryId] || 'Articles';
+    }
+
+    const viewMore = document.querySelector('.articles-section .view-more');
+    if (viewMore) {
+        viewMore.href = 'categories/' + categoryId + '.html';
+    }
+
+    renderCategoryArticlesForGrid(categoryId);
+}
+
+function renderCategoryArticlesForGrid(categoryId) {
+    const categoryNames = {
+        'general-machinery': 'General Machinery',
+        'construction-machinery': 'Construction Machinery',
+        'cleaning-ventilation': 'Cleaning & Ventilation',
+        'machine-tools': 'Machine Tools',
+        'logistics-equipment': 'Logistics Equipment',
+        'food-machinery': 'Food Machinery',
+        'other-machinery': 'Other Special-purpose Equipment',
+        'hardware-parts': 'Hardware Accessories & Standard Parts'
+    };
+
+    const filteredArticles = articlesData.filter(article => article.category === (categoryNames[categoryId] || ''));
+    const sortedArticles = filteredArticles.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+    renderArticles(sortedArticles, 'articlesGrid');
+}
+
+let currentSlide = 0;
+let carouselInterval;
+
+function initCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    if (slides.length === 0) return;
+    
+    startAutoPlay();
+    
+    slides.forEach((slide, index) => {
+        slide.addEventListener('mouseenter', stopAutoPlay);
+        slide.addEventListener('mouseleave', startAutoPlay);
+    });
+}
+
+function startAutoPlay() {
+    carouselInterval = setInterval(nextSlide, 5000);
+}
+
+function stopAutoPlay() {
+    clearInterval(carouselInterval);
+}
+
+function nextSlide() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    slides[currentSlide].classList.remove('active');
+    indicators[currentSlide].classList.remove('active');
+    
+    currentSlide = (currentSlide + 1) % slides.length;
+    
+    slides[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+}
+
+function prevSlide() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    slides[currentSlide].classList.remove('active');
+    indicators[currentSlide].classList.remove('active');
+    
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    
+    slides[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+}
+
+function goToSlide(index) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    slides[currentSlide].classList.remove('active');
+    indicators[currentSlide].classList.remove('active');
+    
+    currentSlide = index;
+    
+    slides[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+}
+
+function scrollTabs(direction) {
+    const tabsContainer = document.getElementById('categoryTabs');
+    if (!tabsContainer) return;
+    
+    const scrollAmount = 200;
+    if (direction === 'left') {
+        tabsContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        tabsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+}
+
+function performSearch() {
+    const input = document.getElementById('searchInput');
+    if (input && input.value.trim()) {
+        const searchTerm = input.value.trim().toLowerCase().replace(/\s+/g, '');
+        const results = articlesData.filter(article => {
+            const titleClean = article.title.toLowerCase().replace(/\s+/g, '');
+            const descClean = article.description.toLowerCase().replace(/\s+/g, '');
+            const categoryClean = article.category.toLowerCase().replace(/\s+/g, '');
+            const tagClean = article.tag ? article.tag.toLowerCase().replace(/\s+/g, '') : '';
+            return titleClean.includes(searchTerm) ||
+                   descClean.includes(searchTerm) ||
+                   categoryClean.includes(searchTerm) ||
+                   tagClean.includes(searchTerm);
+        });
+        renderArticles(results, 'articlesGrid');
+        
+        const sectionTitle = document.querySelector('.articles-section .section-title');
+        if (sectionTitle) {
+            sectionTitle.textContent = 'Search Results: "' + input.value.trim() + '"';
+        }
+
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     initCookiePopup();
+    initCarousel();
 
-    await loadArticlesData();
+    await Promise.all([loadArticlesData(), loadHotTopicsData()]);
 
     const articlesList = document.getElementById('articlesList');
     if (articlesList) {
@@ -599,6 +947,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    const articlesGrid = document.getElementById('articlesGrid');
+    if (articlesGrid) {
+        renderCategoryArticlesForGrid('general-machinery');
+    }
+
     const relatedArticles = document.getElementById('relatedArticles');
     if (relatedArticles) {
         const metaCategory = document.querySelector('meta[name="category"]');
@@ -608,6 +961,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderRelatedArticles(metaCategory.content, articleLink);
         }
     }
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+
+    // Render hot topics (for index.html sidebar)
+    renderHotTopics();
+    
+    // Render full hot topics list (for hot-topics.html)
+    renderHotTopicsFull();
+    
+    // Render recommended articles (for hot-topics.html)
+    renderHotRankArticles();
+    
+    // Render latest updates articles (for latest-updates.html)
+    renderLatestUpdatesArticles();
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {

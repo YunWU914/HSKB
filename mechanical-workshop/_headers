@@ -1,0 +1,26 @@
+/*
+  Cache-Control: max-age=0, must-revalidate
+
+/css/*
+  Cache-Control: max-age=31536000, immutable
+
+/js/*
+  Cache-Control: max-age=31536000, immutable
+
+/images/*
+  Cache-Control: max-age=31536000, immutable
+
+*.html
+  Cache-Control: max-age=86400
+
+*.xml
+  Cache-Control: max-age=86400
+
+*.txt
+  Cache-Control: max-age=86400
+
+/*.css
+  Cache-Control: max-age=31536000, immutable
+
+/*.js
+  Cache-Control: max-age=31536000, immutable
