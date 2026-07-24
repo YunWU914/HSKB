@@ -123,4 +123,13 @@
     </image:image>
   </url>
 
+
+  <url>
+    <loc>https://www.smartmanu.net</loc>
+    <image:image>
+      <image:loc>https://www.smartmanu.net/images/cover-1784885710857.webp</image:loc>
+      <image:title>Article Cover</image:title>
+      <image:caption>Article Cover</image:caption>
+    </image:image>
+  </url>
 </urlset>
