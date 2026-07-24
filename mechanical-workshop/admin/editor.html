@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -741,7 +741,7 @@
         });
       });
 
-      function uploadDroppedImage(file, insertIndex) {
+      async function uploadDroppedImage(file, insertIndex) {
         showStatus('Optimizing and uploading image: ' + file.name + '...', 'info');
         try {
           // 优化图片：最大宽度1200px，质量0.8
@@ -1381,7 +1381,7 @@
   },
   "url": "${articleUrl}"
 }
-</script>`;
+<' + 'script>`;
 
       const html = '<!DOCTYPE html>\n' +
 '<html lang="en">\n' +
@@ -1389,11 +1389,13 @@
 '    <meta charset="UTF-8">\n' +
 '    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
 '    <title>' + title + (subtitle ? ' - ' + subtitle : '') + ' - smartmanu.net</title>\n' +
-metaTags + structuredData + '    <meta name="author" content="' + author + '">\n' +
+metaTags +
+structuredData +
+'    <meta name="author" content="' + author + '">\n' +
 '    <meta name="category" content="' + category + '">\n' +
 '    <meta name="date" content="' + date + '">\n' +
-'    <link rel="preload" href="../css/styles.css" as="style">
-<link rel="stylesheet" href="../css/styles.css" media="screen">\n' +
+'    <link rel="preload" href="../css/styles.css" as="style">\n' +
+'    <link rel="stylesheet" href="../css/styles.css" media="screen">\n' +
 '</head>\n' +
 '<body class="article-page" data-article-id="' + articleId + '">\n' +
 '    <header>\n' +
@@ -1433,7 +1435,7 @@ metaTags + structuredData + '    <meta name="author" content="' + author + '">\n
 '            <img src="' + finalCoverImage + '" alt="' + title + '">\n' +
 '            \n' +
 '            <div class="content">\n' +
-content + '\n' +
+'            ' + content + '\n' +
 '            </div>\n' +
 '        </article>\n' +
 '\n' +
@@ -1586,7 +1588,8 @@ content + '\n' +
         showStatus('Network error. Please check your GitHub token. Click "Re-login" to refresh.', 'error');
       }
     }
-function showStatus(msg, type) {
+
+    function showStatus(msg, type) {
       const el = document.getElementById('status');
       el.textContent = msg;
       el.className = 'status show ' + type;
