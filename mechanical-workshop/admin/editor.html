@@ -691,16 +691,21 @@
       const qlContainer = editorEl.querySelector('.ql-container') || editorEl;
       const qlEditor = editorEl.querySelector('.ql-editor') || editorEl;
 
-      // Prevent default drag behaviors on the whole page
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(eventName) {
-        qlEditor.addEventListener(eventName, preventDefaults, false);
-        document.body.addEventListener(eventName, preventDefaults, false);
-      });
-
+      // Prevent default drag behaviors - use capture phase on document to ensure drop events are not intercepted
       function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
       }
+
+      // Document level capture phase handlers to prevent browser default behavior (opening file)
+      ['dragenter', 'dragover', 'drop'].forEach(function(eventName) {
+        document.addEventListener(eventName, preventDefaults, true); // Capture phase
+      });
+
+      // Editor level handlers
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(eventName) {
+        qlEditor.addEventListener(eventName, preventDefaults, false);
+      });
 
       // Highlight editor on drag over
       qlEditor.addEventListener('dragenter', function() {
@@ -733,15 +738,15 @@
         const range = quill.getSelection(true) || { index: quill.getLength() };
 
         files.forEach(function(file, i) {
-          if (file.size > 5 * 1024 * 1024) {
-            showStatus('Image too large (max 5MB): ' + file.name, 'error');
+          if (file.size > 10 * 1024 * 1024) {
+            showStatus('Image too large (max 10MB): ' + file.name, 'error');
             return;
           }
           uploadDroppedImage(file, range.index + i);
         });
       });
 
-      function uploadDroppedImage(file, insertIndex) {
+      async function uploadDroppedImage(file, insertIndex) {
         showStatus('Optimizing and uploading image: ' + file.name + '...', 'info');
         try {
           // 优化图片：最大宽度1200px，质量0.8
@@ -799,6 +804,28 @@
           console.error('Image optimization error:', e);
         }
       }
+
+      // ===== Paste Image Support =====
+      document.addEventListener('paste', async function(e) {
+        const items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+
+        const imageItems = Array.from(items).filter(item => item.type.startsWith('image/'));
+        if (imageItems.length === 0) return;
+
+        e.preventDefault();
+        const range = quill.getSelection(true) || { index: quill.getLength() };
+
+        for (let i = 0; i < imageItems.length; i++) {
+          const file = imageItems[i].getAsFile();
+          if (!file) continue;
+          if (file.size > 10 * 1024 * 1024) {
+            showStatus('Pasted image too large (max 10MB)', 'error');
+            continue;
+          }
+          await uploadDroppedImage(file, range.index + i);
+        }
+      });
 
       // ===== Keyboard Table Deletion (backup) =====
       quill.root.addEventListener('keydown', function(e) {
@@ -1294,6 +1321,20 @@
       }
       if (!date) {
         alert('Please select publish date');
+        return;
+      }
+
+      // Validate images in content before publishing
+      const imgTags = quill.root.querySelectorAll('img');
+      const missingImages = [];
+      imgTags.forEach(img => {
+        const src = img.getAttribute('src');
+        if (!src || !src.startsWith('../images/')) {
+          missingImages.push(src || 'empty src');
+        }
+      });
+      if (missingImages.length > 0) {
+        alert(`Warning: Found ${missingImages.length} images that may not have been uploaded properly:\n${missingImages.join('\n')}\n\nPlease re-upload these images before publishing.`);
         return;
       }
 
