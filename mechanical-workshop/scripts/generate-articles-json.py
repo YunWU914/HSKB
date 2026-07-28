@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from datetime import datetime
 
-BASE_URL = 'https://www.smartmanu.net'
+BASE_URL = 'https://forum.tbvoh.com'
 
 SITEMAP_STATIC_PAGES = [
     {'path': '', 'changefreq': 'daily', 'priority': '1.0'},
@@ -60,7 +60,7 @@ def extract_metadata_from_html(filepath):
         category = category_match.group(1).strip() if category_match else 'General Machinery'
         
         title = title_match.group(1).strip() if title_match else os.path.basename(filepath).replace('.html', '').replace('-', ' ').title()
-        title = re.sub(r'\s*-\s*smartmanu\.net$', '', title, flags=re.IGNORECASE)
+        title = re.sub(r'\s*-\s*forum\.tbvoh\.com$', '', title, flags=re.IGNORECASE)
         
         return {
             'title': title,

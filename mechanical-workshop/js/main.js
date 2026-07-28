@@ -540,7 +540,7 @@ function renderArticles(articles, containerId) {
     const basePath = getBasePath();
 
     container.innerHTML = articles.map(article => {
-        const articleUrl = `https://www.smartmanu.net/${article.link}`;
+        const articleUrl = `https://forum.tbvoh.com/${article.link}`;
         const formattedDate = formatDate(article.date);
         return `
         <article class="article-card" itemscope itemtype="https://schema.org/Article">

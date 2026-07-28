@@ -1,8 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.smartmanu.net/sitemap.xml
-Sitemap: https://www.smartmanu.net/image-sitemap.xml
+Sitemap: https://forum.tbvoh.com/sitemap.xml
+Sitemap: https://forum.tbvoh.com/image-sitemap.xml
 
 Disallow: /admin/
 Disallow: /private/
