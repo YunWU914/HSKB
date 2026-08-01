@@ -4,7 +4,8 @@ let hotTopicsData = [];
 async function loadArticlesData() {
     try {
         const basePath = getBasePath();
-        const response = await fetch(basePath + 'articles/articles.json?' + Date.now());
+        // 移除 Date.now() 以利用浏览器缓存，提升性能
+        const response = await fetch(basePath + 'articles/articles.json');
         if (response.ok) {
             const data = await response.json();
             articlesData = data.map(article => ({
@@ -22,7 +23,8 @@ async function loadArticlesData() {
 async function loadHotTopicsData() {
     try {
         const basePath = getBasePath();
-        const response = await fetch(basePath + 'data/gsc_hot.json?' + Date.now());
+        // 移除 Date.now() 以利用浏览器缓存
+        const response = await fetch(basePath + 'data/gsc_hot.json');
         if (response.ok) {
             hotTopicsData = await response.json();
         } else {
@@ -538,9 +540,11 @@ function renderArticles(articles, containerId) {
     }
 
     const basePath = getBasePath();
+    const siteOrigin = window.location.origin; // 动态获取当前域名，避免硬编码
 
     container.innerHTML = articles.map(article => {
-        const articleUrl = `https://forum.tbvoh.com/${article.link}`;
+        // 移除硬编码域名，使用动态获取的 origin 拼接完整 URL
+        const articleUrl = `${siteOrigin}/${article.link.replace(/^\//, '')}`;
         const formattedDate = formatDate(article.date);
         return `
         <article class="article-card" itemscope itemtype="https://schema.org/Article">
@@ -858,39 +862,48 @@ function nextSlide() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
     
+    // 增加健壮性检查
+    if (slides.length === 0) return;
+    
     slides[currentSlide].classList.remove('active');
-    indicators[currentSlide].classList.remove('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.remove('active');
     
     currentSlide = (currentSlide + 1) % slides.length;
     
     slides[currentSlide].classList.add('active');
-    indicators[currentSlide].classList.add('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.add('active');
 }
 
 function prevSlide() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
     
+    // 增加健壮性检查
+    if (slides.length === 0) return;
+    
     slides[currentSlide].classList.remove('active');
-    indicators[currentSlide].classList.remove('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.remove('active');
     
     currentSlide = (currentSlide - 1 + slides.length) % slides.length;
     
     slides[currentSlide].classList.add('active');
-    indicators[currentSlide].classList.add('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.add('active');
 }
 
 function goToSlide(index) {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
     
+    // 增加健壮性检查
+    if (slides.length === 0 || index < 0 || index >= slides.length) return;
+    
     slides[currentSlide].classList.remove('active');
-    indicators[currentSlide].classList.remove('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.remove('active');
     
     currentSlide = index;
     
     slides[currentSlide].classList.add('active');
-    indicators[currentSlide].classList.add('active');
+    if (indicators[currentSlide]) indicators[currentSlide].classList.add('active');
 }
 
 function scrollTabs(direction) {

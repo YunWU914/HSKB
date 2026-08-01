@@ -547,6 +547,7 @@ nav a:hover {
     border: 1px solid #eee;
     cursor: pointer;
     transition: all 0.3s;
+    text-decoration: none;
 }
 
 .product-item:hover {
@@ -1302,6 +1303,15 @@ footer {
     background: linear-gradient(90deg, #f97316 0%, #ef4444 100%);
     border-radius: 3px;
     transition: width 0.5s ease;
+}
+
+/* Latest Updates Link */
+.latest-updates-link {
+    text-decoration: none;
+}
+
+.latest-updates-link span {
+    color: #555;
 }
 
 /* Hot Topics Link */
