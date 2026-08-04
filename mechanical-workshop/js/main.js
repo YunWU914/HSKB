@@ -115,11 +115,19 @@ function generateCookiePopupHTML() {
     `;
 }
 
-function dismissCookiePopup() {
+function hideCookiePopup() {
     const popup = document.getElementById('cookiePopup');
     if (popup) {
         popup.classList.remove('show');
+        // 过渡动画完成后完全隐藏，确保不占据布局空间
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 300);
     }
+}
+
+function dismissCookiePopup() {
+    hideCookiePopup();
     localStorage.setItem('cookieConsent', JSON.stringify({
         dismissed: true,
         consented: false,
@@ -159,10 +167,7 @@ function acceptAllCookies() {
         functional: true,
         timestamp: Date.now()
     }));
-    const popup = document.getElementById('cookiePopup');
-    if (popup) {
-        popup.classList.remove('show');
-    }
+    hideCookiePopup();
 }
 
 function rejectAllCookies() {
@@ -174,10 +179,7 @@ function rejectAllCookies() {
         functional: false,
         timestamp: Date.now()
     }));
-    const popup = document.getElementById('cookiePopup');
-    if (popup) {
-        popup.classList.remove('show');
-    }
+    hideCookiePopup();
 }
 
 function saveCustomPreferences() {
@@ -197,10 +199,7 @@ function saveCustomPreferences() {
         timestamp: Date.now()
     }));
     
-    const popup = document.getElementById('cookiePopup');
-    if (popup) {
-        popup.classList.remove('show');
-    }
+    hideCookiePopup();
 }
 
 function generateSubmitPopupHTML() {
@@ -407,7 +406,7 @@ function submitArticle() {
     formData.append('_subject', `Article Submission: ${title}`);
     formData.append('_replyto', email);
 
-    fetch('https://formsubmit.co/NB914Y@163.com', {
+    fetch('https://formsubmit.co/submit@tbvoh.com', {
         method: 'POST',
         body: formData,
         headers: {
@@ -419,12 +418,12 @@ function submitArticle() {
         if (data.success || data.message) {
             showSuccessMessage();
         } else {
-            alert('Submission failed. Please try again or send an email directly to NB914Y@163.com');
+            alert('Submission failed. Please try again or send an email directly to submit@tbvoh.com');
         }
     })
     .catch(error => {
         console.error('Submission error:', error);
-        alert('Submission failed due to network error. Please send an email directly to NB914Y@163.com');
+        alert('Submission failed due to network error. Please send an email directly to submit@tbvoh.com');
     })
     .finally(() => {
         submitBtn.textContent = originalBtnText;
@@ -492,6 +491,8 @@ function initCookiePopup() {
     
     setTimeout(() => {
         if (popup) {
+            // 确保弹窗可见
+            popup.style.display = 'block';
             popup.classList.add('show');
         }
     }, 500);
@@ -504,6 +505,8 @@ function showCookieSettings() {
         popup = document.getElementById('cookiePopup');
     }
     
+    // 重置 display 样式以确保弹窗可见
+    popup.style.display = 'block';
     popup.classList.add('show');
     
     const consentData = localStorage.getItem('cookieConsent');

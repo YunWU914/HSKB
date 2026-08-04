@@ -829,11 +829,17 @@ main {
     border-radius: 12px;
     max-width: 500px;
     width: 90%;
-    transition: transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .cookie-popup.show {
     transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .cookie-header {
@@ -1918,44 +1924,6 @@ footer {
     background-color: #e9ecef;
 }
 
-.float-submit-btn {
-    position: fixed;
-    right: 20px;
-    bottom: 30px;
-    background-color: #3498db;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
-    z-index: 999;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.float-submit-btn:hover {
-    background-color: #2980b9;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
-}
-
-.float-submit-btn:active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-    .float-submit-btn {
-        right: 15px;
-        bottom: 20px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-}
-
 .auth-form {
     max-width: 420px;
     margin: 4rem auto;
@@ -2039,12 +2007,11 @@ footer {
     right: 0;
     bottom: 0;
     z-index: 2000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    overflow-y: auto;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .submit-popup.show {
@@ -2053,7 +2020,7 @@ footer {
 }
 
 .submit-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -2067,12 +2034,13 @@ footer {
     background: white;
     border-radius: 12px;
     max-width: 580px;
-    width: 90%;
+    width: calc(100% - 32px);
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     transform: translateY(20px);
     transition: transform 0.3s ease;
+    margin: 5vh auto;
 }
 
 .submit-popup.show .submit-content {
@@ -2321,9 +2289,10 @@ footer {
 
 @media (max-width: 768px) {
     .submit-content {
-        max-width: 95%;
-        width: 95%;
+        max-width: calc(100% - 16px);
+        width: calc(100% - 16px);
         max-height: 95vh;
+        margin: 2vh auto;
     }
 
     .submit-body {
@@ -2375,12 +2344,11 @@ footer {
     right: 0;
     bottom: 0;
     z-index: 3000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    overflow-y: auto;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .success-popup.show {
@@ -2389,7 +2357,7 @@ footer {
 }
 
 .success-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -2403,12 +2371,13 @@ footer {
     background: white;
     border-radius: 12px;
     max-width: 400px;
-    width: 90%;
+    width: calc(100% - 32px);
     padding: 2rem;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     transform: translateY(20px);
     transition: transform 0.3s ease;
+    margin: 10vh auto;
 }
 
 .success-popup.show .success-content {
@@ -2810,14 +2779,6 @@ footer {
         min-height: 44px;
     }
 
-    .float-submit-btn {
-        right: 12px;
-        bottom: 15px;
-        padding: 10px 18px;
-        font-size: 0.85rem;
-        gap: 6px;
-    }
-
     .auth-form {
         padding: 1.75rem;
         margin: 2rem auto;
@@ -2951,13 +2912,6 @@ footer {
 
     .hot-content h4 {
         font-size: 0.825rem;
-    }
-
-    .float-submit-btn {
-        right: 10px;
-        bottom: 12px;
-        padding: 8px 14px;
-        font-size: 0.8rem;
     }
 
     .auth-form {

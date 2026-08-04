@@ -1347,10 +1347,6 @@
       rawHtml = rawHtml.replace(/\s*data-row="[^"]*"/gi, '');
       // Remove data-list attributes from list items
       rawHtml = rawHtml.replace(/\s*data-list="[^"]*"/gi, '');
-      // Remove all inline style attributes from spans
-      rawHtml = rawHtml.replace(/<span([^>]*)style="[^"]*"([^>]*)>/gi, '<span$1$2>');
-      // Remove style attributes from strong/b tags that only contain default colors
-      rawHtml = rawHtml.replace(/<(strong|b)([^>]*)style="[^"]*"([^>]*)>/gi, '<$1$2$3>');
       // Remove all style attributes from span, strong, b tags
       rawHtml = rawHtml.replace(/(<(span|strong|b)[^>]*)\s+style="[^"]*"/gi, '$1');
       // Remove contenteditable="false" from all elements
@@ -1401,18 +1397,20 @@
       const articleUrl = `https://forum.tbvoh.com/articles/${filename}`;
       const imageUrl = `https://forum.tbvoh.com/${finalCoverImage.replace('../', '')}`;
       
-      const structuredData = `<script type="application/ld+json">
-{
+      const safeTitle = title.replace(/"/g, '&quot;');
+      const safeDesc = (seoDesc || title).replace(/"/g, '&quot;').substring(0, 200);
+      const safeAuthor = author.replace(/"/g, '&quot;');
+      const jsonLd = `{
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "${title.replace(/"/g, '\"')}",
-  "description": "${(seoDesc || description || title).replace(/"/g, '\"').substring(0, 200)}",
+  "headline": "${safeTitle}",
+  "description": "${safeDesc}",
   "image": "${imageUrl}",
   "datePublished": "${date}T08:00:00+08:00",
   "dateModified": "${date}T08:00:00+08:00",
   "author": {
     "@type": "Organization",
-    "name": "${author.replace(/"/g, '\"')}",
+    "name": "${safeAuthor}",
     "url": "https://forum.tbvoh.com"
   },
   "publisher": {
@@ -1421,8 +1419,8 @@
     "url": "https://forum.tbvoh.com"
   },
   "url": "${articleUrl}"
-}
-</script>`;
+}`;
+      const structuredData = '<script type="application/ld+json">' + jsonLd + '<\/scr' + 'ipt>';
 
       const html = '<!DOCTYPE html>\n' +
 '<html lang="en">\n' +
@@ -1433,8 +1431,8 @@
 metaTags + structuredData + '    <meta name="author" content="' + author + '">\n' +
 '    <meta name="category" content="' + category + '">\n' +
 '    <meta name="date" content="' + date + '">\n' +
-'    <link rel="preload" href="../css/styles.css" as="style">
-<link rel="stylesheet" href="../css/styles.css" media="screen">\n' +
+'    <link rel="preload" href="../css/styles.css" as="style">\n' +
+'<link rel="stylesheet" href="../css/styles.css" media="screen">\n' +
 '</head>\n' +
 '<body class="article-page" data-article-id="' + articleId + '">\n' +
 '    <header>\n' +
@@ -1532,7 +1530,7 @@ content + '\n' +
 '                        <button type="submit">Subscribe</button>\n' +
 '                    </form>\n' +
 '                    <div class="contact-info">\n' +
-'                    <span>Submission Email: <a href="mailto:NB914Y@163.com">NB914Y@163.com</a></span>\n' +
+'                    <span>Submission Email: <a href="mailto:submit@tbvoh.com">submit@tbvoh.com</a></span>\n' +
 '                    </div>\n' +
 '                </div>\n' +
 '            </div>\n' +
@@ -1587,7 +1585,7 @@ content + '\n' +
         // 使用第一个标签作为主tag（文章列表显示用）
         const primaryTag = tags ? tags.split(/[,，]/)[0].trim() : '';
         
-        await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc || description, primaryTag, readTime);
+        await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc, primaryTag, readTime);
           
           if (coverImagePath) {
             const articleUrl = `https://forum.tbvoh.com/articles/${filename}`;
