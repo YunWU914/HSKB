@@ -123,4 +123,13 @@
     </image:image>
   </url>
 
+
+  <url>
+    <loc>https://forum.tbvoh.com</loc>
+    <image:image>
+      <image:loc>https://forum.tbvoh.com/images/cover-1786010385865.webp</image:loc>
+      <image:title>Article Cover</image:title>
+      <image:caption>Article Cover</image:caption>
+    </image:image>
+  </url>
 </urlset>
