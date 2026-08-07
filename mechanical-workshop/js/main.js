@@ -1,16 +1,34 @@
 let articlesData = [];
 let hotTopicsData = [];
+let shortLinksMap = {};
+
+// 对图片路径进行 URL 编码，处理空格、中文等特殊字符
+function encodeImagePath(path) {
+    if (!path) return '';
+    // 如果已经是 http/https 开头的绝对 URL，直接返回
+    if (/^https?:\/\//.test(path)) return path;
+    // 分离目录和文件名，只编码文件名部分
+    const lastSlash = path.lastIndexOf('/');
+    if (lastSlash === -1) {
+        return encodeURI(path);
+    }
+    const dir = path.substring(0, lastSlash + 1);
+    const file = path.substring(lastSlash + 1);
+    return dir + encodeURI(file);
+}
 
 async function loadArticlesData() {
     try {
         const basePath = getBasePath();
-        // 移除 Date.now() 以利用浏览器缓存，提升性能
-        const response = await fetch(basePath + 'articles/articles.json');
+        // 添加时间戳参数避免浏览器缓存，确保获取最新文章数据
+        const response = await fetch(basePath + 'articles/articles.json?t=' + Date.now());
         if (response.ok) {
             const data = await response.json();
             articlesData = data.map(article => ({
                 ...article,
-                url: article.link
+                url: article.link,
+                // 预先编码图片路径，避免渲染时重复处理
+                image: encodeImagePath(article.image)
             }));
         } else {
             console.error('Failed to load articles.json');
@@ -24,7 +42,7 @@ async function loadHotTopicsData() {
     try {
         const basePath = getBasePath();
         // 移除 Date.now() 以利用浏览器缓存
-        const response = await fetch(basePath + 'data/gsc_hot.json');
+        const response = await fetch(basePath + 'data/gsc_hot.json?t=' + Date.now());
         if (response.ok) {
             hotTopicsData = await response.json();
         } else {
@@ -33,6 +51,25 @@ async function loadHotTopicsData() {
     } catch (error) {
         console.error('Error loading gsc_hot.json:', error);
     }
+}
+
+async function loadShortLinksData() {
+    try {
+        const basePath = getBasePath();
+        const response = await fetch(basePath + 'data/short_links.json?t=' + Date.now());
+        if (response.ok) {
+            shortLinksMap = await response.json();
+        }
+    } catch (error) {
+        console.error('Error loading short_links.json:', error);
+    }
+}
+
+function getArticleUrl(articleLink) {
+    if (shortLinksMap[articleLink]) {
+        return '/s/' + shortLinksMap[articleLink];
+    }
+    return articleLink;
 }
 
 function navigateToHotTopics() {
@@ -543,16 +580,26 @@ function renderArticles(articles, containerId) {
     }
 
     const basePath = getBasePath();
-    const siteOrigin = window.location.origin; // 动态获取当前域名，避免硬编码
+    const siteOrigin = window.location.origin;
+
+    // 获取图片的实际 src，正确处理外部 URL 和相对路径
+    function getImageSrc(imagePath) {
+        if (!imagePath) return '';
+        // 如果是外部 URL（以 http/https 开头），直接返回
+        if (/^https?:\/\//.test(imagePath)) return imagePath;
+        // 否则添加 basePath 前缀
+        return basePath + imagePath;
+    }
 
     container.innerHTML = articles.map(article => {
-        // 移除硬编码域名，使用动态获取的 origin 拼接完整 URL
         const articleUrl = `${siteOrigin}/${article.link.replace(/^\//, '')}`;
+        const shortUrl = getArticleUrl(article.link);
         const formattedDate = formatDate(article.date);
+        const imageSrc = getImageSrc(article.image);
         return `
-        <article class="article-card" itemscope itemtype="https://schema.org/Article">
+        <article class="article-card" itemscope itemtype="https://schema.org/Article" data-url="${shortUrl}">
             <div class="article-card-image-wrapper">
-                <img itemprop="image" src="${basePath}${article.image}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200">
+                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="this.onerror=null; this.src='${basePath}images/categories/general-machinery.webp';">
                 <meta itemprop="url" content="${articleUrl}">
                 <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
             </div>
@@ -576,7 +623,8 @@ function renderArticles(articles, containerId) {
     const cards = container.querySelectorAll('.article-card');
     cards.forEach((card, index) => {
         card.addEventListener('click', () => {
-            window.location.href = basePath + articles[index].url;
+            const url = card.getAttribute('data-url') || basePath + articles[index].url;
+            window.location.href = url;
         });
     });
 }
@@ -600,8 +648,9 @@ function renderLatestUpdatesArticles() {
     const basePath = getBasePath();
 
     container.innerHTML = sortedArticles.map((article) => {
+        const shortUrl = getArticleUrl(article.link);
         return `
-        <article class="latest-update-card" onclick="window.location.href='${basePath}${article.link}'">
+        <article class="latest-update-card" onclick="window.location.href='${shortUrl}'">
             <h3>${article.title}</h3>
             <div class="latest-update-meta">
                 <span>${formatDate(article.date)}</span>
@@ -637,9 +686,10 @@ function renderHotTopics() {
         // Find corresponding article data
         const article = articlesData.find(a => a.link === item.url);
         const title = article ? article.title : item.url.split('/').pop().replace(/-/g, ' ').replace('.html', '');
+        const shortUrl = getArticleUrl(item.url);
         
         return `
-        <article class="hot-topic-item" onclick="window.location.href='${basePath}${item.url}'">
+        <article class="hot-topic-item" onclick="window.location.href='${shortUrl}'">
             <span class="hot-rank ${index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : ''}">${index + 1}</span>
             <div class="hot-content">
                 <h4>${title}</h4>
@@ -676,6 +726,7 @@ function renderHotTopicsFull() {
         // Find corresponding article data
         const article = articlesData.find(a => a.link === item.url);
         const title = article ? article.title : item.url.split('/').pop().replace(/-/g, ' ').replace('.html', '');
+        const shortUrl = getArticleUrl(item.url);
         
         // Determine rank style
         let rankClass = '';
@@ -685,7 +736,7 @@ function renderHotTopicsFull() {
         else rankClass = 'rank-normal';
         
         return `
-        <article class="hot-rank-item" onclick="window.location.href='${basePath}${item.url}'">
+        <article class="hot-rank-item" onclick="window.location.href='${shortUrl}'">
             <span class="hot-rank-num ${rankClass}">${index + 1}</span>
             <div class="hot-rank-content">
                 <h4>${title}</h4>
@@ -717,8 +768,9 @@ function renderHotRankArticles() {
     const basePath = getBasePath();
 
     container.innerHTML = articlesWithHot.map((article, index) => {
+        const shortUrl = getArticleUrl(article.link);
         return `
-        <article class="hot-rank-article-card" onclick="window.location.href='${basePath}${article.link}'">
+        <article class="hot-rank-article-card" onclick="window.location.href='${shortUrl}'">
             <div class="hot-rank-article-header">
                 <h3>${article.title}</h3>
             </div>
@@ -754,11 +806,20 @@ function renderRelatedArticles(currentCategory, excludeLink) {
 
     const basePath = getBasePath();
 
+    // 获取图片的实际 src，正确处理外部 URL 和相对路径
+    function getImageSrc(imagePath) {
+        if (!imagePath) return '';
+        if (/^https?:\/\//.test(imagePath)) return imagePath;
+        return basePath + imagePath;
+    }
+
     container.innerHTML = relatedArticles.map(article => {
+        const imageSrc = getImageSrc(article.image);
+        const shortUrl = getArticleUrl(article.link);
         return `
-        <article class="article-card" itemscope itemtype="https://schema.org/Article">
+        <article class="article-card" itemscope itemtype="https://schema.org/Article" data-url="${shortUrl}">
             <div class="article-card-image-wrapper">
-                <img itemprop="image" src="${basePath}${article.image}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200">
+                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="this.onerror=null; this.src='${basePath}images/categories/general-machinery.webp';">
                 <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
             </div>
             <div class="article-card-content">
@@ -781,7 +842,8 @@ function renderRelatedArticles(currentCategory, excludeLink) {
     const cards = container.querySelectorAll('.article-card');
     cards.forEach((card, index) => {
         card.addEventListener('click', () => {
-            window.location.href = basePath + relatedArticles[index].url;
+            const url = card.getAttribute('data-url') || basePath + relatedArticles[index].url;
+            window.location.href = url;
         });
     });
 }
@@ -951,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initCookiePopup();
     initCarousel();
 
-    await Promise.all([loadArticlesData(), loadHotTopicsData()]);
+    await Promise.all([loadArticlesData(), loadHotTopicsData(), loadShortLinksData()]);
 
     const articlesList = document.getElementById('articlesList');
     if (articlesList) {

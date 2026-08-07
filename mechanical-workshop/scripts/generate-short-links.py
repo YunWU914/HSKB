@@ -79,8 +79,8 @@ def main():
     
     # 加载已有映射
     short_links = load_existing_short_links()
-    existing_hashes = set(short_links.keys())
-    existing_articles = set(short_links.values())
+    existing_articles = set(short_links.keys())  # 文章路径集合 (keys)
+    existing_hashes = set(short_links.values())   # 短码集合 (values)
     
     print(f"Loaded {len(short_links)} existing short links")
 
@@ -102,14 +102,16 @@ def main():
         print(f"Generated short link: /s/{hash_str} -> {article_link}")
 
     # 检查是否有已删除的文章
+    removed_count = 0
     for article_link in list(existing_articles):
         full_path = os.path.join(articles_dir, article_link.replace('articles/', ''))
         if not os.path.exists(full_path):
             hash_str = short_links.pop(article_link)
+            removed_count += 1
             print(f"Removed short link for deleted article: /s/{hash_str} -> {article_link}")
 
     # 保存映射和更新重定向
-    if new_articles or existing_articles - set(short_links.keys()):
+    if new_articles or removed_count > 0:
         save_short_links(short_links)
         update_redirects(short_links)
         print(f"Updated {len(short_links)} short links total")

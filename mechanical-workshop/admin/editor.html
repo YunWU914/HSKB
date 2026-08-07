@@ -408,6 +408,8 @@
         </label>
         <button class="btn btn-ghost" onclick="logoutAndRelogin()">🔑 Re-login</button>
       </div>
+      <!-- Hidden file input for Quill toolbar image button -->
+      <input type="file" id="quillImageInput" accept="image/*" style="display:none" onchange="handleQuillImageSelect(this)">
       <div id="status" class="status"></div>
     </div>
 
@@ -431,6 +433,11 @@
     let token = null;
     let quill;
     let coverImagePath = '';
+
+    function generateSecureFilename(prefix) {
+      const uuid = crypto.randomUUID().replace(/-/g, '');
+      return prefix + '-' + uuid + '.webp';
+    }
 
     function init() {
       document.getElementById('loginModal').style.display = 'flex';
@@ -683,6 +690,12 @@
         }
       });
 
+      // Override Quill's default image handler to use GitHub upload instead of base64 embed
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', function() {
+        document.getElementById('quillImageInput').click();
+      });
+
       // Init table picker after toolbar renders
       setTimeout(initTablePicker, 200);
 
@@ -691,15 +704,20 @@
       const qlContainer = editorEl.querySelector('.ql-container') || editorEl;
       const qlEditor = editorEl.querySelector('.ql-editor') || editorEl;
 
-      // Prevent default drag behaviors - use capture phase on document to ensure drop events are not intercepted
+      // Document level: only prevent browser default (opening file), don't stop propagation
+      function preventBrowserDefault(e) {
+        e.preventDefault();
+      }
+
+      // Editor level: prevent default and stop propagation to avoid parent handlers
       function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
       }
 
-      // Document level capture phase handlers to prevent browser default behavior (opening file)
+      // Document level capture phase: just prevent browser from opening dropped files
       ['dragenter', 'dragover', 'drop'].forEach(function(eventName) {
-        document.addEventListener(eventName, preventDefaults, true); // Capture phase
+        document.addEventListener(eventName, preventBrowserDefault, true);
       });
 
       // Editor level handlers
@@ -723,7 +741,7 @@
         qlEditor.style.outlineOffset = '';
       });
 
-      // Handle dropped files
+      // Handle dropped files - this runs AFTER preventDefaults on the same element
       qlEditor.addEventListener('drop', function(e) {
         const dt = e.dataTransfer;
         if (!dt || !dt.files) return;
@@ -734,24 +752,25 @@
 
         if (files.length === 0) return;
 
-        // Get drop position in editor
-        const range = quill.getSelection(true) || { index: quill.getLength() };
+        // Use current selection position or end of editor
+        const sel = quill.getSelection();
+        const insertIndex = sel ? sel.index : quill.getLength();
 
         files.forEach(function(file, i) {
           if (file.size > 10 * 1024 * 1024) {
             showStatus('Image too large (max 10MB): ' + file.name, 'error');
             return;
           }
-          uploadDroppedImage(file, range.index + i);
+          uploadDroppedImage(file, insertIndex + i);
         });
-      });
+      }, false);
 
       async function uploadDroppedImage(file, insertIndex) {
         showStatus('Optimizing and uploading image: ' + file.name + '...', 'info');
         try {
           // 优化图片：最大宽度1200px，质量0.8
           const optimized = await optimizeImage(file, 1200, 0.8);
-          const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.webp';
+          const filename = generateSecureFilename('img');
 
           try {
             let sha = null;
@@ -990,7 +1009,7 @@
       try {
         // 优化图片：最大宽度1200px，质量0.8
         const optimized = await optimizeImage(file, 1200, 0.8);
-        const filename = 'cover-' + Date.now() + '.webp';
+        const filename = generateSecureFilename('cover');
 
         try {
           let sha = null;
@@ -1059,7 +1078,7 @@
       try {
         // 优化图片：最大宽度1200px，质量0.8
         const optimized = await optimizeImage(file, 1200, 0.8);
-        const filename = 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '.webp';
+        const filename = generateSecureFilename('img');
 
         try {
           let sha = null;
@@ -1095,6 +1114,75 @@
             const optimizedSizeKB = (optimized.size / 1024).toFixed(1);
             const savedPercent = ((file.size - optimized.size) / file.size * 100).toFixed(0);
             showStatus(`✅ 图片上传成功，已插入文章 (${originalSizeKB}KB → ${optimizedSizeKB}KB，节省${savedPercent}%)`, 'success');
+          } else {
+            let errMsg = 'HTTP ' + res.status;
+            try {
+              const err = await res.json();
+              errMsg += ': ' + (err.message || JSON.stringify(err));
+            } catch(e) {
+              errMsg += ': ' + await res.text();
+            }
+            showStatus('上传失败: ' + errMsg, 'error');
+            console.error('Image upload error:', errMsg);
+          }
+        } catch(e) {
+          showStatus('网络错误，请检查GitHub Token。点击"Re-login"重新登录。', 'error');
+        }
+      } catch(e) {
+        showStatus('图片优化失败: ' + e.message, 'error');
+        console.error('Image optimization error:', e);
+      }
+      input.value = '';
+    }
+
+    // Handle image selected via Quill toolbar button
+    async function handleQuillImageSelect(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('图片不能超过 10MB', 'error');
+        return;
+      }
+
+      showStatus('正在优化并上传图片...', 'info');
+      try {
+        const optimized = await optimizeImage(file, 1200, 0.8);
+        const filename = generateSecureFilename('img');
+
+        try {
+          let sha = null;
+          const checkRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}?ref=${BRANCH}`, {
+            headers: { 'Authorization': 'token ' + token }
+          });
+          if (checkRes.ok) {
+            const existingData = await checkRes.json();
+            sha = existingData.sha;
+          }
+
+          const body = {
+            message: 'Upload image: ' + filename,
+            content: optimized.base64,
+            branch: BRANCH
+          };
+          if (sha) body.sha = sha;
+          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${IMAGES_PATH}/${filename}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'token ' + token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+
+          if (res.ok) {
+            const range = quill.getSelection() || { index: quill.getLength() };
+            quill.insertEmbed(range.index, 'image', `../images/${filename}`);
+            quill.setSelection(range.index + 1);
+            await updateImageSitemap(`images/${filename}`, 'Article Content Image');
+            const originalSizeKB = (file.size / 1024).toFixed(1);
+            const optimizedSizeKB = (optimized.size / 1024).toFixed(1);
+            const savedPercent = ((file.size - optimized.size) / file.size * 100).toFixed(0);
+            showStatus(`✅ 图片上传成功 (${originalSizeKB}KB → ${optimizedSizeKB}KB，节省${savedPercent}%)`, 'success');
           } else {
             let errMsg = 'HTTP ' + res.status;
             try {
@@ -1187,7 +1275,14 @@
         }
 
         const link = `articles/${filename}`;
-        const cleanImage = image.replace('../', '');
+        // 清理图片路径：移除 '../' 前缀，确保存储的是相对于网站根目录的路径
+        let cleanImage = image || '';
+        // 移除所有 '../' 前缀（可能有多个）
+        while (cleanImage.startsWith('../')) {
+          cleanImage = cleanImage.substring(3);
+        }
+        // 移除可能开头的 '/'
+        cleanImage = cleanImage.replace(/^\//, '');
 
         const newArticle = {
           id: Date.now(),
@@ -1231,6 +1326,140 @@
         }
       } catch(e) {
         console.error('articles.json update error:', e.message);
+      }
+    }
+
+    // 生成随机短码
+    function generateRandomHash(existingHashes) {
+      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let hash;
+      do {
+        const length = 6 + Math.floor(Math.random() * 3); // 6-8 chars
+        hash = '';
+        for (let i = 0; i < length; i++) {
+          hash += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+      } while (existingHashes.has(hash));
+      return hash;
+    }
+
+    // 更新短链接映射
+    async function updateShortLinks(articleLink) {
+      const SHORT_LINKS_PATH = 'mechanical-workshop/data/short_links.json';
+      const REDIRECTS_PATH = 'mechanical-workshop/_redirects';
+      
+      try {
+        // 读取现有的 short_links.json
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${SHORT_LINKS_PATH}?ref=${BRANCH}`, {
+          headers: { 'Authorization': 'token ' + token }
+        });
+
+        let shortLinks = {};
+        let sha = null;
+
+        if (getRes.ok) {
+          const data = await getRes.json();
+          shortLinks = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+          sha = data.sha;
+        }
+
+        // 检查文章是否已有短链接
+        if (shortLinks[articleLink]) {
+          console.log('Short link already exists:', shortLinks[articleLink]);
+          return shortLinks[articleLink];
+        }
+
+        // 生成唯一短码
+        const existingHashes = new Set(Object.values(shortLinks));
+        const hash = generateRandomHash(existingHashes);
+        
+        // 添加新映射
+        shortLinks[articleLink] = hash;
+        
+        // 保存 short_links.json
+        const jsonContent = JSON.stringify(shortLinks, null, 4);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonContent)));
+
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${SHORT_LINKS_PATH}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'token ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update short_links.json: add ${hash}`,
+            content: base64Content,
+            branch: BRANCH,
+            sha: sha || undefined
+          })
+        });
+
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          console.error('Failed to update short_links.json:', err.message);
+        }
+
+        // 更新 _redirects 文件
+        try {
+          const redirectsRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${REDIRECTS_PATH}?ref=${BRANCH}`, {
+            headers: { 'Authorization': 'token ' + token }
+          });
+
+          let redirectsContent = '';
+          let redirectsSha = null;
+          const AUTO_START = '# === AUTO-GENERATED SHORT LINKS START ===';
+          const AUTO_END = '# === AUTO-GENERATED SHORT LINKS END ===';
+
+          if (redirectsRes.ok) {
+            const data = await redirectsRes.json();
+            redirectsContent = decodeURIComponent(escape(atob(data.content)));
+            redirectsSha = data.sha;
+          }
+
+          // 构建新的重定向内容
+          const newRule = `/s/${hash} ${articleLink} 302`;
+          
+          if (redirectsContent.includes(AUTO_START) && redirectsContent.includes(AUTO_END)) {
+            // 在自动生成区域内添加新规则
+            const startIdx = redirectsContent.indexOf(AUTO_START) + AUTO_START.length;
+            const endIdx = redirectsContent.indexOf(AUTO_END);
+            const existingRules = redirectsContent.substring(startIdx, endIdx).trim();
+            
+            if (existingRules) {
+              redirectsContent = redirectsContent.substring(0, startIdx) + '\n' + newRule + '\n' + redirectsContent.substring(endIdx);
+            } else {
+              redirectsContent = redirectsContent.substring(0, startIdx) + '\n' + newRule + '\n' + redirectsContent.substring(endIdx);
+            }
+          } else {
+            // 在文件末尾添加自动生成区域
+            if (!redirectsContent.endsWith('\n')) redirectsContent += '\n';
+            redirectsContent += `\n${AUTO_START}\n${newRule}\n${AUTO_END}\n`;
+          }
+
+          const redirectsBase64 = btoa(unescape(encodeURIComponent(redirectsContent)));
+
+          await fetch(`https://api.github.com/repos/${REPO}/contents/${REDIRECTS_PATH}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'token ' + token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Update _redirects: add short link /s/${hash}`,
+              content: redirectsBase64,
+              branch: BRANCH,
+              sha: redirectsSha || undefined
+            })
+          });
+        } catch (e) {
+          console.error('Redirects update error:', e.message);
+        }
+
+        console.log(`Short link generated: /s/${hash} -> ${articleLink}`);
+        return hash;
+      } catch (e) {
+        console.error('Short links update error:', e.message);
+        return null;
       }
     }
 
@@ -1551,7 +1780,7 @@ content + '\n' +
 '        </div>\n' +
 '    </footer>\n' +
 '\n' +
-'    <script src="../js/main.js"></' + 'script>\n' +
+'    <script src="../js/main.js?v=20260725"></' + 'script>\n' +
 '</body>\n' +
 '</html>';
 
@@ -1586,6 +1815,13 @@ content + '\n' +
         const primaryTag = tags ? tags.split(/[,，]/)[0].trim() : '';
         
         await updateArticlesJson(title, filename, category, date, author, finalCoverImage, seoDesc, primaryTag, readTime);
+          
+          // 生成短链接
+          const articleLink = `articles/${filename}`;
+          const shortHash = await updateShortLinks(articleLink);
+          if (shortHash) {
+            console.log(`Short link: https://forum.tbvoh.com/s/${shortHash}`);
+          }
           
           if (coverImagePath) {
             const articleUrl = `https://forum.tbvoh.com/articles/${filename}`;

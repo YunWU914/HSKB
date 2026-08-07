@@ -123,27 +123,4 @@
     </image:image>
   </url>
 
-
-  <url>
-    <loc>https://forum.tbvoh.com</loc>
-    <image:image>
-      <image:loc>https://forum.tbvoh.com/images/img-1786010475837-nol8q5.webp</image:loc>
-      <image:title>Article Content Image</image:title>
-      <image:caption>Article Content Image</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://forum.tbvoh.com/images/cover-1786010385865.webp</image:loc>
-      <image:title>Article Cover</image:title>
-      <image:caption>Article Cover</image:caption>
-    </image:image>
-  </url>
-
-  <url>
-    <loc>https://forum.tbvoh.com/articles/2026-08-06-how-to-choose-a-manufacturer-of-stone-processing-equipment-a-comprehensive-guide-to-selecting-cnc-processing-equipment-for-sintered-stone-and-natural-stone-2026-.html</loc>
-    <image:image>
-      <image:loc>https://forum.tbvoh.com/images/cover-1786010385865.webp</image:loc>
-      <image:title>How to Choose a Manufacturer of Stone Processing Equipment? A Comprehensive Guide to Selecting CNC Processing Equipment for Sintered Stone and Natural Stone (2026)</image:title>
-      <image:caption>How to Choose a Manufacturer of Stone Processing Equipment? A Comprehensive Guide to Selecting CNC Processing Equipment for Sintered Stone and Natural Stone (2026)</image:caption>
-    </image:image>
-  </url>
 </urlset>
