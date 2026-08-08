@@ -3,17 +3,24 @@ let hotTopicsData = [];
 let shortLinksMap = {};
 
 // 对图片路径进行 URL 编码，处理空格、中文等特殊字符
+// 同时清理 '../' 前缀和开头的 '/'，确保路径一致性
 function encodeImagePath(path) {
     if (!path) return '';
     // 如果已经是 http/https 开头的绝对 URL，直接返回
     if (/^https?:\/\//.test(path)) return path;
-    // 分离目录和文件名，只编码文件名部分
-    const lastSlash = path.lastIndexOf('/');
-    if (lastSlash === -1) {
-        return encodeURI(path);
+    // 清理路径：移除所有 '../' 前缀和开头的 '/'
+    let cleanPath = path;
+    while (cleanPath.startsWith('../')) {
+        cleanPath = cleanPath.substring(3);
     }
-    const dir = path.substring(0, lastSlash + 1);
-    const file = path.substring(lastSlash + 1);
+    cleanPath = cleanPath.replace(/^\//, '');
+    // 分离目录和文件名，只编码文件名部分
+    const lastSlash = cleanPath.lastIndexOf('/');
+    if (lastSlash === -1) {
+        return encodeURI(cleanPath);
+    }
+    const dir = cleanPath.substring(0, lastSlash + 1);
+    const file = cleanPath.substring(lastSlash + 1);
     return dir + encodeURI(file);
 }
 
@@ -596,10 +603,13 @@ function renderArticles(articles, containerId) {
         const shortUrl = getArticleUrl(article.link);
         const formattedDate = formatDate(article.date);
         const imageSrc = getImageSrc(article.image);
+        // Fallback 图片列表，逐级尝试
+        const fallbackImg1 = basePath + 'images/categories/general-machinery.webp';
+        const fallbackImg2 = basePath + 'images/categories/construction-machinery.webp';
         return `
         <article class="article-card" itemscope itemtype="https://schema.org/Article" data-url="${shortUrl}">
             <div class="article-card-image-wrapper">
-                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="this.onerror=null; this.src='${basePath}images/categories/general-machinery.webp';">
+                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="if(this.src!=='${fallbackImg1}'){this.src='${fallbackImg1}'}else if(this.src!=='${fallbackImg2}'){this.src='${fallbackImg2}'}else{this.style.display='none'};">
                 <meta itemprop="url" content="${articleUrl}">
                 <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
             </div>
@@ -816,10 +826,12 @@ function renderRelatedArticles(currentCategory, excludeLink) {
     container.innerHTML = relatedArticles.map(article => {
         const imageSrc = getImageSrc(article.image);
         const shortUrl = getArticleUrl(article.link);
+        const fallbackImg1 = basePath + 'images/categories/general-machinery.webp';
+        const fallbackImg2 = basePath + 'images/categories/construction-machinery.webp';
         return `
         <article class="article-card" itemscope itemtype="https://schema.org/Article" data-url="${shortUrl}">
             <div class="article-card-image-wrapper">
-                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="this.onerror=null; this.src='${basePath}images/categories/general-machinery.webp';">
+                <img itemprop="image" src="${imageSrc}" alt="${article.tag || article.category} - ${article.title}" loading="lazy" width="300" height="200" onerror="if(this.src!=='${fallbackImg1}'){this.src='${fallbackImg1}'}else if(this.src!=='${fallbackImg2}'){this.src='${fallbackImg2}'}else{this.style.display='none'};">
                 <span class="article-card-tag">${article.tag || article.category.split(' ')[0]}</span>
             </div>
             <div class="article-card-content">

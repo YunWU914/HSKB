@@ -61,7 +61,13 @@ function generateRelatedArticles(currentArticlePath) {
   const cards = related.map(a => {
     const shortCode = shortLinks[a.link];
     const url = shortCode ? '/s/' + shortCode : '/' + a.link;
-    const imageSrc = a.image && a.image.startsWith('http') ? a.image : '/' + (a.image || 'images/categories/general-machinery.webp');
+    // 清理图片路径：移除 '../' 前缀，确保路径正确
+    let cleanImage = a.image || '';
+    while (cleanImage.startsWith('../')) {
+      cleanImage = cleanImage.substring(3);
+    }
+    cleanImage = cleanImage.replace(/^\//, '');
+    const imageSrc = cleanImage && cleanImage.startsWith('http') ? cleanImage : '/' + (cleanImage || 'images/categories/general-machinery.webp');
     return `
       <a href="${url}" class="related-card" onclick="event.preventDefault(); window.location.href='${url}'">
         <img src="${imageSrc}" alt="${a.title}" loading="lazy">
