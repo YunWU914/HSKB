@@ -2,6 +2,8 @@ import os
 import json
 import random
 import string
+import html
+from urllib.parse import quote
 
 # 短链接哈希长度范围
 MIN_HASH_LENGTH = 6
@@ -10,6 +12,9 @@ MAX_HASH_LENGTH = 8
 # 映射文件路径
 SHORT_LINKS_FILE = 'mechanical-workshop/data/short_links.json'
 REDIRECTS_FILE = 'mechanical-workshop/_redirects'
+# 静态重定向 HTML 文件目录（用于 GitHub Pages 等不支持 _redirects 的平台）
+STATIC_REDIRECTS_DIR = 'mechanical-workshop/s'
+SITE_ORIGIN = 'https://forum.tbvoh.com'
 
 # 重定向区域标记
 REDIRECTS_START = '# === AUTO-GENERATED SHORT LINKS START ==='
@@ -74,6 +79,66 @@ def update_redirects(short_links):
         f.write(content + '\n'.join(rules))
 
 
+def generate_static_redirect_html(article_link):
+    """生成静态重定向 HTML 内容（用于 GitHub Pages 等不支持 _redirects 的平台）
+
+    文件位于 /s/HASH.html，目标文章相对于站点根目录，如 articles/xxx.html
+    因此相对路径前缀为 ../
+    对路径进行 URL 编码以正确处理空格、括号等特殊字符
+    """
+    # URL 编码：保留路径分隔符 /，其余特殊字符按需编码（空格 -> %20）
+    encoded_link = quote(article_link, safe='/')
+    target_url = '../' + encoded_link
+    canonical_url = SITE_ORIGIN + '/' + encoded_link
+    safe_target = html.escape(target_url, quote=True)
+    safe_canonical = html.escape(canonical_url, quote=True)
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="0; url={safe_target}">
+<link rel="canonical" href="{safe_canonical}">
+<title>Redirecting…</title>
+<script>window.location.replace({{target: "{safe_target}"}}.target);</script>
+</head>
+<body>
+<p>Redirecting to <a href="{safe_target}">the article</a>. If you are not redirected automatically, please click the link.</p>
+</body>
+</html>
+"""
+
+
+def sync_static_redirect_files(short_links):
+    """同步静态重定向 HTML 文件，使其与 short_links 映射保持一致
+
+    - 为每个短链生成 s/HASH.html
+    - 删除不再需要的旧文件
+    返回 (生成数, 删除数)
+    """
+    os.makedirs(STATIC_REDIRECTS_DIR, exist_ok=True)
+
+    keep_files = set()
+    for article_link, hash_str in short_links.items():
+        filename = f'{hash_str}.html'
+        keep_files.add(filename)
+        filepath = os.path.join(STATIC_REDIRECTS_DIR, filename)
+        html_content = generate_static_redirect_html(article_link)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+    removed = 0
+    for filename in os.listdir(STATIC_REDIRECTS_DIR):
+        if filename.endswith('.html') and filename not in keep_files:
+            try:
+                os.remove(os.path.join(STATIC_REDIRECTS_DIR, filename))
+                removed += 1
+            except OSError:
+                pass
+
+    return len(short_links), removed
+
+
 def main():
     articles_dir = 'mechanical-workshop/articles'
     
@@ -117,6 +182,11 @@ def main():
         print(f"Updated {len(short_links)} short links total")
     else:
         print("No changes needed")
+
+    # 始终同步静态重定向 HTML 文件
+    # GitHub Pages 不支持 _redirects，必须为每个短链生成 s/HASH.html 才能正常跳转
+    generated, removed_files = sync_static_redirect_files(short_links)
+    print(f"Synced {generated} static redirect files in s/, removed {removed_files} stale files")
 
 
 if __name__ == '__main__':
