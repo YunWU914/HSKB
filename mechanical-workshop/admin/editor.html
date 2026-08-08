@@ -1624,7 +1624,13 @@
       const finalCoverImage = coverImagePath || categoryImages[category] || '../images/categories/general-machinery.webp';
 
       const articleUrl = `https://forum.tbvoh.com/articles/${filename}`;
-      const imageUrl = `https://forum.tbvoh.com/${finalCoverImage.replace('../', '')}`;
+      // 清理图片路径：移除所有 '../' 前缀，确保生成正确的 URL
+      let cleanImageUrl = finalCoverImage;
+      while (cleanImageUrl.startsWith('../')) {
+        cleanImageUrl = cleanImageUrl.substring(3);
+      }
+      cleanImageUrl = cleanImageUrl.replace(/^\//, '');
+      const imageUrl = `https://forum.tbvoh.com/${cleanImageUrl}`;
       
       const safeTitle = title.replace(/"/g, '&quot;');
       const safeDesc = (seoDesc || title).replace(/"/g, '&quot;').substring(0, 200);
